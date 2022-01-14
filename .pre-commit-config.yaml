@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.30.1
+    hooks:
+      - id: pyupgrade
+        args: [--py38-plus]
+  - repo: https://github.com/psf/black
+    rev: 21.12b0
+    hooks:
+      - id: black
+        args:
+          - --safe
+          - --quiet
+        files: ^((python_scripts)/.+)?[^/]+\.py$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.1.0
+    hooks:
+      - id: no-commit-to-branch
+        args:
+          - --branch=master
+  - repo: https://github.com/PyCQA/flake8
+    rev: 4.0.1
+    hooks:
+      - id: flake8
+        additional_dependencies:
+          - pycodestyle==2.8.0
+          - pyflakes==2.4.0
+          - flake8-docstrings==1.6.0
+          - pydocstyle==6.1.1
+          - flake8-comprehensions==3.7.0
+          - flake8-noqa==1.2.0
+          - mccabe==0.6.1
+        files: ^python_scripts/.+\.py$
