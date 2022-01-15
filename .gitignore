@@ -135,6 +135,6 @@ deps
 tts
 blueprints
 .HA_VERSION
-*.db
+*.db*
 *.log.*
 *.yaml
