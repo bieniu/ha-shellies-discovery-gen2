@@ -26,10 +26,13 @@ KEY_SW_VERSION = "sw"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_VALUE_TEMPLATE = "val_tpl"
 
-VALUE_FALSE = "false"
-VALUE_TRUE = "true"
+MODEL_PLUS_1PM = "shellyplus1pm"
+MODEL_PRO_4PM = "shellypro4pm"
 
-SUPPORTED_MODELS = {"SHPSW04P": "Shelly Pro 4PM", "SNSW-001P16EU": "Shelly Plus 1PM"}
+VALUE_OFF = "off"
+VALUE_ON = "on"
+
+SUPPORTED_MODELS = {MODEL_PRO_4PM: "Shelly Pro 4PM", MODEL_PLUS_1PM: "Shelly Plus 1PM"}
 
 def mqtt_publish(topic, payload, retain):
     """Publish data to MQTT broker."""
@@ -52,6 +55,27 @@ def encode_config_topic(string):
     """Encode a config topic to UTF-8."""
     return string.encode("ascii", "ignore").decode("utf-8")
 
+def get_switch(relay):
+    config_topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
+    payload = {
+        KEY_NAME: f"{device_name} Relay {relay}",
+        KEY_COMMAND_TOPIC: f"~rpc",
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
+        KEY_STATE_TOPIC: f"~status/switch:{relay}",
+        KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_STATE_OFF: VALUE_OFF,
+        KEY_STATE_ON: VALUE_ON,
+        # KEY_AVAILABILITY_TOPIC: f"~online",
+        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        "~": f"{device_id}/",
+    }
+    return config_topic, payload
+
 def configure_pro4pm():
     """Create configuration for Shelly Pro 4PM."""
     device_config = {}
@@ -59,24 +83,7 @@ def configure_pro4pm():
     relays = 4
 
     for relay in range(relays):
-        config_topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
-        payload = {
-            KEY_NAME: f"{device_name} Relay {relay}",
-            KEY_COMMAND_TOPIC: f"~rpc",
-            KEY_PAYLOAD_OFF: f"{{^id^: 1, ^src^:^{device_id}^, ^method^: ^Switch.Set^, ^params^: {{^id^: {relay}, ^on^: false}}}}",
-            KEY_PAYLOAD_ON: f"{{^id^: 1, ^src^:^{device_id}^, ^method^: ^Switch.Set^, ^params^: {{^id^: {relay}, ^on^: true}}}}",
-            KEY_STATE_TOPIC: f"~status/switch:{relay}",
-            KEY_VALUE_TEMPLATE: "{{ value_json.output }}",
-            KEY_STATE_ON: VALUE_TRUE,
-            KEY_STATE_OFF: VALUE_FALSE,
-            KEY_AVAILABILITY_TOPIC: f"~online",
-            KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-            KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
-            KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
-            KEY_QOS: qos,
-            KEY_DEVICE: device_info,
-            "~": f"{device_id}/",
-        }
+        config_topic, payload = get_switch(relay)
         device_config.update({config_topic: payload})
 
     return device_config
@@ -88,34 +95,17 @@ def configure_plus1pm():
     relays = 1
 
     for relay in range(relays):
-        config_topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
-        payload = {
-            KEY_NAME: f"{device_name} Relay {relay}",
-            KEY_COMMAND_TOPIC: f"~rpc",
-            KEY_PAYLOAD_OFF: f"{{^id^: 1, ^src^:^{device_id}^, ^method^: ^Switch.Set^, ^params^: {{^id^: {relay}, ^on^: false}}}}",
-            KEY_PAYLOAD_ON: f"{{^id^: 1, ^src^:^{device_id}^, ^method^: ^Switch.Set^, ^params^: {{^id^: {relay}, ^on^: true}}}}",
-            KEY_STATE_TOPIC: f"~status/switch:{relay}",
-            KEY_VALUE_TEMPLATE: "{{ value_json.output }}",
-            KEY_STATE_ON: VALUE_TRUE,
-            KEY_STATE_OFF: VALUE_FALSE,
-            KEY_AVAILABILITY_TOPIC: f"~online",
-            KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-            KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
-            KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
-            KEY_QOS: qos,
-            KEY_DEVICE: device_info,
-            "~": f"{device_id}/",
-        }
+        config_topic, payload = get_switch(relay)
         device_config.update({config_topic: payload})
 
     return device_config
 
 device_id = data.get(ATTR_ID)  # noqa: F821
 firmware_id = data.get(ATTR_FW_ID)  # noqa: F821
-firmware_ver = data.get(ATTR_FW_VER)  # noqa: F821
 mac = data.get(ATTR_MAC)  # noqa: F821
-model = data.get(ATTR_MODEL)  # noqa: F821
 device_name = data.get(ATTR_NAME)  # noqa: F821
+
+model = device_id.rsplit("-", 1)[0]
 
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
@@ -134,13 +124,13 @@ device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
     KEY_NAME: device_name,
     KEY_MODEL: SUPPORTED_MODELS[model],
-    KEY_SW_VERSION: firmware_ver,
+    KEY_SW_VERSION: firmware_id,
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
 }
 
-if model == "SHPSW04P":
+if model == MODEL_PRO_4PM:
     config_data = configure_pro4pm()
-if model == "SNSW-001P16EU":
+if model == MODEL_PLUS_1PM:
     config_data = configure_plus1pm()
 
 if config_data:

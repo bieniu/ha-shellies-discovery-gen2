@@ -8,7 +8,7 @@
     - platform: homeassistant
       event: start
   variables:
-    device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetDeviceInfo'} | to_json }}"
+    device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
   action:
     - service: mqtt.publish
       data:
@@ -29,10 +29,8 @@
   action:
   - service: python_script.shellies_discovery_gen2
     data:
-      fw_id: "{{ trigger.payload_json.result.fw_id }}"
-      fw_ver: "{{ trigger.payload_json.result.ver }}"
-      id: "{{ trigger.payload_json.result.id }}"
-      mac: "{{ trigger.payload_json.result.mac }}"
-      model: "{{ trigger.payload_json.result.model }}"
-      name: "{{ trigger.payload_json.result.name }}"
+      fw_id: "{{ trigger.payload_json.result.sys.device.fw_id }}"
+      id: "{{ trigger.payload_json.src }}"
+      mac: "{{ trigger.payload_json.result.sys.device.mac }}"
+      name: "{{ trigger.payload_json.result.sys.device.name }}"
 ```
