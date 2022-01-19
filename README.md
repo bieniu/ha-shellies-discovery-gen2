@@ -11,6 +11,7 @@
 - Shelly Pro 4PM
 
 ## Required automations
+
 ```yaml
 - id: shellies_announce_gen2
   alias: "Shellies Announce Gen2"
@@ -39,8 +40,6 @@
   action:
   - service: python_script.shellies_discovery_gen2
     data:
-      fw_id: "{{ trigger.payload_json.result.sys.device.fw_id }}"
       id: "{{ trigger.payload_json.src }}"
-      mac: "{{ trigger.payload_json.result.sys.device.mac }}"
-      name: "{{ trigger.payload_json.result.sys.device.name }}"
+      device_config: "{{ trigger.payload_json.result }}"
 ```
