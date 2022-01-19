@@ -1,5 +1,16 @@
 # ha-shellies-discovery-gen2
 
+## Supported devices
+
+- Shelly Plus 1
+- Shelly Plus 1PM
+- Shelly Pro 1
+- Shelly Pro 1PM
+- Shelly Pro 2
+- Shelly Pro 2PM
+- Shelly Pro 4PM
+
+## Required automations
 
 ```yaml
 - id: shellies_announce_gen2
@@ -12,11 +23,11 @@
   action:
     - service: mqtt.publish
       data:
-        topic: "shelly-pro-4pm-aabbcc/rpc"
+        topic: "shellypro4pm-aabbcc/rpc"
         payload: "{{ device_info_payload }}"
     - service: mqtt.publish
       data:
-        topic: "shelly-plus-1pm-112233/rpc"
+        topic: "shellyplus1pm-112233/rpc"
         payload: "{{ device_info_payload }}"
 
 - id: shellies_discovery_gen2
@@ -29,8 +40,6 @@
   action:
   - service: python_script.shellies_discovery_gen2
     data:
-      fw_id: "{{ trigger.payload_json.result.sys.device.fw_id }}"
       id: "{{ trigger.payload_json.src }}"
-      mac: "{{ trigger.payload_json.result.sys.device.mac }}"
-      name: "{{ trigger.payload_json.result.sys.device.name }}"
+      device_config: "{{ trigger.payload_json.result }}"
 ```
