@@ -28,13 +28,26 @@ KEY_SW_VERSION = "sw"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_VALUE_TEMPLATE = "val_tpl"
 
+MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
+MODEL_PRO_1 = "shellypro1"
+MODEL_PRO_1PM = "shellypro1pm"
+MODEL_PRO_2 = "shellypro2"
+MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_4PM = "shellypro4pm"
 
 VALUE_OFF = "off"
 VALUE_ON = "on"
 
-SUPPORTED_MODELS = {MODEL_PRO_4PM: "Shelly Pro 4PM", MODEL_PLUS_1PM: "Shelly Plus 1PM"}
+SUPPORTED_MODELS = {
+    MODEL_PLUS_1: "Shelly Plus 1",
+    MODEL_PLUS_1PM: "Shelly Plus 1PM",
+    MODEL_PRO_1: "Shelly Pro 1",
+    MODEL_PRO_1PM: "Shelly Pro 1PM",
+    MODEL_PRO_2: "Shelly Pro 2",
+    MODEL_PRO_2PM: "Shelly Pro 2PM",
+    MODEL_PRO_4PM: "Shelly Pro 4PM",
+}
 
 
 def mqtt_publish(topic, payload, retain):

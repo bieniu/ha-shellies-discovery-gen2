@@ -2,8 +2,13 @@
 
 ## Supported devices
 
-- Shelly Pro 4PM
+- Shelly Plus 1
 - Shelly Plus 1PM
+- Shelly Pro 1
+- Shelly Pro 1PM
+- Shelly Pro 2
+- Shelly Pro 2PM
+- Shelly Pro 4PM
 
 ## Required automations
 ```yaml
