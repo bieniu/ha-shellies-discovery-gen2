@@ -1,3 +1,5 @@
+"""This script adds MQTT discovery support for Shellies Gen2 devices."""
+
 ATTR_FW_ID = "fw_id"
 ATTR_FW_VER = "fw_ver"
 ATTR_ID = "id"
@@ -34,6 +36,7 @@ VALUE_ON = "on"
 
 SUPPORTED_MODELS = {MODEL_PRO_4PM: "Shelly Pro 4PM", MODEL_PLUS_1PM: "Shelly Plus 1PM"}
 
+
 def mqtt_publish(topic, payload, retain):
     """Publish data to MQTT broker."""
     payload_str = str(payload).replace("'", '"').replace("^", '\\"')
@@ -47,19 +50,23 @@ def mqtt_publish(topic, payload, retain):
     logger.debug("Sending to MQTT broker: %s %s", topic, payload_str)  # noqa: F821
     hass.services.call("mqtt", "publish", service_data, False)  # noqa: F821
 
+
 def format_mac(mac):
     """Format the mac address string."""
     return ":".join(mac[i : i + 2] for i in range(0, 12, 2))
+
 
 def encode_config_topic(string):
     """Encode a config topic to UTF-8."""
     return string.encode("ascii", "ignore").decode("utf-8")
 
+
 def get_switch(relay):
-    config_topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
+    """Create configuration for Shelly switch."""
+    topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
     payload = {
         KEY_NAME: f"{device_name} Relay {relay}",
-        KEY_COMMAND_TOPIC: f"~rpc",
+        KEY_COMMAND_TOPIC: "~rpc",
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
         KEY_STATE_TOPIC: f"~status/switch:{relay}",
@@ -74,7 +81,8 @@ def get_switch(relay):
         KEY_DEVICE: device_info,
         "~": f"{device_id}/",
     }
-    return config_topic, payload
+    return topic, payload
+
 
 def configure_pro4pm():
     """Create configuration for Shelly Pro 4PM."""
@@ -88,6 +96,7 @@ def configure_pro4pm():
 
     return device_config
 
+
 def configure_plus1pm():
     """Create configuration for Shelly Plus 1PM."""
     device_config = {}
@@ -99,6 +108,7 @@ def configure_plus1pm():
         device_config.update({config_topic: payload})
 
     return device_config
+
 
 device_id = data.get(ATTR_ID)  # noqa: F821
 firmware_id = data.get(ATTR_FW_ID)  # noqa: F821
@@ -134,5 +144,5 @@ if model == MODEL_PLUS_1PM:
     config_data = configure_plus1pm()
 
 if config_data:
-    for topic, payload in config_data.items():
-        mqtt_publish(topic, payload, retain)
+    for config_topic, config_payload in config_data.items():
+        mqtt_publish(config_topic, config_payload, retain)
