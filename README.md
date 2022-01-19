@@ -1,6 +1,11 @@
 # ha-shellies-discovery-gen2
 
+## Supported devices
 
+- Shelly Pro 4PM
+- Shelly Plus 1PM
+
+## Required automations
 ```yaml
 - id: shellies_announce_gen2
   alias: "Shellies Announce Gen2"
@@ -12,11 +17,11 @@
   action:
     - service: mqtt.publish
       data:
-        topic: "shelly-pro-4pm-aabbcc/rpc"
+        topic: "shellypro4pm-aabbcc/rpc"
         payload: "{{ device_info_payload }}"
     - service: mqtt.publish
       data:
-        topic: "shelly-plus-1pm-112233/rpc"
+        topic: "shellyplus1pm-112233/rpc"
         payload: "{{ device_info_payload }}"
 
 - id: shellies_discovery_gen2
