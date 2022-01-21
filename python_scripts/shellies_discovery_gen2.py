@@ -7,11 +7,12 @@ ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
 ATTR_MODEL = "model"
 ATTR_NAME = "name"
+ATTR_RELAY_SENSORS = "sensors"
 ATTR_RELAYS = "relays"
 ATTR_SWITCH = "switch"
-ATTR_RELAY_SENSORS = "sensors"
 
 DEVICE_CLASS_ENERGY = "energy"
+DEVICE_CLASS_POWER = "power"
 
 KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
@@ -19,6 +20,8 @@ KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TOPIC = "cmd_t"
 KEY_CONNECTIONS = "cns"
 KEY_DEVICE = "dev"
+KEY_DEVICE_CLASS = "dev_cla"
+KEY_ENABLED_BY_DEFAULT = "en"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
@@ -29,17 +32,15 @@ KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
 KEY_QOS = "qos"
 KEY_SCHEMA = "schema"
+KEY_STATE_CLASS = "stat_cla"
 KEY_STATE_OFF = "stat_off"
 KEY_STATE_ON = "stat_on"
-KEY_STATE_TOPIC = "stat_t"
 KEY_STATE_TEMPLATE = "stat_tpl"
+KEY_STATE_TOPIC = "stat_t"
 KEY_SW_VERSION = "sw"
 KEY_UNIQUE_ID = "uniq_id"
-KEY_VALUE_TEMPLATE = "val_tpl"
-KEY_DEVICE_CLASS = "dev_cla"
-KEY_ENABLED_BY_DEFAULT = "en"
-KEY_STATE_CLASS = "stat_cla"
 KEY_UNIT = "unit_of_meas"
+KEY_VALUE_TEMPLATE = "val_tpl"
 
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
@@ -50,63 +51,86 @@ MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_4PM = "shellypro4pm"
 
 SENSOR_ENERGY = "energy"
+SENSOR_POWER = "power"
 
-TOPIC_RELAY_ENERGY = "~status/switch:{relay}"
+TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 
+TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
+TPL_POWER = "{{value_json.apower|round(1)}}"
+
+UNIT_W = "W"
 UNIT_WH = "Wh"
-
-TPL_ENERGY = "{{value_json.aenergy.total|round(1)}}"
 
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
+
+VALUE_OFF = "off"
+VALUE_ON = "on"
 
 DESCRIPTION_SENSOR_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_RELAY_ENERGY,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_WH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
-
-VALUE_OFF = "off"
-VALUE_ON = "on"
+DESCRIPTION_SENSOR_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_UNIT: UNIT_W,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
 
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
         ATTR_NAME: "Shelly Plus 1",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+        },
     },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+        },
     },
     MODEL_PRO_2: {
         ATTR_NAME: "Shelly Pro 2",
         ATTR_RELAYS: 2,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
         ATTR_RELAYS: 2,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+        },
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
         ATTR_RELAYS: 4,
-        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+        ATTR_RELAY_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+        },
     },
 }
 
@@ -151,7 +175,7 @@ def get_switch(relay, relay_type):
         KEY_COMMAND_TOPIC: "~rpc",
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
-        KEY_STATE_TOPIC: f"~status/switch:{relay}",
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay),
         KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
@@ -183,7 +207,7 @@ def get_light(relay, relay_type):
         KEY_COMMAND_TOPIC: "~rpc",
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
-        KEY_STATE_TOPIC: f"~status/switch:{relay}",
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         # KEY_AVAILABILITY_TOPIC: f"~online",
         # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
