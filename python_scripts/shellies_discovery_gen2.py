@@ -9,6 +9,9 @@ ATTR_MODEL = "model"
 ATTR_NAME = "name"
 ATTR_RELAYS = "relays"
 ATTR_SWITCH = "switch"
+ATTR_RELAY_SENSORS = "sensors"
+
+DEVICE_CLASS_ENERGY = "energy"
 
 KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
@@ -33,6 +36,10 @@ KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_SW_VERSION = "sw"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_VALUE_TEMPLATE = "val_tpl"
+KEY_DEVICE_CLASS = "dev_cla"
+KEY_ENABLED_BY_DEFAULT = "en"
+KEY_STATE_CLASS = "stat_cla"
+KEY_UNIT = "unit_of_meas"
 
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
@@ -42,17 +49,65 @@ MODEL_PRO_2 = "shellypro2"
 MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_4PM = "shellypro4pm"
 
+SENSOR_ENERGY = "energy"
+
+TOPIC_RELAY_ENERGY = "~status/switch:{relay}"
+
+UNIT_WH = "Wh"
+
+TPL_ENERGY = "{{value_json.aenergy.total|round(1)}}"
+
+STATE_CLASS_MEASUREMENT = "measurement"
+STATE_CLASS_TOTAL_INCREASING = "total_increasing"
+
+DESCRIPTION_SENSOR_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_RELAY_ENERGY,
+    KEY_UNIT: UNIT_WH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+
 VALUE_OFF = "off"
 VALUE_ON = "on"
 
 SUPPORTED_MODELS = {
-    MODEL_PLUS_1: {ATTR_NAME: "Shelly Plus 1", ATTR_RELAYS: 1},
-    MODEL_PLUS_1PM: {ATTR_NAME: "Shelly Plus 1PM", ATTR_RELAYS: 1},
-    MODEL_PRO_1: {ATTR_NAME: "Shelly Pro 1", ATTR_RELAYS: 1},
-    MODEL_PRO_1PM: {ATTR_NAME: "Shelly Pro 1PM", ATTR_RELAYS: 1},
-    MODEL_PRO_2: {ATTR_NAME: "Shelly Pro 2", ATTR_RELAYS: 2},
-    MODEL_PRO_2PM: {ATTR_NAME: "Shelly Pro 2PM", ATTR_RELAYS: 2},
-    MODEL_PRO_4PM: {ATTR_NAME: "Shelly Pro 4PM", ATTR_RELAYS: 4},
+    MODEL_PLUS_1: {
+        ATTR_NAME: "Shelly Plus 1",
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PLUS_1PM: {
+        ATTR_NAME: "Shelly Plus 1PM",
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PRO_1: {
+        ATTR_NAME: "Shelly Pro 1",
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PRO_1PM: {
+        ATTR_NAME: "Shelly Pro 1PM",
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PRO_2: {
+        ATTR_NAME: "Shelly Pro 2",
+        ATTR_RELAYS: 2,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PRO_2PM: {
+        ATTR_NAME: "Shelly Pro 2PM",
+        ATTR_RELAYS: 2,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
+    MODEL_PRO_4PM: {
+        ATTR_NAME: "Shelly Pro 4PM",
+        ATTR_RELAYS: 4,
+        ATTR_RELAY_SENSORS: {SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY},
+    },
 }
 
 
@@ -141,7 +196,46 @@ def get_light(relay, relay_type):
     return topic, payload
 
 
-def configure_device(relays):
+def get_sensor(sensor, description, relay=None):
+    """Create configuration for Shelly sensor."""
+    switch_name = (
+        device_config[f"switch:{relay}"][ATTR_NAME] or f"{device_name} Relay {relay}"
+    )
+    if relay is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{relay}-{sensor}/config"
+        )
+        unique_id = f"{device_id}-{relay}-{sensor}".lower()
+        sensor_name = f"{switch_name} {sensor.title()}"
+    else:
+        topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
+        unique_id = f"{device_id}-{sensor}".lower()
+        sensor_name = f"{device_name} {sensor.title()}"
+
+    payload = {
+        KEY_NAME: sensor_name,
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay),
+        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
+        KEY_UNIT: description[KEY_UNIT],
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        # KEY_AVAILABILITY_TOPIC: f"~online",
+        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_UNIQUE_ID: unique_id,
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        "~": f"{device_id}/",
+    }
+
+    if description.get(KEY_DEVICE_CLASS):
+        payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_STATE_CLASS):
+        payload[KEY_STATE_CLASS] = description[KEY_STATE_CLASS]
+
+    return topic, payload
+
+
+def configure_device(relays, relay_sensors):
     """Create configuration for the device."""
     config = {}
 
@@ -158,6 +252,10 @@ def configure_device(relays):
 
         topic, payload = get_light(relay, relay_type)
         config[topic] = payload
+
+        for sensor, description in relay_sensors.items():
+            topic, payload = get_sensor(sensor, description, relay)
+            config[topic] = payload
 
     return config
 
@@ -196,8 +294,9 @@ device_info = {
 }
 
 relays = SUPPORTED_MODELS[model][ATTR_RELAYS]
+relay_sensors = SUPPORTED_MODELS[model][ATTR_RELAY_SENSORS]
 
-config_data = configure_device(relays)
+config_data = configure_device(relays, relay_sensors)
 
 if config_data:
     for config_topic, config_payload in config_data.items():
