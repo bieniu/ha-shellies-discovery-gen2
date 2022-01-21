@@ -14,6 +14,7 @@ ATTR_SWITCH = "switch"
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_POWER = "power"
+DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_VOLTAGE = "voltage"
 
 KEY_AVAILABILITY_TOPIC = "avty_t"
@@ -55,6 +56,7 @@ MODEL_PRO_4PM = "shellypro4pm"
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
 SENSOR_POWER = "power"
+SENSOR_POWER_FACTOR = "power_factor"
 SENSOR_VOLTAGE = "voltage"
 
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
@@ -62,9 +64,11 @@ TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_POWER = "{{value_json.apower|round(1)}}"
+TPL_POWER_FACTOR = "{{value_json.pf*100|round}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 
 UNIT_A = "A"
+UNIT_PERCENT = "%"
 UNIT_V = "V"
 UNIT_W = "W"
 UNIT_WH = "Wh"
@@ -98,6 +102,14 @@ DESCRIPTION_SENSOR_POWER = {
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_W,
     KEY_VALUE_TEMPLATE: TPL_POWER,
+}
+DESCRIPTION_SENSOR_POWER_FACTOR = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_POWER_FACTOR,
 }
 DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
@@ -161,6 +173,7 @@ SUPPORTED_MODELS = {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
             SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+            SENSOR_POWER_FACTOR: DESCRIPTION_SENSOR_POWER_FACTOR,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
         },
     },
@@ -262,11 +275,11 @@ def get_sensor(sensor, description, relay=None):
             f"{disc_prefix}/sensor/{device_id}-{relay}-{sensor}/config"
         )
         unique_id = f"{device_id}-{relay}-{sensor}".lower()
-        sensor_name = f"{switch_name} {sensor.title()}"
+        sensor_name = f"{switch_name} {sensor.replace('_', ' ').title()}"
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{device_name} {sensor.title()}"
+        sensor_name = f"{device_name} {sensor.replace('_', ' ').title()}"
 
     payload = {
         KEY_NAME: sensor_name,
