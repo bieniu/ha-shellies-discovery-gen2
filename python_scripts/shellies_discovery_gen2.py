@@ -35,6 +35,7 @@ KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TOPIC = "cmd_t"
+KEY_CONFIGURATION_URL = "cu"
 KEY_CONNECTIONS = "cns"
 KEY_DEVICE = "dev"
 KEY_DEVICE_CLASS = "dev_cla"
@@ -434,6 +435,7 @@ device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 mac = device_config["sys"]["device"][ATTR_MAC]
 device_name = device_config["sys"]["device"][ATTR_NAME]
+device_url = f"http://{device_config['mqtt']['topic_prefix']}.local/"
 default_topic = f"{device_config['mqtt']['topic_prefix']}/"
 
 model = device_id.rsplit("-", 1)[0]
@@ -463,6 +465,7 @@ device_info = {
     KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
     KEY_SW_VERSION: firmware_id,
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
+    KEY_CONFIGURATION_URL: device_url,
 }
 
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
