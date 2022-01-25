@@ -252,7 +252,7 @@ def get_switch(relay, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
     return topic, payload
 
@@ -282,7 +282,7 @@ def get_light(relay, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
     return topic, payload
 
@@ -315,7 +315,7 @@ def get_sensor(sensor, description, relay=None):
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
 
     if description.get(KEY_DEVICE_CLASS):
@@ -356,6 +356,7 @@ device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 mac = device_config["sys"]["device"][ATTR_MAC]
 device_name = device_config["sys"]["device"][ATTR_NAME]
+default_topic = f"{device_config['mqtt']['topic_prefix']}/"
 
 model = device_id.rsplit("-", 1)[0]
 
