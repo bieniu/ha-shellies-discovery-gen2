@@ -57,6 +57,13 @@ logger:
 
 - availability doesn’t work (firmware change is needed)
 
+## Script arguments
+
+key | optional | type | default | description
+-- | -- | -- | -- | --
+`discovery_prefix` | True | string | `homeassistant` | MQTT discovery prefix
+`qos` | True | integer | `0` | MQTT QoS, you can use `0`, `1` or `2`
+
 ## Minimal configuration
 
 ```yaml

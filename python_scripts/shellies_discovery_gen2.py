@@ -11,6 +11,11 @@ ATTR_RELAY_SENSORS = "sensors"
 ATTR_RELAYS = "relays"
 ATTR_SWITCH = "switch"
 
+CONF_DISCOVERY_PREFIX = "discovery_prefix"
+CONF_QOS = "qos"
+
+DEFAULT_DISC_PREFIX = "homeassistant"
+
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_POWER = "power"
@@ -202,13 +207,13 @@ SUPPORTED_MODELS = {
 }
 
 
-def mqtt_publish(topic, payload, retain):
+def mqtt_publish(topic, payload):
     """Publish data to MQTT broker."""
     payload_str = str(payload).replace("'", '"').replace("^", '\\"')
     service_data = {
         "topic": topic,
         "payload": payload_str,
-        "retain": retain,
+        "retain": True,
         "qos": 0,
     }
     logger.debug(service_data)  # noqa: F821
@@ -373,9 +378,11 @@ if device_id is None:
 if mac is None:
     raise ValueError("mac value None is not valid, check script configuration")
 
-qos = 0
-retain = True
-disc_prefix = "homeassistant"
+qos = data.get(CONF_QOS, 0)  # noqa: F821
+if qos not in (0, 1, 2):
+    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
+
+disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
 device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
@@ -392,4 +399,4 @@ config_data = configure_device(relays, relay_sensors)
 
 if config_data:
     for config_topic, config_payload in config_data.items():
-        mqtt_publish(config_topic, config_payload, retain)
+        mqtt_publish(config_topic, config_payload)
