@@ -21,6 +21,7 @@ You can download `shellies_discovery_gen2.py` file and save it in `<config>/pyth
 
 - Shelly Plus 1
 - Shelly Plus 1PM
+- Shelly Plus i4
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2

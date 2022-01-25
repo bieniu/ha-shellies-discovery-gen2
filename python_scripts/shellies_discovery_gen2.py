@@ -1,7 +1,10 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
+ATTR_BUTTON = "button"
 ATTR_FW_ID = "fw_id"
 ATTR_ID = "id"
+ATTR_INPUT_EVENTS = "input_events"
+ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
 ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
@@ -23,6 +26,11 @@ DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_VOLTAGE = "voltage"
 
+EVENT_DOUBLE_PUSH = "double_push"
+EVENT_LONG_PUSH = "long_push"
+EVENT_SINGLE_PUSH = "single_push"
+
+KEY_AUTOMATION_TYPE = "atype"
 KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
@@ -35,6 +43,7 @@ KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
+KEY_PAYLOAD = "pl"
 KEY_PAYLOAD_AVAILABLE = "pl_avail"
 KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
 KEY_PAYLOAD_OFF = "pl_off"
@@ -46,13 +55,17 @@ KEY_STATE_OFF = "stat_off"
 KEY_STATE_ON = "stat_on"
 KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
+KEY_SUBTYPE = "stype"
 KEY_SW_VERSION = "sw"
+KEY_TOPIC = "t"
+KEY_TYPE = "type"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_UNIT = "unit_of_meas"
 KEY_VALUE_TEMPLATE = "val_tpl"
 
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
+MODEL_PLUS_I4 = "shellyplusi4"
 MODEL_PRO_1 = "shellypro1"
 MODEL_PRO_1PM = "shellypro1pm"
 MODEL_PRO_2 = "shellypro2"
@@ -78,6 +91,10 @@ TPL_POWER_FACTOR = "{{value_json.pf*100|round}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 
+TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
+TRIGGER_BUTTON_LONG_PRESS = "button_long_press"
+TRIGGER_BUTTON_SHORT_PRESS = "button_short_press"
+
 UNIT_AMPERE = "A"
 UNIT_CELSIUS = "°C"
 UNIT_PERCENT = "%"
@@ -87,6 +104,13 @@ UNIT_WATTH = "Wh"
 
 VALUE_OFF = "off"
 VALUE_ON = "on"
+VALUE_TRIGGER = "trigger"
+
+DEVICE_TRIGGER_MAP = {
+    EVENT_DOUBLE_PUSH: TRIGGER_BUTTON_DOUBLE_PRESS,
+    EVENT_LONG_PUSH: TRIGGER_BUTTON_LONG_PRESS,
+    EVENT_SINGLE_PUSH: TRIGGER_BUTTON_SHORT_PRESS,
+}
 
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -147,7 +171,6 @@ SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
         ATTR_NAME: "Shelly Plus 1",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
@@ -160,10 +183,14 @@ SUPPORTED_MODELS = {
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
         },
     },
+    MODEL_PLUS_I4: {
+        ATTR_NAME: "Shelly Plus i4",
+        ATTR_INPUTS: 4,
+        ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
+    },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
         ATTR_RELAYS: 1,
-        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
@@ -179,7 +206,6 @@ SUPPORTED_MODELS = {
     MODEL_PRO_2: {
         ATTR_NAME: "Shelly Pro 2",
         ATTR_RELAYS: 2,
-        ATTR_RELAY_SENSORS: {},
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
@@ -231,30 +257,31 @@ def encode_config_topic(string):
     return string.encode("ascii", "ignore").decode("utf-8")
 
 
-def get_switch(relay, relay_type):
+def get_switch(relay_id, relay_type):
     """Create configuration for Shelly as switch."""
-    topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay}/config")
+    topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_SWITCH:
         payload = ""
         return topic, payload
 
     relay_name = (
-        device_config[f"switch:{relay}"][ATTR_NAME] or f"{device_name} Relay {relay}"
+        device_config[f"switch:{relay_id}"][ATTR_NAME]
+        or f"{device_name} Relay {relay_id}"
     )
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: "~rpc",
-        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
-        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay),
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
         # KEY_AVAILABILITY_TOPIC: f"~online",
         # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
         # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
-        KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
+        KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         "~": default_topic,
@@ -262,29 +289,30 @@ def get_switch(relay, relay_type):
     return topic, payload
 
 
-def get_light(relay, relay_type):
+def get_light(relay_id, relay_type):
     """Create configuration for Shelly relay as light."""
-    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{relay}/config")
+    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_LIGHT:
         payload = ""
         return topic, payload
 
     relay_name = (
-        device_config[f"switch:{relay}"][ATTR_NAME] or f"{device_name} Relay {relay}"
+        device_config[f"switch:{relay_id}"][ATTR_NAME]
+        or f"{device_name} Relay {relay_id}"
     )
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: "~rpc",
-        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:false}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay),
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         # KEY_AVAILABILITY_TOPIC: f"~online",
         # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
         # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
-        KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
+        KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         "~": default_topic,
@@ -292,16 +320,17 @@ def get_light(relay, relay_type):
     return topic, payload
 
 
-def get_sensor(sensor, description, relay=None):
+def get_sensor(sensor, description, relay_id=None):
     """Create configuration for Shelly sensor."""
     switch_name = (
-        device_config[f"switch:{relay}"][ATTR_NAME] or f"{device_name} Relay {relay}"
+        device_config[f"switch:{relay_id}"][ATTR_NAME]
+        or f"{device_name} Relay {relay_id}"
     )
-    if relay is not None:
+    if relay_id is not None:
         topic = encode_config_topic(
-            f"{disc_prefix}/sensor/{device_id}-{relay}-{sensor}/config"
+            f"{disc_prefix}/sensor/{device_id}-{relay_id}-{sensor}/config"
         )
-        unique_id = f"{device_id}-{relay}-{sensor}".lower()
+        unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
@@ -310,7 +339,7 @@ def get_sensor(sensor, description, relay=None):
 
     payload = {
         KEY_NAME: sensor_name,
-        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay),
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay_id),
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_UNIT: description[KEY_UNIT],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
@@ -331,26 +360,56 @@ def get_sensor(sensor, description, relay=None):
     return topic, payload
 
 
-def configure_device(relays, relay_sensors):
+def get_input(input_id, input_type, event):
+    """Create configuration for Shelly input event."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/device_automation/{device_id}-input-{input_id}/{event}/config"
+    )
+
+    if input_type != ATTR_BUTTON:
+        payload = ""
+        return topic, payload
+
+    payload = {
+        KEY_AUTOMATION_TYPE: VALUE_TRIGGER,
+        KEY_TOPIC: f"{device_id}/events/rpc",
+        KEY_PAYLOAD: event,
+        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.event}}",
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_TYPE: DEVICE_TRIGGER_MAP[event],
+        KEY_SUBTYPE: f"button_{input_id + 1}",
+    }
+
+    return topic, payload
+
+
+def configure_device(relays, relay_sensors, inputs, input_events):
     """Create configuration for the device."""
     config = {}
 
-    for relay in range(relays):
+    for relay_id in range(relays):
         relay_type = (
             ATTR_LIGHT
             if ATTR_LIGHT
-            in device_config["sys"]["ui_data"]["consumption_types"][relay].lower()
+            in device_config["sys"]["ui_data"]["consumption_types"][relay_id].lower()
             else ATTR_SWITCH
         )
 
-        topic, payload = get_switch(relay, relay_type)
+        topic, payload = get_switch(relay_id, relay_type)
         config[topic] = payload
 
-        topic, payload = get_light(relay, relay_type)
+        topic, payload = get_light(relay_id, relay_type)
         config[topic] = payload
 
         for sensor, description in relay_sensors.items():
-            topic, payload = get_sensor(sensor, description, relay)
+            topic, payload = get_sensor(sensor, description, relay_id)
+            config[topic] = payload
+
+    for input_id in range(inputs):
+        input_type = device_config[f"input:{input_id}"]["type"]
+        for event in input_events:
+            topic, payload = get_input(input_id, input_type, event)
             config[topic] = payload
 
     return config
@@ -392,10 +451,13 @@ device_info = {
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
 }
 
-relays = SUPPORTED_MODELS[model][ATTR_RELAYS]
-relay_sensors = SUPPORTED_MODELS[model][ATTR_RELAY_SENSORS]
+inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
+input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 
-config_data = configure_device(relays, relay_sensors)
+relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
+relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
+
+config_data = configure_device(relays, relay_sensors, inputs, input_events)
 
 if config_data:
     for config_topic, config_payload in config_data.items():
