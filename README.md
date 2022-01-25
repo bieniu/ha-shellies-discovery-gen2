@@ -21,6 +21,7 @@ You can download `shellies_discovery_gen2.py` file and save it in `<config>/pyth
 
 - Shelly Plus 1
 - Shelly Plus 1PM
+- Shelly Plus i4
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2
@@ -51,11 +52,19 @@ logger:
 - the device name is taken from the device configuration
 - the relay name is taken from the device configuration
 - the relay consumption type is taken from the device configuration
+- if the input type is set to button, device automation triggers are available
 - custom MQTT prefixes are supported
 
 ## Known problems
 
 - availability doesn’t work (firmware change is needed)
+
+## Script arguments
+
+key | optional | type | default | description
+-- | -- | -- | -- | --
+`discovery_prefix` | True | string | `homeassistant` | MQTT discovery prefix
+`qos` | True | integer | `0` | MQTT QoS, you can use `0`, `1` or `2`
 
 ## Minimal configuration
 
