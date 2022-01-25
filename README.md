@@ -2,6 +2,7 @@
 
 [![GitHub Release][releases-shield]][releases]
 [![GitHub All Releases][downloads-total-shield]][releases]
+[![Community Forum][forum-shield]][forum]
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 [![PayPal_Me][paypal-me-shield]][paypal-me]
 
@@ -107,6 +108,8 @@ python_script:
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
 [releases-shield]: https://img.shields.io/github/release/bieniu/ha-shellies-discovery-gen2.svg?style=popout
 [downloads-total-shield]: https://img.shields.io/github/downloads/bieniu/ha-shellies-discovery-gen2/total
+[forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
+[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [buy-me-a-coffee-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
 [buy-me-a-coffee]: https://www.buymeacoffee.com/QnLdxeaqO
 [paypal-me-shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
