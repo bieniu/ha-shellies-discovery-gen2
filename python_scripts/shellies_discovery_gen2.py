@@ -86,6 +86,7 @@ VALUE_ON = "on"
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_AMPERE,
@@ -94,6 +95,7 @@ DESCRIPTION_SENSOR_CURRENT = {
 DESCRIPTION_SENSOR_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_WATTH,
@@ -102,6 +104,7 @@ DESCRIPTION_SENSOR_ENERGY = {
 DESCRIPTION_SENSOR_POWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
     KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_WATT,
@@ -110,6 +113,7 @@ DESCRIPTION_SENSOR_POWER = {
 DESCRIPTION_SENSOR_POWER_FACTOR = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
     KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Power Factor",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_PERCENT,
@@ -118,6 +122,7 @@ DESCRIPTION_SENSOR_POWER_FACTOR = {
 DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Temperature",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_CELSIUS,
@@ -126,6 +131,7 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
 DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
     KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_VOLT,
@@ -246,7 +252,7 @@ def get_switch(relay, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
     return topic, payload
 
@@ -276,7 +282,7 @@ def get_light(relay, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
     return topic, payload
 
@@ -291,11 +297,11 @@ def get_sensor(sensor, description, relay=None):
             f"{disc_prefix}/sensor/{device_id}-{relay}-{sensor}/config"
         )
         unique_id = f"{device_id}-{relay}-{sensor}".lower()
-        sensor_name = f"{switch_name} {sensor.replace('_', ' ').title()}"
+        sensor_name = f"{switch_name} {description[KEY_NAME]}"
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{device_name} {sensor.replace('_', ' ').title()}"
+        sensor_name = f"{device_name} {description[KEY_NAME]}"
 
     payload = {
         KEY_NAME: sensor_name,
@@ -309,7 +315,7 @@ def get_sensor(sensor, description, relay=None):
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": f"{device_id}/",
+        "~": default_topic,
     }
 
     if description.get(KEY_DEVICE_CLASS):
@@ -350,6 +356,7 @@ device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 mac = device_config["sys"]["device"][ATTR_MAC]
 device_name = device_config["sys"]["device"][ATTR_NAME]
+default_topic = f"{device_config['mqtt']['topic_prefix']}/"
 
 model = device_id.rsplit("-", 1)[0]
 
