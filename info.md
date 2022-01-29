@@ -40,9 +40,10 @@ logger:
 
 ## Supported platforms
 
-- switch
+- button
 - light
 - sensor
+- switch
 
 ## Supported features
 
