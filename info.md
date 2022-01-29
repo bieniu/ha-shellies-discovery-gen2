@@ -82,11 +82,11 @@ python_script:
   action:
     - service: mqtt.publish
       data:
-        topic: "shellypro4pm-aabbcc/rpc"  # shellypro4pm-aabbccddeeff is a device ID
+        topic: "shellypro4pm-aabbccddeeff/rpc"  # shellypro4pm-aabbccddeeff is a device ID
         payload: "{{ device_info_payload }}"
     - service: mqtt.publish
       data:
-        topic: "shellyplus1pm-112233/rpc"  # shellyplus1pm-112233445566 is a device ID
+        topic: "shellyplus1pm-112233445566/rpc"  # shellyplus1pm-112233445566 is a device ID
         payload: "{{ device_info_payload }}"
 
 - id: shellies_discovery_gen2
