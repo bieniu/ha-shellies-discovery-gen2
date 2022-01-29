@@ -18,7 +18,8 @@ For the device to work with the script, it must have MQTT configured and options
 
 ## Installation
 
-You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder.
+You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder or install the script via [HACS](https://hacs.xyz/).
+You won't find **Shellies Discovery Gen2** in the HACS **Integrations** section, nor add it as a custom repository. You must have a properly configured `python_script` component to be able to install the script from the HACS **Automations** section.
 
 ## Supported devices
 
