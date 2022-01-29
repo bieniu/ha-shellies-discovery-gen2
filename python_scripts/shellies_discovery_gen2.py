@@ -504,7 +504,9 @@ def get_binary_sensor(sensor, description, relay_id=None):
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     else:
-        topic = encode_config_topic(f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config")
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
+        )
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = f"{device_name} {description[KEY_NAME]}"
 
@@ -532,6 +534,7 @@ def get_binary_sensor(sensor, description, relay_id=None):
         payload[KEY_STATE_CLASS] = description[KEY_STATE_CLASS]
 
     return topic, payload
+
 
 def get_input(input_id, input_type, event):
     """Create configuration for Shelly input event."""
