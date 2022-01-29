@@ -1,6 +1,7 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
 ATTR_BUTTON = "button"
+ATTR_BUTTONS = "buttons"
 ATTR_FW_ID = "fw_id"
 ATTR_ID = "id"
 ATTR_INPUT_EVENTS = "input_events"
@@ -14,6 +15,9 @@ ATTR_RELAY_SENSORS = "sensors"
 ATTR_RELAYS = "relays"
 ATTR_SWITCH = "switch"
 
+BUTTON_RESTART = "restart"
+BUTTON_UPDATE_FIRMWARE = "update_firmware"
+
 CONF_DISCOVERY_PREFIX = "discovery_prefix"
 CONF_QOS = "qos"
 
@@ -23,8 +27,13 @@ DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
+DEVICE_CLASS_RESTART = "restart"
 DEVICE_CLASS_TEMPERATURE = "temperature"
+DEVICE_CLASS_UPDATE = "update"
 DEVICE_CLASS_VOLTAGE = "voltage"
+
+ENTITY_CATEGORY_CONFIG = "config"
+ENTITY_CATEGORY_DIAGNOSTIC = "diagnostic"
 
 EVENT_DOUBLE_PUSH = "double_push"
 EVENT_LONG_PUSH = "long_push"
@@ -40,6 +49,8 @@ KEY_CONNECTIONS = "cns"
 KEY_DEVICE = "dev"
 KEY_DEVICE_CLASS = "dev_cla"
 KEY_ENABLED_BY_DEFAULT = "en"
+KEY_ENTITY_CATEGORY = "entity_category"
+KEY_ICON = "icon"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
@@ -49,6 +60,7 @@ KEY_PAYLOAD_AVAILABLE = "pl_avail"
 KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
 KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
+KEY_PAYLOAD_PRESS = "payload_press"
 KEY_QOS = "qos"
 KEY_SCHEMA = "schema"
 KEY_STATE_CLASS = "stat_cla"
@@ -113,6 +125,20 @@ DEVICE_TRIGGER_MAP = {
     EVENT_SINGLE_PUSH: TRIGGER_BUTTON_SHORT_PRESS,
 }
 
+DESCRIPTION_BUTTON_RESTART = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_RESTART,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Restart",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Reboot^}}",
+}
+DESCRIPTION_UPDATE_FIRMWARE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Update Firmware",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
+}
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -171,12 +197,20 @@ DESCRIPTION_SENSOR_VOLTAGE = {
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
         ATTR_NAME: "Shelly Plus 1",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
@@ -190,17 +224,29 @@ SUPPORTED_MODELS = {
     },
     MODEL_PLUS_I4: {
         ATTR_NAME: "Shelly Plus i4",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 4,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
     },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
@@ -214,12 +260,20 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_2: {
         ATTR_NAME: "Shelly Pro 2",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 2,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 2,
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 2,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 2,
@@ -233,6 +287,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
+        ATTR_BUTTONS: {
+            BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
+            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
         ATTR_INPUTS: 4,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 4,
@@ -273,7 +331,7 @@ def encode_config_topic(string):
 
 
 def get_switch(relay_id, relay_type):
-    """Create configuration for Shelly as switch."""
+    """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_SWITCH:
@@ -305,7 +363,7 @@ def get_switch(relay_id, relay_type):
 
 
 def get_light(relay_id, relay_type):
-    """Create configuration for Shelly relay as light."""
+    """Create configuration for Shelly relay as light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_LIGHT:
@@ -336,7 +394,7 @@ def get_light(relay_id, relay_type):
 
 
 def get_sensor(sensor, description, relay_id=None):
-    """Create configuration for Shelly sensor."""
+    """Create configuration for Shelly sensor entity."""
     switch_name = (
         device_config[f"switch:{relay_id}"][ATTR_NAME]
         or f"{device_name} Relay {relay_id}"
@@ -399,7 +457,35 @@ def get_input(input_id, input_type, event):
     return topic, payload
 
 
-def configure_device(relays, relay_sensors, inputs, input_events):
+def get_button(button, description):
+    """Create configuration for Shelly button entity."""
+    topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
+
+    payload = {
+        KEY_NAME: f"{device_name} {description[KEY_NAME]}",
+        KEY_COMMAND_TOPIC: "~rpc",
+        KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(device_id=device_id),
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
+        KEY_QOS: qos,
+        # KEY_AVAILABILITY_TOPIC: f"~online",
+        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_DEVICE: device_info,
+        "~": default_topic,
+    }
+
+    if description.get(KEY_DEVICE_CLASS):
+        payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = description[KEY_ENTITY_CATEGORY]
+    if description.get(KEY_ICON):
+        payload[KEY_ICON] = description[KEY_ICON]
+
+    return topic, payload
+
+
+def configure_device(relays, relay_sensors, inputs, input_events, buttons):
     """Create configuration for the device."""
     config = {}
 
@@ -426,6 +512,10 @@ def configure_device(relays, relay_sensors, inputs, input_events):
         for event in input_events:
             topic, payload = get_input(input_id, input_type, event)
             config[topic] = payload
+
+    for button, descripton in buttons.items():
+        topic, payload = get_button(button, descripton)
+        config[topic] = payload
 
     return config
 
@@ -474,7 +564,9 @@ input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
 relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
 
-config_data = configure_device(relays, relay_sensors, inputs, input_events)
+buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+
+config_data = configure_device(relays, relay_sensors, inputs, input_events, buttons)
 
 if config_data:
     for config_topic, config_payload in config_data.items():
