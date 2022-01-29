@@ -40,6 +40,7 @@ logger:
 
 ## Supported platforms
 
+- binary sensor
 - button
 - light
 - sensor

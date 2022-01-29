@@ -11,6 +11,7 @@ ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
 ATTR_MODEL = "model"
 ATTR_NAME = "name"
+ATTR_RELAY_BINARY_SENSORS = "binary_sensors"
 ATTR_RELAY_SENSORS = "sensors"
 ATTR_RELAYS = "relays"
 ATTR_SWITCH = "switch"
@@ -27,6 +28,7 @@ DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
+DEVICE_CLASS_PROBLEM = "problem"
 DEVICE_CLASS_RESTART = "restart"
 DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_UPDATE = "update"
@@ -87,6 +89,9 @@ MODEL_PRO_4PM = "shellypro4pm"
 
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
+SENSOR_OVERPOWER = "overpower"
+SENSOR_OVERTEMP = "overtemp"
+SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
 SENSOR_TEMPERATURE = "temperature"
@@ -101,6 +106,7 @@ TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_POWER = "{{value_json.apower|round(1)}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100|round}}"
+TPL_RELAY_ERROR = "{{{{^{sensor}^ in value_json.get(^errors^,[])}}}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 
@@ -156,6 +162,36 @@ DESCRIPTION_SENSOR_ENERGY = {
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_OVERPOWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Overpower",
+    KEY_PAYLOAD_OFF: False,
+    KEY_PAYLOAD_ON: True,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
+}
+DESCRIPTION_SENSOR_OVERTEMP = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Overtemperature",
+    KEY_PAYLOAD_OFF: False,
+    KEY_PAYLOAD_ON: True,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
+}
+DESCRIPTION_SENSOR_OVERVOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Overvoltage",
+    KEY_PAYLOAD_OFF: False,
+    KEY_PAYLOAD_ON: True,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
 }
 DESCRIPTION_SENSOR_POWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
@@ -214,6 +250,11 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
@@ -250,6 +291,11 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
@@ -277,6 +323,11 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 2,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 2,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
@@ -294,6 +345,11 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 4,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 4,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
@@ -427,11 +483,55 @@ def get_sensor(sensor, description, relay_id=None):
 
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = description[KEY_ENTITY_CATEGORY]
     if description.get(KEY_STATE_CLASS):
         payload[KEY_STATE_CLASS] = description[KEY_STATE_CLASS]
 
     return topic, payload
 
+
+def get_binary_sensor(sensor, description, relay_id=None):
+    """Create configuration for Shelly binary sensor entity."""
+    switch_name = (
+        device_config[f"switch:{relay_id}"][ATTR_NAME]
+        or f"{device_name} Relay {relay_id}"
+    )
+    if relay_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{relay_id}-{sensor}/config"
+        )
+        unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
+        sensor_name = f"{switch_name} {description[KEY_NAME]}"
+    else:
+        topic = encode_config_topic(f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config")
+        unique_id = f"{device_id}-{sensor}".lower()
+        sensor_name = f"{device_name} {description[KEY_NAME]}"
+
+    payload = {
+        KEY_NAME: sensor_name,
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay_id),
+        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE].format(sensor=sensor),
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        KEY_PAYLOAD_OFF: str(description[KEY_PAYLOAD_OFF]),
+        KEY_PAYLOAD_ON: str(description[KEY_PAYLOAD_ON]),
+        # KEY_AVAILABILITY_TOPIC: f"~online",
+        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
+        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_UNIQUE_ID: unique_id,
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        "~": default_topic,
+    }
+
+    if description.get(KEY_DEVICE_CLASS):
+        payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = description[KEY_ENTITY_CATEGORY]
+    if description.get(KEY_STATE_CLASS):
+        payload[KEY_STATE_CLASS] = description[KEY_STATE_CLASS]
+
+    return topic, payload
 
 def get_input(input_id, input_type, event):
     """Create configuration for Shelly input event."""
@@ -507,8 +607,13 @@ def configure_device(relays, relay_sensors, inputs, input_events, buttons):
             topic, payload = get_sensor(sensor, description, relay_id)
             config[topic] = payload
 
+        for binary_sensor, description in relay_binary_sensors.items():
+            topic, payload = get_binary_sensor(binary_sensor, description, relay_id)
+            config[topic] = payload
+
     for input_id in range(inputs):
         input_type = device_config[f"input:{input_id}"]["type"]
+
         for event in input_events:
             topic, payload = get_input(input_id, input_type, event)
             config[topic] = payload
@@ -563,6 +668,7 @@ input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 
 relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
 relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
+relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 
