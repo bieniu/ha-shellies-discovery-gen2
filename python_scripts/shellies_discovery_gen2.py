@@ -576,8 +576,8 @@ def get_input(input_id, input_type, event):
     payload = {
         KEY_AUTOMATION_TYPE: VALUE_TRIGGER,
         KEY_TOPIC: f"{device_id}/events/rpc",
-        KEY_PAYLOAD: event,
-        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.event}}",
+        KEY_PAYLOAD: f"{input_id}_{event}",
+        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}",
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_TYPE: DEVICE_TRIGGER_MAP[event],
