@@ -4,6 +4,7 @@ ATTR_BUTTON = "button"
 ATTR_BUTTONS = "buttons"
 ATTR_FW_ID = "fw_id"
 ATTR_ID = "id"
+ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
@@ -89,6 +90,7 @@ MODEL_PRO_4PM = "shellypro4pm"
 
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
+SENSOR_INPUT = "input"
 SENSOR_OVERPOWER = "overpower"
 SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
@@ -100,13 +102,23 @@ SENSOR_VOLTAGE = "voltage"
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
+TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
+TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_POWER = "{{value_json.apower|round(1)}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100|round}}"
-TPL_RELAY_ERROR = "{{{{^{sensor}^ in value_json.get(^errors^,[])}}}}"
+TPL_RELAY_OVERPOWER = (
+    "{%if ^overpower^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
+)
+TPL_RELAY_OVERTEMP = (
+    "{%if ^overtemp^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
+)
+TPL_RELAY_OVERVOLTAGE = (
+    "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
+)
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 
@@ -163,35 +175,34 @@ DESCRIPTION_SENSOR_ENERGY = {
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
+DESCRIPTION_SENSOR_INPUT = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_STATE_TOPIC: TOPIC_INPUT,
+    KEY_VALUE_TEMPLATE: TPL_INPUT,
+}
 DESCRIPTION_SENSOR_OVERPOWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Overpower",
-    KEY_PAYLOAD_OFF: False,
-    KEY_PAYLOAD_ON: True,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
-    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_OVERPOWER,
 }
 DESCRIPTION_SENSOR_OVERTEMP = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Overtemperature",
-    KEY_PAYLOAD_OFF: False,
-    KEY_PAYLOAD_ON: True,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
-    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_OVERTEMP,
 }
 DESCRIPTION_SENSOR_OVERVOLTAGE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Overvoltage",
-    KEY_PAYLOAD_OFF: False,
-    KEY_PAYLOAD_ON: True,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
-    KEY_VALUE_TEMPLATE: TPL_RELAY_ERROR,
+    KEY_VALUE_TEMPLATE: TPL_RELAY_OVERVOLTAGE,
 }
 DESCRIPTION_SENSOR_POWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
@@ -240,6 +251,7 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP},
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
@@ -270,6 +282,7 @@ SUPPORTED_MODELS = {
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
         },
         ATTR_INPUTS: 4,
+        ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
     },
     MODEL_PRO_1: {
@@ -281,6 +294,7 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 1,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP},
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
@@ -313,6 +327,7 @@ SUPPORTED_MODELS = {
         ATTR_INPUTS: 2,
         ATTR_INPUT_EVENTS: [EVENT_SINGLE_PUSH, EVENT_DOUBLE_PUSH, EVENT_LONG_PUSH],
         ATTR_RELAYS: 2,
+        ATTR_RELAY_BINARY_SENSORS: {SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP},
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
@@ -491,18 +506,28 @@ def get_sensor(sensor, description, relay_id=None):
     return topic, payload
 
 
-def get_binary_sensor(sensor, description, relay_id=None):
+def get_binary_sensor(
+    sensor, description, entity_id=None, is_input=False, input_type=None
+):
     """Create configuration for Shelly binary sensor entity."""
-    switch_name = (
-        device_config[f"switch:{relay_id}"][ATTR_NAME]
-        or f"{device_name} Relay {relay_id}"
-    )
-    if relay_id is not None:
-        topic = encode_config_topic(
-            f"{disc_prefix}/binary_sensor/{device_id}-{relay_id}-{sensor}/config"
+    if is_input:
+        name = (
+            device_config[f"input:{entity_id}"][ATTR_NAME]
+            or f"{device_name} Input {entity_id}"
         )
-        unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
-        sensor_name = f"{switch_name} {description[KEY_NAME]}"
+    else:
+        name = (
+            device_config[f"switch:{entity_id}"][ATTR_NAME]
+            or f"{device_name} Relay {entity_id}"
+        )
+    if entity_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{entity_id}-{sensor}/config"
+        )
+        unique_id = f"{device_id}-{entity_id}-{sensor}".lower()
+        sensor_name = (
+            f"{name} {description[KEY_NAME]}" if description.get(KEY_NAME) else name
+        )
     else:
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
@@ -510,13 +535,15 @@ def get_binary_sensor(sensor, description, relay_id=None):
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = f"{device_name} {description[KEY_NAME]}"
 
+    if is_input and input_type != ATTR_SWITCH:
+        payload = ""
+        return topic, payload
+
     payload = {
         KEY_NAME: sensor_name,
-        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay_id),
-        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE].format(sensor=sensor),
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=entity_id),
+        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
-        KEY_PAYLOAD_OFF: str(description[KEY_PAYLOAD_OFF]),
-        KEY_PAYLOAD_ON: str(description[KEY_PAYLOAD_ON]),
         # KEY_AVAILABILITY_TOPIC: f"~online",
         # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
         # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
@@ -588,7 +615,7 @@ def get_button(button, description):
     return topic, payload
 
 
-def configure_device(relays, relay_sensors, inputs, input_events, buttons):
+def configure_device():
     """Create configuration for the device."""
     config = {}
 
@@ -619,6 +646,16 @@ def configure_device(relays, relay_sensors, inputs, input_events, buttons):
 
         for event in input_events:
             topic, payload = get_input(input_id, input_type, event)
+            config[topic] = payload
+
+        for binary_sensor, description in input_binary_sensors.items():
+            topic, payload = get_binary_sensor(
+                binary_sensor,
+                description,
+                input_id,
+                is_input=True,
+                input_type=input_type,
+            )
             config[topic] = payload
 
     for button, descripton in buttons.items():
@@ -668,6 +705,7 @@ device_info = {
 
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
+input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
 
 relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
 relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
@@ -675,7 +713,7 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 
-config_data = configure_device(relays, relay_sensors, inputs, input_events, buttons)
+config_data = configure_device()
 
 if config_data:
     for config_topic, config_payload in config_data.items():
