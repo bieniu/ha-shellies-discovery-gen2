@@ -521,7 +521,7 @@ def get_sensor(sensor, description, relay_id=None):
         "~": default_topic,
     }
 
-    if relay_id:
+    if relay_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
