@@ -108,6 +108,7 @@ STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_RPC = "~rpc"
+TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 
 TPL_CURRENT = "{{value_json.current|round(1)}}"
@@ -253,7 +254,7 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "WiFi Signal",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: "~status/rpc",
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
 }
