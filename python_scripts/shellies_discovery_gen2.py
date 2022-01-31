@@ -15,6 +15,7 @@ ATTR_NAME = "name"
 ATTR_RELAY_BINARY_SENSORS = "binary_sensors"
 ATTR_RELAY_SENSORS = "sensors"
 ATTR_RELAYS = "relays"
+ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
 
 BUTTON_RESTART = "restart"
@@ -31,6 +32,7 @@ DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
 DEVICE_CLASS_RESTART = "restart"
+DEVICE_CLASS_SIGNAL_STRENGTH = "signal_strength"
 DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_UPDATE = "update"
 DEVICE_CLASS_VOLTAGE = "voltage"
@@ -98,11 +100,13 @@ SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
 SENSOR_TEMPERATURE = "temperature"
 SENSOR_VOLTAGE = "voltage"
+SENSOR_WIFI_SIGNAL = "wifi_signal"
 
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_INPUT = "~status/input:{relay}"
+TOPIC_RPC = "~rpc"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 
 TPL_CURRENT = "{{value_json.current|round(1)}}"
@@ -121,6 +125,7 @@ TPL_RELAY_OVERVOLTAGE = (
 )
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
+TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_LONG_PRESS = "button_long_press"
@@ -128,6 +133,7 @@ TRIGGER_BUTTON_SHORT_PRESS = "button_short_press"
 
 UNIT_AMPERE = "A"
 UNIT_CELSIUS = "°C"
+UNIT_DBM = "dBm"
 UNIT_PERCENT = "%"
 UNIT_VOLT = "V"
 UNIT_WATT = "W"
@@ -240,6 +246,16 @@ DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
 }
+DESCRIPTION_SENSOR_WIFI_SIGNAL = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "WiFi Signal",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_RPC,
+    KEY_UNIT: UNIT_DBM,
+    KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
+}
 
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
@@ -275,6 +291,9 @@ SUPPORTED_MODELS = {
             SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
     },
     MODEL_PLUS_I4: {
@@ -422,7 +441,7 @@ def get_switch(relay_id, relay_type):
     )
     payload = {
         KEY_NAME: relay_name,
-        KEY_COMMAND_TOPIC: "~rpc",
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
@@ -455,7 +474,7 @@ def get_light(relay_id, relay_type):
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: relay_name,
-        KEY_COMMAND_TOPIC: "~rpc",
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
@@ -473,11 +492,11 @@ def get_light(relay_id, relay_type):
 
 def get_sensor(sensor, description, relay_id=None):
     """Create configuration for Shelly sensor entity."""
-    switch_name = (
-        device_config[f"switch:{relay_id}"][ATTR_NAME]
-        or f"{device_name} Relay {relay_id}"
-    )
     if relay_id is not None:
+        switch_name = (
+            device_config[f"switch:{relay_id}"][ATTR_NAME]
+            or f"{device_name} Relay {relay_id}"
+        )
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{relay_id}-{sensor}/config"
         )
@@ -490,7 +509,6 @@ def get_sensor(sensor, description, relay_id=None):
 
     payload = {
         KEY_NAME: sensor_name,
-        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=relay_id),
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_UNIT: description[KEY_UNIT],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
@@ -503,6 +521,10 @@ def get_sensor(sensor, description, relay_id=None):
         "~": default_topic,
     }
 
+    if relay_id:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
+    else:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
@@ -600,7 +622,7 @@ def get_button(button, description):
 
     payload = {
         KEY_NAME: f"{device_name} {description[KEY_NAME]}",
-        KEY_COMMAND_TOPIC: "~rpc",
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(device_id=device_id),
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
@@ -669,6 +691,10 @@ def configure_device():
         topic, payload = get_button(button, descripton)
         config[topic] = payload
 
+    for sensor, description in sensors.items():
+        topic, payload = get_sensor(sensor, description)
+        config[topic] = payload
+
     return config
 
 
@@ -719,6 +745,7 @@ relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
 relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 
 config_data = configure_device()
 
