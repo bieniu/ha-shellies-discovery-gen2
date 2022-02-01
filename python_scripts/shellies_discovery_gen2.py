@@ -1,5 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
+ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
 ATTR_BUTTONS = "buttons"
 ATTR_FW_ID = "fw_id"
@@ -26,6 +27,7 @@ CONF_QOS = "qos"
 
 DEFAULT_DISC_PREFIX = "homeassistant"
 
+DEVICE_CLASS_CONNECTIVITY = "connectivity"
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_POWER = "power"
@@ -52,6 +54,7 @@ KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TOPIC = "cmd_t"
 KEY_CONFIGURATION_URL = "cu"
 KEY_CONNECTIONS = "cns"
+KEY_DEFAULT_TOPIC = "~"
 KEY_DEVICE = "dev"
 KEY_DEVICE_CLASS = "dev_cla"
 KEY_ENABLED_BY_DEFAULT = "en"
@@ -92,6 +95,7 @@ MODEL_PRO_2 = "shellypro2"
 MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_4PM = "shellypro4pm"
 
+SENSOR_CLOUD = "cloud"
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
 SENSOR_INPUT = "input"
@@ -114,6 +118,7 @@ TOPIC_RPC = "~rpc"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 
+TPL_CLOUD = "{%if value_json.result.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
@@ -169,6 +174,14 @@ DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Update Firmware",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
+}
+DESCRIPTION_SENSOR_CLOUD = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CONNECTIVITY,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Cloud",
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
+    KEY_VALUE_TEMPLATE: TPL_CLOUD,
 }
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -300,6 +313,7 @@ SUPPORTED_MODELS = {
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -514,7 +528,7 @@ def get_switch(relay_id, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": default_topic,
+        KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
 
@@ -545,7 +559,7 @@ def get_light(relay_id, relay_type):
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": default_topic,
+        KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
 
@@ -577,7 +591,7 @@ def get_sensor(sensor, description, relay_id=None):
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": default_topic,
+        KEY_DEFAULT_TOPIC: default_topic,
     }
 
     if relay_id is not None:
@@ -608,7 +622,7 @@ def get_binary_sensor(
             device_config[f"input:{entity_id}"][ATTR_NAME]
             or f"{device_name} Input {entity_id}"
         )
-    else:
+    elif entity_id is not None:
         name = (
             device_config[f"switch:{entity_id}"][ATTR_NAME]
             or f"{device_name} Relay {entity_id}"
@@ -634,7 +648,6 @@ def get_binary_sensor(
 
     payload = {
         KEY_NAME: sensor_name,
-        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC].format(relay=entity_id),
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         # KEY_AVAILABILITY_TOPIC: f"~online",
@@ -643,8 +656,13 @@ def get_binary_sensor(
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
-        "~": default_topic,
+        KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if entity_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=entity_id)
+    else:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
@@ -695,7 +713,7 @@ def get_button(button, description):
         # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
         # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
         KEY_DEVICE: device_info,
-        "~": default_topic,
+        KEY_DEFAULT_TOPIC: default_topic,
     }
 
     if description.get(KEY_DEVICE_CLASS):
@@ -759,6 +777,10 @@ def configure_device():
         topic, payload = get_sensor(sensor, description)
         config[topic] = payload
 
+    for binary_sensor, description in binary_sensors.items():
+        topic, payload = get_binary_sensor(binary_sensor, description)
+        config[topic] = payload
+
     return config
 
 
@@ -810,6 +832,7 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
 
 config_data = configure_device()
 
