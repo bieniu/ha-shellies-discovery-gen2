@@ -101,6 +101,21 @@ python_script:
     data:
       id: "{{ trigger.payload_json.src }}"
       device_config: "{{ trigger.payload_json.result }}"
+
+- id: shellies_status_gen2
+  alias: "Shellies Status Gen2"
+  trigger:
+  - platform: time_pattern
+    minutes: "/15"
+  action:
+  - service: mqtt.publish
+    data:
+      topic: shellyplus1pm-a8032ab22864/rpc
+      payload: "{{ {'id': 1, 'src':'shellypro4pm-aabbccddeeff/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellypro4pm-aabbccddeeff is a device ID
+  - service: mqtt.publish
+    data:
+      topic: shellyplusi4-30839809e6ac/rpc
+      payload: "{{ {'id': 1, 'src':'shellyplus1pm-112233445566/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellyplus1pm-112233445566 is a device ID
 ```
 
 [forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
