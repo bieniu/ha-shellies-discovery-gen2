@@ -48,6 +48,8 @@ EVENT_LONG_PUSH = "long_push"
 EVENT_SINGLE_PUSH = "single_push"
 
 KEY_AUTOMATION_TYPE = "atype"
+KEY_AVAILABILITY = "avty"
+KEY_AVAILABILITY_MODE = "avty_mode"
 KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
@@ -65,8 +67,8 @@ KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
 KEY_PAYLOAD = "pl"
-KEY_PAYLOAD_AVAILABLE = "pl_avail"
-KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
+KEY_PAYLOAD_AVAILABLE = "payload_available"
+KEY_PAYLOAD_NOT_AVAILABLE = "payload_not_available"
 KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
 KEY_PAYLOAD_PRESS = "payload_press"
@@ -80,11 +82,13 @@ KEY_STATE_TOPIC = "stat_t"
 KEY_SUBTYPE = "stype"
 KEY_SW_VERSION = "sw"
 KEY_TOPIC = "t"
+KEY_TOPIC_LONG = "topic"
 KEY_TOPIC_SUFFIX = "topic_suffix"
 KEY_TYPE = "type"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_UNIT = "unit_of_meas"
 KEY_VALUE_TEMPLATE = "val_tpl"
+KEY_VALUE_TEMPLATE_LONG = "value_template"
 
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
@@ -114,6 +118,7 @@ STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_INPUT = "~status/input:{relay}"
+TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
@@ -138,6 +143,9 @@ TPL_UPTIME = "{{(as_timestamp(now())-value_json.result.sys.uptime)|timestamp_loc
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 TPL_WIFI_SIGNAL = "{{value_json.result.wifi.rssi}}"
 TPL_WIFI_SSID = "{{value_json.result.wifi.ssid}}"
+TPL_MQTT_CONNECTED = (
+    "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
+)
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_LONG_PRESS = "button_long_press"
@@ -486,7 +494,6 @@ def mqtt_publish(topic, payload):
         "retain": True,
         "qos": 0,
     }
-    logger.debug(service_data)  # noqa: F821
     logger.debug("Sending to MQTT broker: %s %s", topic, payload_str)  # noqa: F821
     hass.services.call("mqtt", "publish", service_data, False)  # noqa: F821
 
@@ -522,9 +529,7 @@ def get_switch(relay_id, relay_type):
         KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
-        # KEY_AVAILABILITY_TOPIC: f"~online",
-        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
@@ -553,9 +558,7 @@ def get_light(relay_id, relay_type):
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
-        # KEY_AVAILABILITY_TOPIC: f"~online",
-        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
@@ -585,9 +588,7 @@ def get_sensor(sensor, description, relay_id=None):
         KEY_NAME: sensor_name,
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
-        # KEY_AVAILABILITY_TOPIC: f"~online",
-        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
@@ -650,9 +651,7 @@ def get_binary_sensor(
         KEY_NAME: sensor_name,
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
-        # KEY_AVAILABILITY_TOPIC: f"~online",
-        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
@@ -709,9 +708,7 @@ def get_button(button, description):
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
         KEY_QOS: qos,
-        # KEY_AVAILABILITY_TOPIC: f"~online",
-        # KEY_PAYLOAD_AVAILABLE: VALUE_TRUE,
-        # KEY_PAYLOAD_NOT_AVAILABLE: VALUE_FALSE,
+        KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
@@ -821,6 +818,19 @@ device_info = {
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
     KEY_CONFIGURATION_URL: device_url,
 }
+
+# do not use constants with an abbreviation here
+availability = [
+    {
+        KEY_TOPIC_LONG: TOPIC_ONLINE,
+        KEY_PAYLOAD_AVAILABLE: "true",
+        KEY_PAYLOAD_NOT_AVAILABLE: "false",
+    },
+    {
+        KEY_TOPIC_LONG: TOPIC_STATUS_RPC,
+        KEY_VALUE_TEMPLATE_LONG: TPL_MQTT_CONNECTED,
+    },
+]
 
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
