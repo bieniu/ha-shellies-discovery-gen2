@@ -114,6 +114,8 @@ python_script:
   trigger:
   - platform: time_pattern
     minutes: "/15"
+  - platform: homeassistant
+    event: start
   action:
   - service: mqtt.publish
     data:
