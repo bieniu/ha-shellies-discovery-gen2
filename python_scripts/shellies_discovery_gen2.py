@@ -38,6 +38,7 @@ DEVICE_CLASS_SIGNAL_STRENGTH = "signal_strength"
 DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_TIMESTAMP = "timestamp"
 DEVICE_CLASS_UPDATE = "update"
+DEVICE_CLASS_UPDATE = "update"
 DEVICE_CLASS_VOLTAGE = "voltage"
 
 ENTITY_CATEGORY_CONFIG = "config"
@@ -61,6 +62,8 @@ KEY_DEVICE_CLASS = "dev_cla"
 KEY_ENABLED_BY_DEFAULT = "en"
 KEY_ENTITY_CATEGORY = "entity_category"
 KEY_ICON = "icon"
+KEY_JSON_ATTRIBUTES_TEMPLATE = "json_attributes_template"
+KEY_JSON_ATTRIBUTES_TOPIC = "json_attributes_topic"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
@@ -102,6 +105,7 @@ SENSOR_CLOUD = "cloud"
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
 SENSOR_ETH_IP = "eth_ip"
+SENSOR_FIRMWARE = "firmware"
 SENSOR_INPUT = "input"
 SENSOR_LAST_RESTART = "last_restart"
 SENSOR_OVERPOWER = "overpower"
@@ -128,6 +132,8 @@ TPL_CLOUD = "{%if value_json.result.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
+TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
+TPL_FIRMWARE_STABLE_ATTRS = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable|to_json}}{%endif%}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_MQTT_CONNECTED = (
     "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
@@ -146,7 +152,7 @@ TPL_RELAY_OVERVOLTAGE = (
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.result.sys.uptime)|timestamp_local}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
-TPL_WIFI_IP = "{{value_json.result.wifi.ip}}"
+TPL_WIFI_IP = "{{value_json.result.wifi.sta_ip}}"
 TPL_WIFI_SIGNAL = "{{value_json.result.wifi.rssi}}"
 TPL_WIFI_SSID = "{{value_json.result.wifi.ssid}}"
 
@@ -219,6 +225,16 @@ DESCRIPTION_SENSOR_ETH_IP = {
     KEY_NAME: "Ethernet IP",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_ETH_IP,
+}
+DESCRIPTION_SENSOR_FIRMWARE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Firmware",
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
+    KEY_VALUE_TEMPLATE: TPL_FIRMWARE_STABLE,
+    KEY_JSON_ATTRIBUTES_TOPIC: TOPIC_STATUS_RPC,
+    KEY_JSON_ATTRIBUTES_TEMPLATE: TPL_FIRMWARE_STABLE_ATTRS,
 }
 DESCRIPTION_SENSOR_INPUT = {
     KEY_ENABLED_BY_DEFAULT: False,
@@ -323,6 +339,10 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
         ATTR_NAME: "Shelly Plus 1",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -341,7 +361,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
-        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -371,6 +394,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PLUS_I4: {
         ATTR_NAME: "Shelly Plus i4",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -387,6 +414,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -406,6 +437,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -436,6 +471,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_2: {
         ATTR_NAME: "Shelly Pro 2",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -455,6 +494,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -485,6 +528,10 @@ SUPPORTED_MODELS = {
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -695,6 +742,13 @@ def get_binary_sensor(
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
+    if description.get(KEY_JSON_ATTRIBUTES_TOPIC) and description.get(
+        KEY_JSON_ATTRIBUTES_TEMPLATE
+    ):
+        payload[KEY_JSON_ATTRIBUTES_TOPIC] = description[KEY_JSON_ATTRIBUTES_TOPIC]
+        payload[KEY_JSON_ATTRIBUTES_TEMPLATE] = description[
+            KEY_JSON_ATTRIBUTES_TEMPLATE
+        ]
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
