@@ -61,10 +61,6 @@ logger:
 - if the input type is set to button, device automation triggers are available
 - custom MQTT prefixes are supported
 
-## Known problems
-
-- availability doesn’t work (firmware change is needed)
-
 ## Script arguments
 
 key | optional | type | default | description
