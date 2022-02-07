@@ -108,11 +108,11 @@ python_script:
   action:
   - service: mqtt.publish
     data:
-      topic: shellyplus1pm-a8032ab22864/rpc
+      topic: shellypro4pm-aabbccddeeff/rpc
       payload: "{{ {'id': 1, 'src':'shellypro4pm-aabbccddeeff/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellypro4pm-aabbccddeeff is a device ID
   - service: mqtt.publish
     data:
-      topic: shellyplusi4-30839809e6ac/rpc
+      topic: shellyplus1pm-112233445566/rpc
       payload: "{{ {'id': 1, 'src':'shellyplus1pm-112233445566/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellyplus1pm-112233445566 is a device ID
 ```
 
