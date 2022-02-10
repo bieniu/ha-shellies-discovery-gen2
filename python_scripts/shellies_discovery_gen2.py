@@ -148,7 +148,9 @@ TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
 TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
-TPL_FIRMWARE_STABLE_ATTRS = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable|to_json}}{%endif%}"
+TPL_FIRMWARE_STABLE_ATTRS = (
+    "{{value_json.result.sys.available_updates.get(^stable^, {})}}"
+)
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_MQTT_CONNECTED = (
     "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
@@ -333,6 +335,15 @@ DESCRIPTION_SENSOR_POWER_FACTOR = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_POWER_FACTOR,
 }
+DESCRIPTION_SENSOR_POWER_FACTOR_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Power Factor",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_COVER,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_POWER_FACTOR,
+}
 DESCRIPTION_SENSOR_SSID = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
@@ -467,6 +478,7 @@ SUPPORTED_MODELS = {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT_COVER,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY_COVER,
             SENSOR_POWER: DESCRIPTION_SENSOR_POWER_COVER,
+            SENSOR_POWER_FACTOR: DESCRIPTION_SENSOR_POWER_FACTOR_COVER,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_COVER,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE_COVER,
         },
@@ -482,6 +494,7 @@ SUPPORTED_MODELS = {
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_POWER_FACTOR: DESCRIPTION_SENSOR_POWER_FACTOR,
             SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
@@ -804,7 +817,7 @@ def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
     if cover_id is not None:
         switch_name = (
             device_config[f"cover:{cover_id}"][ATTR_NAME]
-            or f"{device_name} Cover {relay_id}"
+            or f"{device_name} Cover {cover_id}"
         )
         unique_id = f"{device_id}-cover-{cover_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
