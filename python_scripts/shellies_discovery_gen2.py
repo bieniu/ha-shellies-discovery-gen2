@@ -14,6 +14,7 @@ ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
 ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
+ATTR_MIN_FIRMWARE_DATE = "min_firmware_date"
 ATTR_MODEL = "model"
 ATTR_NAME = "name"
 ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
@@ -429,6 +430,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PLUS_1PM: {
         ATTR_NAME: "Shelly Plus 1PM",
@@ -462,6 +464,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PLUS_2PM: {
         ATTR_NAME: "Shelly Plus 2PM",
@@ -505,6 +508,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220205,
     },
     MODEL_PLUS_I4: {
         ATTR_NAME: "Shelly Plus i4",
@@ -525,6 +529,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
@@ -548,6 +553,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PRO_1PM: {
         ATTR_NAME: "Shelly Pro 1PM",
@@ -582,6 +588,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PRO_2: {
         ATTR_NAME: "Shelly Pro 2",
@@ -605,6 +612,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
@@ -639,6 +647,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
@@ -674,6 +683,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_MIN_FIRMWARE_DATE: 20220117,
     },
 }
 
@@ -1092,6 +1102,18 @@ if qos not in (0, 1, 2):
     raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
 disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
+
+min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
+try:
+    firmware_date = int(firmware_id.split("-", 1)[0])
+except ValueError:
+    raise ValueError(
+        f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
+    )
+if firmware_date < min_firmware_date:
+    raise ValueError(
+        f"firmware dated {min_firmware_date} is required, update your device {device_id}"
+    )
 
 device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
