@@ -3,6 +3,9 @@
 ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
 ATTR_BUTTONS = "buttons"
+ATTR_COVER = "cover"
+ATTR_COVER_SENSORS = "cover_sensors"
+ATTR_COVERS = "covers"
 ATTR_FW_ID = "fw_id"
 ATTR_ID = "id"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
@@ -70,15 +73,25 @@ KEY_MODEL = "mdl"
 KEY_NAME = "name"
 KEY_PAYLOAD = "pl"
 KEY_PAYLOAD_AVAILABLE = "payload_available"
+KEY_PAYLOAD_CLOSE = "pl_cls"
 KEY_PAYLOAD_NOT_AVAILABLE = "payload_not_available"
 KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
+KEY_PAYLOAD_OPEN = "pl_open"
 KEY_PAYLOAD_PRESS = "payload_press"
+KEY_PAYLOAD_STOP = "pl_stop"
+KEY_POSITION_TEMPLATE = "pos_tpl"
+KEY_POSITION_TOPIC = "pos_t"
 KEY_QOS = "qos"
 KEY_SCHEMA = "schema"
+KEY_SET_POSITION_TEMPLATE = "set_pos_tpl"
+KEY_SET_POSITION_TOPIC = "set_pos_t"
 KEY_STATE_CLASS = "stat_cla"
+KEY_STATE_CLOSING = "stat_closing"
 KEY_STATE_OFF = "stat_off"
 KEY_STATE_ON = "stat_on"
+KEY_STATE_OPENING = "stat_opening"
+KEY_STATE_STOPPED = "stat_stopped"
 KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
 KEY_SUBTYPE = "stype"
@@ -123,6 +136,7 @@ SENSOR_WIFI_SIGNAL = "wifi_signal"
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
+TOPIC_COVER = "~status/cover:{cover}"
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
@@ -210,12 +224,30 @@ DESCRIPTION_SENSOR_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
 }
+DESCRIPTION_SENSOR_CURRENT_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_COVER,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
 DESCRIPTION_SENSOR_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_ENERGY_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_COVER,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
@@ -283,6 +315,15 @@ DESCRIPTION_SENSOR_POWER = {
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
 }
+DESCRIPTION_SENSOR_POWER_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_COVER,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
 DESCRIPTION_SENSOR_POWER_FACTOR = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -309,12 +350,30 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
 }
+DESCRIPTION_SENSOR_TEMPERATURE_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_COVER,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
+}
 DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_VOLTAGE_COVER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_COVER,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
 }
@@ -402,6 +461,14 @@ SUPPORTED_MODELS = {
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
             BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+        },
+        ATTR_COVERS: 1,
+        ATTR_COVER_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT_COVER,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY_COVER,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER_COVER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_COVER,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE_COVER,
         },
         ATTR_INPUTS: 2,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -621,11 +688,44 @@ def encode_config_topic(string):
     return string.encode("ascii", "ignore").decode("utf-8")
 
 
-def get_switch(relay_id, relay_type):
+def get_cover(cover_id, profile):
+    """Create configuration for Shelly cover entity."""
+    topic = encode_config_topic(f"{disc_prefix}/cover/{device_id}-{cover_id}/config")
+
+    if profile != ATTR_COVER:
+        payload = ""
+        return topic, payload
+
+    cover_name = (
+        device_config[f"cover:{cover_id}"][ATTR_NAME]
+        or f"{device_name} Cover {cover_id}"
+    )
+    payload = {
+        KEY_NAME: cover_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_POSITION_TOPIC: TOPIC_COVER.format(cover=cover_id),
+        KEY_STATE_TOPIC: TOPIC_COVER.format(cover=cover_id),
+        KEY_VALUE_TEMPLATE: "{%if value_json.state!=^calibrating^%}{{value_json.state}}{%endif%}",
+        KEY_POSITION_TEMPLATE: "{%if is_number(value_json.get(^current_pos^))%}{{value_json.current_pos}}{%endif%}",
+        KEY_SET_POSITION_TOPIC: TOPIC_RPC,
+        KEY_SET_POSITION_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^pos^:position}}}}",
+        KEY_PAYLOAD_OPEN: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Open^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_PAYLOAD_CLOSE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Close^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_PAYLOAD_STOP: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Stop^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-{cover_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
+def get_switch(relay_id, relay_type, profile):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
-    if relay_type != ATTR_SWITCH:
+    if relay_type != ATTR_SWITCH or profile == ATTR_COVER:
         payload = ""
         return topic, payload
 
@@ -651,11 +751,11 @@ def get_switch(relay_id, relay_type):
     return topic, payload
 
 
-def get_light(relay_id, relay_type):
+def get_light(relay_id, relay_type, profile):
     """Create configuration for Shelly relay as light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{relay_id}/config")
 
-    if relay_type != ATTR_LIGHT:
+    if relay_type != ATTR_LIGHT or profile == ATTR_COVER:
         payload = ""
         return topic, payload
 
@@ -680,20 +780,42 @@ def get_light(relay_id, relay_type):
     return topic, payload
 
 
-def get_sensor(sensor, description, relay_id=None):
+def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
     """Create configuration for Shelly sensor entity."""
-    if relay_id is not None:
+    if cover_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-cover-{cover_id}-{sensor}/config"
+        )
+    elif relay_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{relay_id}-{sensor}/config"
+        )
+    else:
+        topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
+
+    if profile == ATTR_COVER and cover_id is None:
+        payload = ""
+        return topic, payload
+
+    if profile == ATTR_SWITCH and relay_id is None:
+        payload = ""
+        return topic, payload
+
+    if cover_id is not None:
+        switch_name = (
+            device_config[f"cover:{cover_id}"][ATTR_NAME]
+            or f"{device_name} Cover {relay_id}"
+        )
+        unique_id = f"{device_id}-cover-{cover_id}-{sensor}".lower()
+        sensor_name = f"{switch_name} {description[KEY_NAME]}"
+    elif relay_id is not None:
         switch_name = (
             device_config[f"switch:{relay_id}"][ATTR_NAME]
             or f"{device_name} Relay {relay_id}"
         )
-        topic = encode_config_topic(
-            f"{disc_prefix}/sensor/{device_id}-{relay_id}-{sensor}/config"
-        )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     else:
-        topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = f"{device_name} {description[KEY_NAME]}"
 
@@ -708,7 +830,9 @@ def get_sensor(sensor, description, relay_id=None):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
-    if relay_id is not None:
+    if cover_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(cover=cover_id)
+    elif relay_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
@@ -728,9 +852,22 @@ def get_sensor(sensor, description, relay_id=None):
 
 
 def get_binary_sensor(
-    sensor, description, entity_id=None, is_input=False, input_type=None
+    sensor, description, entity_id=None, is_input=False, input_type=None, profile=None
 ):
     """Create configuration for Shelly binary sensor entity."""
+    if entity_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{entity_id}-{sensor}/config"
+        )
+    else:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
+        )
+
+    if profile == ATTR_COVER:
+        payload = ""
+        return topic, payload
+
     if is_input:
         name = (
             device_config[f"input:{entity_id}"][ATTR_NAME]
@@ -742,17 +879,11 @@ def get_binary_sensor(
             or f"{device_name} Relay {entity_id}"
         )
     if entity_id is not None:
-        topic = encode_config_topic(
-            f"{disc_prefix}/binary_sensor/{device_id}-{entity_id}-{sensor}/config"
-        )
         unique_id = f"{device_id}-{entity_id}-{sensor}".lower()
         sensor_name = (
             f"{name} {description[KEY_NAME]}" if description.get(KEY_NAME) else name
         )
     else:
-        topic = encode_config_topic(
-            f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
-        )
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = f"{device_name} {description[KEY_NAME]}"
 
@@ -847,6 +978,18 @@ def configure_device():
     """Create configuration for the device."""
     config = {}
 
+    profile = device_config["sys"]["device"].get("profile", ATTR_SWITCH)
+
+    for cover_id in range(covers):
+        topic, payload = get_cover(cover_id, profile)
+        config[topic] = payload
+
+        for sensor, description in cover_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, profile=profile, cover_id=cover_id
+            )
+            config[topic] = payload
+
     for relay_id in range(relays):
         relay_type = (
             ATTR_LIGHT
@@ -858,18 +1001,22 @@ def configure_device():
             else ATTR_SWITCH
         )
 
-        topic, payload = get_switch(relay_id, relay_type)
+        topic, payload = get_switch(relay_id, relay_type, profile)
         config[topic] = payload
 
-        topic, payload = get_light(relay_id, relay_type)
+        topic, payload = get_light(relay_id, relay_type, profile)
         config[topic] = payload
 
         for sensor, description in relay_sensors.items():
-            topic, payload = get_sensor(sensor, description, relay_id)
+            topic, payload = get_sensor(
+                sensor, description, profile=profile, relay_id=relay_id
+            )
             config[topic] = payload
 
         for binary_sensor, description in relay_binary_sensors.items():
-            topic, payload = get_binary_sensor(binary_sensor, description, relay_id)
+            topic, payload = get_binary_sensor(
+                binary_sensor, description, relay_id, profile=profile
+            )
             config[topic] = payload
 
     for input_id in range(inputs):
@@ -966,6 +1113,9 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+
+covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
+cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
 
 config_data = configure_device()
 
