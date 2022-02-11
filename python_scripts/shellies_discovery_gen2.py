@@ -1014,15 +1014,11 @@ def configure_device():
             config[topic] = payload
 
     for relay_id in range(relays):
-        relay_type = (
-            ATTR_LIGHT
-            if ATTR_LIGHT
-            in device_config["sys"]["ui_data"]
-            .get("consumption_types", {})
-            .get(relay_id, "switch")
-            .lower()
-            else ATTR_SWITCH
-        )
+        consumption_types = [
+            item.lower()
+            for item in device_config["sys"]["device"].get("consumption_types", [])
+        ]
+        relay_type = ATTR_LIGHT if ATTR_LIGHT in consumption_types else ATTR_SWITCH
 
         topic, payload = get_switch(relay_id, relay_type, profile)
         config[topic] = payload
