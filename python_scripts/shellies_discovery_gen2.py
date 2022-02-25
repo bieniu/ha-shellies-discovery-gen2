@@ -150,7 +150,7 @@ TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
 TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 TPL_FIRMWARE_STABLE_ATTRS = (
-    "{{value_json.result.sys.available_updates.get(^stable^, {})}}"
+    "{{value_json.result.sys.available_updates.get(^stable^, {})|to_json}}"
 )
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_MQTT_CONNECTED = (
