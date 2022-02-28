@@ -26,7 +26,7 @@ You won't find **Shellies Discovery Gen2** in the HACS **Integrations** section,
 - Shelly Plus 1
 - Shelly Plus 1PM
 - Shelly Plus 2PM
-- Shelly Plus i4
+- Shelly Plus I4
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2
