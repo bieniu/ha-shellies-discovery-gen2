@@ -697,6 +697,16 @@ SUPPORTED_MODELS = {
 }
 
 
+def get_consumption_type(consumption_list, relay_id):
+    """Return consumption type for relay."""
+    try:
+        consumption_type = consumption_list[relay_id]
+    except IndexError:
+        return ATTR_SWITCH
+
+    return ATTR_LIGHT if "light" in consumption_type else ATTR_SWITCH
+
+
 def mqtt_publish(topic, payload):
     """Publish data to MQTT broker."""
     payload_str = str(payload).replace("'", '"').replace("^", '\\"')
@@ -1025,13 +1035,9 @@ def configure_device():
     for relay_id in range(relays):
         consumption_types = [
             item.lower()
-            for item in device_config["sys"]["device"].get("consumption_types", [])
+            for item in device_config["sys"]["ui_data"].get("consumption_types", [])
         ]
-        relay_type = (
-            ATTR_LIGHT
-            if "light" in consumption_types or "lights" in consumption_types
-            else ATTR_SWITCH
-        )
+        relay_type = get_consumption_type(consumption_types, relay_id)
 
         topic, payload = get_switch(relay_id, relay_type, profile)
         config[topic] = payload
