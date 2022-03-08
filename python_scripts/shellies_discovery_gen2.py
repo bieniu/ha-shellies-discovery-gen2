@@ -750,7 +750,7 @@ def get_cover(cover_id, profile):
         KEY_VALUE_TEMPLATE: "{%if value_json.state!=^calibrating^%}{{value_json.state}}{%endif%}",
         KEY_POSITION_TEMPLATE: "{%if is_number(value_json.get(^current_pos^))%}{{value_json.current_pos}}{%endif%}",
         KEY_SET_POSITION_TOPIC: TOPIC_RPC,
-        KEY_SET_POSITION_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^pos^:position}}}}",
+        KEY_SET_POSITION_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^pos^:{{{{position}}}}}}}}",
         KEY_PAYLOAD_OPEN: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Open^,^params^:{{^id^:{cover_id}}}}}",
         KEY_PAYLOAD_CLOSE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Close^,^params^:{{^id^:{cover_id}}}}}",
         KEY_PAYLOAD_STOP: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Stop^,^params^:{{^id^:{cover_id}}}}}",
