@@ -1090,33 +1090,17 @@ def configure_device():
 
 
 device_id = data[ATTR_ID]  # noqa: F821
-device_config = data["device_config"]  # noqa: F821
-firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
-mac = device_config["sys"]["device"][ATTR_MAC]
-device_name = device_config["sys"]["device"][ATTR_NAME]
-device_url = f"http://{device_config['mqtt']['topic_prefix']}.local/"
-default_topic = f"{device_config['mqtt']['topic_prefix']}/"
+if device_id is None:
+    raise ValueError("id value None is not valid, check script configuration")
 
 model = device_id.rsplit("-", 1)[0]
-
 if model not in SUPPORTED_MODELS:
     raise ValueError(
         f"model {model} is not supported, please open an issue here https://github.com/bieniu/ha-shellies-discovery-gen2/issues"
     )
 
-if not device_name:
-    device_name = SUPPORTED_MODELS[model][ATTR_NAME]
-
-if device_id is None:
-    raise ValueError("id value None is not valid, check script configuration")
-if mac is None:
-    raise ValueError("mac value None is not valid, check script configuration")
-
-qos = data.get(CONF_QOS, 0)  # noqa: F821
-if qos not in (0, 1, 2):
-    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
-
-disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
+device_config = data["device_config"]  # noqa: F821
+firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
@@ -1129,6 +1113,23 @@ if firmware_date < min_firmware_date:
     raise ValueError(
         f"firmware dated {min_firmware_date} is required, update your device {device_id}"
     )
+
+mac = device_config["sys"]["device"][ATTR_MAC]
+if mac is None:
+    raise ValueError("mac value None is not valid, check script configuration")
+
+device_name = device_config["sys"]["device"][ATTR_NAME]
+device_url = f"http://{device_config['mqtt']['topic_prefix']}.local/"
+default_topic = f"{device_config['mqtt']['topic_prefix']}/"
+
+if not device_name:
+    device_name = SUPPORTED_MODELS[model][ATTR_NAME]
+
+qos = data.get(CONF_QOS, 0)  # noqa: F821
+if qos not in (0, 1, 2):
+    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
+
+disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
 device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
