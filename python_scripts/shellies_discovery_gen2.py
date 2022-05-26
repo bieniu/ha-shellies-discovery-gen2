@@ -109,6 +109,7 @@ KEY_VALUE_TEMPLATE_LONG = "value_template"
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
 MODEL_PLUS_2PM = "shellyplus2pm"
+MODEL_PLUS_HT = "shellyplusht"
 MODEL_PLUS_I4 = "shellyplusi4"
 MODEL_PLUS_PLUG_US = "shellyplugus"
 MODEL_PRO_1 = "shellypro1"
@@ -510,6 +511,13 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
+    },
+    MODEL_PLUS_HT: {
+        ATTR_NAME: "Shelly Plus H&T",
+        ATTR_SENSORS: {
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20220421,
     },
     MODEL_PLUS_I4: {
         ATTR_NAME: "Shelly Plus I4",
