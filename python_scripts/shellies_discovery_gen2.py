@@ -1,5 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
+ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
 ATTR_BUTTONS = "buttons"
@@ -34,6 +35,7 @@ DEFAULT_DISC_PREFIX = "homeassistant"
 DEVICE_CLASS_CONNECTIVITY = "connectivity"
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
+DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
@@ -65,6 +67,7 @@ KEY_DEVICE = "dev"
 KEY_DEVICE_CLASS = "dev_cla"
 KEY_ENABLED_BY_DEFAULT = "en"
 KEY_ENTITY_CATEGORY = "entity_category"
+KEY_EXPIRE_AFTER = "expire_after"
 KEY_ICON = "icon"
 KEY_JSON_ATTRIBUTES_TEMPLATE = "json_attributes_template"
 KEY_JSON_ATTRIBUTES_TOPIC = "json_attributes_topic"
@@ -123,6 +126,7 @@ SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
 SENSOR_ETH_IP = "eth_ip"
 SENSOR_FIRMWARE = "firmware"
+SENSOR_HUMIDITY = "humidity"
 SENSOR_INPUT = "input"
 SENSOR_LAST_RESTART = "last_restart"
 SENSOR_OVERPOWER = "overpower"
@@ -140,20 +144,33 @@ STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
+TOPIC_HUMIDITY = "~status/humidity:0"
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
+TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_RPC = "~status/rpc"
+TOPIC_STATUS_SYS = "~status/sys"
+TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
+TOPIC_TEMPERATURE = "~status/temperature:0"
 
 TPL_CLOUD = "{%if value_json.result.cloud.connected%}ON{%else%}OFF{%endif%}"
+TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
 TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
-TPL_FIRMWARE_STABLE_ATTRS = (
-    "{{value_json.result.sys.available_updates.get(^stable^, {})|to_json}}"
+TPL_FIRMWARE_STABLE_INDEPENDENT = (
+    "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 )
+TPL_FIRMWARE_STABLE_ATTRS = (
+    "{{value_json.result.sys.available_updates.get(^stable^,{})|to_json}}"
+)
+TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT = (
+    "{{value_json.available_updates.get(^stable^,{})|to_json}}"
+)
+TPL_HUMIDITY = "{{value_json.rh|round(1)}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_MQTT_CONNECTED = (
     "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
@@ -170,11 +187,16 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
+TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC|round(1)}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.result.sys.uptime)|timestamp_local}}"
+TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
 TPL_WIFI_IP = "{{value_json.result.wifi.sta_ip}}"
+TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
 TPL_WIFI_SIGNAL = "{{value_json.result.wifi.rssi}}"
+TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
 TPL_WIFI_SSID = "{{value_json.result.wifi.ssid}}"
+TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_LONG_PRESS = "button_long_press"
@@ -409,6 +431,76 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
 }
+DESCRIPTION_SLEEPING_SENSOR_CLOUD = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CONNECTIVITY,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Cloud",
+    KEY_STATE_TOPIC: TOPIC_STATUS_CLOUD,
+    KEY_VALUE_TEMPLATE: TPL_CLOUD_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_FIRMWARE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Firmware",
+    KEY_STATE_TOPIC: TOPIC_STATUS_SYS,
+    KEY_VALUE_TEMPLATE: TPL_FIRMWARE_STABLE_INDEPENDENT,
+    KEY_JSON_ATTRIBUTES_TOPIC: TOPIC_STATUS_SYS,
+    KEY_JSON_ATTRIBUTES_TEMPLATE: TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_HUMIDITY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Humidity",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_HUMIDITY,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
+}
+DESCRIPTION_SLEEPING_SENSOR_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_TEMPERATURE,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TIMESTAMP,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Last Restart",
+    KEY_STATE_TOPIC: TOPIC_STATUS_SYS,
+    KEY_VALUE_TEMPLATE: TPL_UPTIME_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_SSID = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ICON: "mdi:wifi-settings",
+    KEY_NAME: "SSID",
+    KEY_STATE_TOPIC: TOPIC_STATUS_WIFI,
+    KEY_VALUE_TEMPLATE: TPL_WIFI_SSID_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_WIFI_IP = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ICON: "mdi:ip-outline",
+    KEY_NAME: "WiFi IP",
+    KEY_STATE_TOPIC: TOPIC_STATUS_WIFI,
+    KEY_VALUE_TEMPLATE: TPL_WIFI_IP_INDEPENDENT,
+}
+DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "WiFi Signal",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_WIFI,
+    KEY_UNIT: UNIT_DBM,
+    KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL_INDEPENDENT,
+}
 
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
@@ -513,9 +605,19 @@ SUPPORTED_MODELS = {
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
     MODEL_PLUS_HT: {
+        ATTR_BATTERY_POWERED: True,
         ATTR_NAME: "Shelly Plus H&T",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
         ATTR_SENSORS: {
-            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE,
+            SENSOR_HUMIDITY: DESCRIPTION_SLEEPING_SENSOR_HUMIDITY,
+            SENSOR_TEMPERATURE: DESCRIPTION_SLEEPING_SENSOR_TEMPERATURE,
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220421,
     },
@@ -905,12 +1007,17 @@ def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
         KEY_NAME: sensor_name,
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
-        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+
+    if expire_after:
+        payload[KEY_EXPIRE_AFTER] = expire_after
 
     if cover_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(cover=cover_id)
@@ -977,12 +1084,17 @@ def get_binary_sensor(
         KEY_NAME: sensor_name,
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
-        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+
+    if expire_after:
+        payload[KEY_EXPIRE_AFTER] = expire_after
 
     if entity_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=entity_id)
@@ -1161,6 +1273,7 @@ if mac is None:
 device_name = device_config["sys"]["device"][ATTR_NAME]
 device_url = f"http://{device_config['mqtt']['topic_prefix']}.local/"
 default_topic = f"{device_config['mqtt']['topic_prefix']}/"
+wakeup_period = device_config["sys"].get("sleep", {}).get("wakeup_period", 0)
 
 if not device_name:
     device_name = SUPPORTED_MODELS[model][ATTR_NAME]
@@ -1181,17 +1294,23 @@ device_info = {
 }
 
 # do not use constants with an abbreviation here
-availability = [
-    {
-        KEY_TOPIC_LONG: TOPIC_ONLINE,
-        KEY_PAYLOAD_AVAILABLE: "true",
-        KEY_PAYLOAD_NOT_AVAILABLE: "false",
-    },
-    {
-        KEY_TOPIC_LONG: TOPIC_STATUS_RPC,
-        KEY_VALUE_TEMPLATE_LONG: TPL_MQTT_CONNECTED,
-    },
-]
+
+if wakeup_period > 0:
+    availability = None
+    expire_after = wakeup_period * 1.2
+else:
+    availability = [
+        {
+            KEY_TOPIC_LONG: TOPIC_ONLINE,
+            KEY_PAYLOAD_AVAILABLE: "true",
+            KEY_PAYLOAD_NOT_AVAILABLE: "false",
+        },
+        {
+            KEY_TOPIC_LONG: TOPIC_STATUS_RPC,
+            KEY_VALUE_TEMPLATE_LONG: TPL_MQTT_CONNECTED,
+        },
+    ]
+    expire_after = None
 
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
