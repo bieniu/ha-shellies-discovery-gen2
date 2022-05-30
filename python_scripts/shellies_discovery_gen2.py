@@ -33,7 +33,6 @@ CONF_QOS = "qos"
 DEFAULT_DISC_PREFIX = "homeassistant"
 
 DEVICE_CLASS_BATTERY = "battery"
-DEVICE_CLASS_BATTERY_CHARGING = "battery_charging"
 DEVICE_CLASS_CONNECTIVITY = "connectivity"
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
@@ -123,11 +122,11 @@ MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_4PM = "shellypro4pm"
 
 SENSOR_BATTERY = "battery"
-SENSOR_CHARGER = "charger"
 SENSOR_CLOUD = "cloud"
 SENSOR_CURRENT = "current"
 SENSOR_ENERGY = "energy"
 SENSOR_ETH_IP = "eth_ip"
+SENSOR_EXTERNAL_POWER = "external_power"
 SENSOR_FIRMWARE = "firmware"
 SENSOR_HUMIDITY = "humidity"
 SENSOR_INPUT = "input"
@@ -160,12 +159,12 @@ TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:0"
 
 TPL_BATTERY = "{{value_json.battery.percent}}"
-TPL_CHARGER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD = "{%if value_json.result.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
+TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
 TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 TPL_FIRMWARE_STABLE_INDEPENDENT = (
     "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
@@ -249,13 +248,13 @@ DESCRIPTION_BATTERY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
-DESCRIPTION_SENSOR_CHARGER = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY_CHARGING,
+DESCRIPTION_SENSOR_EXTERNAL_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Charger",
+    KEY_NAME: "External Power",
     KEY_STATE_TOPIC: TOPIC_STATUS_DEVICE_POWER,
-    KEY_VALUE_TEMPLATE: TPL_CHARGER,
+    KEY_VALUE_TEMPLATE: TPL_EXTERNAL_POWER,
 }
 DESCRIPTION_SENSOR_CLOUD = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CONNECTIVITY,
@@ -631,7 +630,7 @@ SUPPORTED_MODELS = {
         ATTR_BATTERY_POWERED: True,
         ATTR_NAME: "Shelly Plus H&T",
         ATTR_BINARY_SENSORS: {
-            SENSOR_CHARGER: DESCRIPTION_SENSOR_CHARGER,
+            SENSOR_EXTERNAL_POWER: DESCRIPTION_SENSOR_EXTERNAL_POWER,
             SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
         },
