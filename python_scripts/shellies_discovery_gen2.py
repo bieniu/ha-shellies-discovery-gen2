@@ -1318,7 +1318,6 @@ device_info = {
 }
 
 # do not use constants with an abbreviation here
-
 if wakeup_period > 0:
     availability = None
     expire_after = wakeup_period * 1.2
