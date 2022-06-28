@@ -76,52 +76,43 @@ key | optional | type | default | description
 python_script:
 
 # automations.yaml file
-- id: shellies_announce_gen2
-  alias: "Shellies Announce Gen2"
+- id: shellies_announce_status_gen2
+  alias: "Shellies Announce and Status Gen2"
   trigger:
     - platform: homeassistant
       event: start
+      id: homeassistant_start
+    - platform: time_pattern
+      minutes: "/15"
+      id: "interval"
   variables:
     device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
+    device_ids:
+      - "shellyplus2pm-485519a1ff8c" # shellypro4pm-aabbccddeeff is a device ID
   action:
-    - service: mqtt.publish
-      data:
-        topic: "shellypro4pm-aabbccddeeff/rpc"  # shellypro4pm-aabbccddeeff is a device ID
-        payload: "{{ device_info_payload }}"
-    - service: mqtt.publish
-      data:
-        topic: "shellyplus1pm-112233445566/rpc"  # shellyplus1pm-112233445566 is a device ID
-        payload: "{{ device_info_payload }}"
-
-- id: shellies_discovery_gen2
-  alias: "Shellies Discovery Gen2"
-  mode: queued
-  max: 999
-  trigger:
-  - platform: mqtt
-    topic: shellies_discovery/rpc
-  action:
-  - service: python_script.shellies_discovery_gen2
-    data:
-      id: "{{ trigger.payload_json.src }}"
-      device_config: "{{ trigger.payload_json.result }}"
-
-- id: shellies_status_gen2
-  alias: "Shellies Status Gen2"
-  trigger:
-  - platform: time_pattern
-    minutes: "/15"
-  - platform: homeassistant
-    event: start
-  action:
-  - service: mqtt.publish
-    data:
-      topic: shellypro4pm-aabbccddeeff/rpc
-      payload: "{{ {'id': 1, 'src':'shellypro4pm-aabbccddeeff/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellypro4pm-aabbccddeeff is a device ID
-  - service: mqtt.publish
-    data:
-      topic: shellyplus1pm-112233445566/rpc
-      payload: "{{ {'id': 1, 'src':'shellyplus1pm-112233445566/status', 'method':'Shelly.GetStatus'} | to_json }}"  # shellyplus1pm-112233445566 is a device ID
+    - choose:
+      - conditions:
+        - condition: trigger
+          id: homeassistant_start
+        sequence:
+          - repeat:
+              for_each: "{{device_ids}}"
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    topic: "{{repeat.item}}/rpc"  
+                    payload: "{{ device_info_payload }}"
+      - conditions:
+        - condition: trigger
+          id: interval
+        sequence:
+          - repeat:
+              for_each: "{{device_ids}}"
+              sequence:
+                - service: mqtt.publish
+                  data:
+                    topic: "{{repeat.item}}/rpc"
+                    payload: "{{ {'id': 1, 'src': repeat.item + '/status', 'method':'Shelly.GetStatus'} | to_json }}"
 ```
 
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
