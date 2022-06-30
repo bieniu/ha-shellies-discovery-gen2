@@ -107,6 +107,19 @@ python_script:
                   data:
                     topic: "{{ repeat.item }}/rpc"
                     payload: "{{ {'id': 1, 'src': repeat.item + '/status', 'method':'Shelly.GetStatus'} | to_json }}"
+                    
+- id: shellies_discovery_gen2
+  alias: "Shellies Discovery Gen2"
+  mode: queued
+  max: 999
+  trigger:
+  - platform: mqtt
+    topic: shellies_discovery/rpc
+  action:
+  - service: python_script.shellies_discovery_gen2
+    data:
+      id: "{{ trigger.payload_json.src }}"
+      device_config: "{{ trigger.payload_json.result }}"
 ```
 
 [forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
