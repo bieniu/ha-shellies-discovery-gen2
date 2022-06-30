@@ -69,7 +69,7 @@ key | optional | type | default | description
 `discovery_prefix` | True | string | `homeassistant` | MQTT discovery prefix
 `qos` | True | integer | `0` | MQTT QoS, you can use `0`, `1` or `2`
 
-## Minimal configuration
+## Configuration
 
 ```yaml
 # configuration.yaml file
@@ -84,11 +84,12 @@ python_script:
       id: homeassistant_start
     - platform: time_pattern
       minutes: "/15"
-      id: "interval"
+      id: interval
   variables:
     device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
-    device_ids:
-      - "shellyplus2pm-485519a1ff8c" # shellypro4pm-aabbccddeeff is a device ID
+    device_ids:  # enter the list of device IDs here
+      - shellyplus2pm-485519a1ff8c 
+      - shellyplus1pm-112233445566
   action:
     - choose:
       - conditions:
@@ -96,22 +97,22 @@ python_script:
           id: homeassistant_start
         sequence:
           - repeat:
-              for_each: "{{device_ids}}"
+              for_each: "{{ device_ids }}"
               sequence:
                 - service: mqtt.publish
                   data:
-                    topic: "{{repeat.item}}/rpc"  
+                    topic: "{{ repeat.item }}/rpc"  
                     payload: "{{ device_info_payload }}"
       - conditions:
         - condition: trigger
           id: interval
         sequence:
           - repeat:
-              for_each: "{{device_ids}}"
+              for_each: "{{ device_ids }}"
               sequence:
                 - service: mqtt.publish
                   data:
-                    topic: "{{repeat.item}}/rpc"
+                    topic: "{{ repeat.item }}/rpc"
                     payload: "{{ {'id': 1, 'src': repeat.item + '/status', 'method':'Shelly.GetStatus'} | to_json }}"
 ```
 
