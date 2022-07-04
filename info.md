@@ -8,11 +8,13 @@ This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Ass
 
 This script needs Home Assistant `python_script` component so, if you never used it, I strongly suggest you to follow the [official instruction](https://www.home-assistant.io/integrations/python_script#writing-your-first-script) and check that `python_script` is properly configured and it's working.
 
-For the device to work with the script, it must have MQTT configured and options `RPC status notifications over MQTT` and `Generic status update over MQTT` enabled.
+For the device to work with the script, it must have MQTT configured and options **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
 
 ## Installation
 
 You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder.
+
+You need to install the `send_device_status.js` script from the `scripts` folder on Shelly devices in the **Scripts** section.
 
 ## Supported devices
 
@@ -69,45 +71,25 @@ key | optional | type | default | description
 python_script:
 
 # automations.yaml file
-- id: shellies_announce_status_gen2
-  alias: "Shellies Announce and Status Gen2"
+- id: shellies_announce_gen2
+  alias: "Shellies Announce Gen2"
   trigger:
     - platform: homeassistant
       event: start
-      id: homeassistant_start
-    - platform: time_pattern
-      minutes: "/15"
-      id: interval
   variables:
     device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
     device_ids:  # enter the list of device IDs here
-      - shellyplus2pm-485519a1ff8c 
+      - shellyplus2pm-485519a1ff8c
       - shellyplus1pm-112233445566
   action:
-    - choose:
-      - conditions:
-        - condition: trigger
-          id: homeassistant_start
+    - repeat:
+        for_each: "{{ device_ids }}"
         sequence:
-          - repeat:
-              for_each: "{{ device_ids }}"
-              sequence:
-                - service: mqtt.publish
-                  data:
-                    topic: "{{ repeat.item }}/rpc"  
-                    payload: "{{ device_info_payload }}"
-      - conditions:
-        - condition: trigger
-          id: interval
-        sequence:
-          - repeat:
-              for_each: "{{ device_ids }}"
-              sequence:
-                - service: mqtt.publish
-                  data:
-                    topic: "{{ repeat.item }}/rpc"
-                    payload: "{{ {'id': 1, 'src': repeat.item + '/status', 'method':'Shelly.GetStatus'} | to_json }}"
-                    
+          - service: mqtt.publish
+            data:
+              topic: "{{ repeat.item }}/rpc"
+              payload: "{{ device_info_payload }}"
+
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"
   mode: queued
