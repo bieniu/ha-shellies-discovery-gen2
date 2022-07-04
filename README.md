@@ -21,6 +21,8 @@ For the device to work with the script, it must have MQTT configured and options
 You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder or install the script via [HACS](https://hacs.xyz/).
 You won't find **Shellies Discovery Gen2** in the HACS **Integrations** section, nor add it as a custom repository. You must have a properly configured `python_script` component to be able to install the script from the HACS **Automations** section.
 
+You have to install `send_device_status.js` script from folder `scripts` on your Shelly devices in **Scripts** section.
+
 ## Supported devices
 
 - Shelly Plus 1
@@ -76,45 +78,25 @@ key | optional | type | default | description
 python_script:
 
 # automations.yaml file
-- id: shellies_announce_status_gen2
-  alias: "Shellies Announce and Status Gen2"
+- id: shellies_announce_gen2
+  alias: "Shellies Announce Gen2"
   trigger:
     - platform: homeassistant
       event: start
-      id: homeassistant_start
-    - platform: time_pattern
-      minutes: "/15"
-      id: interval
   variables:
     device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
     device_ids:  # enter the list of device IDs here
-      - shellyplus2pm-485519a1ff8c 
+      - shellyplus2pm-485519a1ff8c
       - shellyplus1pm-112233445566
   action:
-    - choose:
-      - conditions:
-        - condition: trigger
-          id: homeassistant_start
+    - repeat:
+        for_each: "{{ device_ids }}"
         sequence:
-          - repeat:
-              for_each: "{{ device_ids }}"
-              sequence:
-                - service: mqtt.publish
-                  data:
-                    topic: "{{ repeat.item }}/rpc"  
-                    payload: "{{ device_info_payload }}"
-      - conditions:
-        - condition: trigger
-          id: interval
-        sequence:
-          - repeat:
-              for_each: "{{ device_ids }}"
-              sequence:
-                - service: mqtt.publish
-                  data:
-                    topic: "{{ repeat.item }}/rpc"
-                    payload: "{{ {'id': 1, 'src': repeat.item + '/status', 'method':'Shelly.GetStatus'} | to_json }}"
-                    
+          - service: mqtt.publish
+            data:
+              topic: "{{ repeat.item }}/rpc"
+              payload: "{{ device_info_payload }}"
+
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"
   mode: queued
