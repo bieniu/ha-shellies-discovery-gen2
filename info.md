@@ -8,13 +8,13 @@ This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Ass
 
 This script needs Home Assistant `python_script` component so, if you never used it, I strongly suggest you to follow the [official instruction](https://www.home-assistant.io/integrations/python_script#writing-your-first-script) and check that `python_script` is properly configured and it's working.
 
-For the device to work with the script, it must have MQTT configured and options `RPC status notifications over MQTT` and `Generic status update over MQTT` enabled.
+For the device to work with the script, it must have MQTT configured and options **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
 
 ## Installation
 
 You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder.
 
-You have to install `send_device_status.js` script from folder `scripts` on your Shelly devices in **Scripts** section.
+You need to install the `send_device_status.js` script from the `scripts` folder on Shelly devices in the **Scripts** section.
 
 ## Supported devices
 
