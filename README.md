@@ -28,12 +28,20 @@ You need to install the `send_device_status.js` script from the `scripts` folder
 - Shelly Plus 1
 - Shelly Plus 1PM
 - Shelly Plus 2PM
+- Shelly Plus H&T
 - Shelly Plus I4
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2
 - Shelly Pro 2PM
 - Shelly Pro 4PM
+
+## Battery powered devices
+
+Battery powered devices like Plus H&T are put to sleep most of the time. For this reason, adding/updating entities configuration for a device should be done as follows:
+
+- enter the device into setup mode (press the button on the device)
+- manually run `Shellies Announce Gen2` automation
 
 ## How to debug
 
