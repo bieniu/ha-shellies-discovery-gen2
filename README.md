@@ -34,6 +34,7 @@ You need to install the `send_device_status.js` script from the `scripts` folder
 - Shelly Pro 1PM
 - Shelly Pro 2
 - Shelly Pro 2PM
+- Shelly Pro 3
 - Shelly Pro 4PM
 
 ## Battery powered devices
