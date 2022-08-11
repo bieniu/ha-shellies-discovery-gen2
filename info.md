@@ -14,7 +14,7 @@ For the device to work with the script, it must have MQTT configured and options
 
 You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder.
 
-You need to install the `send_device_status.js` script from the `scripts` folder on Shelly devices in the **Scripts** section.
+You need to install the `send_device_status.js` script from the `scripts` folder on Shelly devices in the **Scripts** section (this doesn't apply to battery powered devices).
 
 ## Supported devices
 
