@@ -896,7 +896,7 @@ def get_consumption_type(consumption_list, relay_id):
     except IndexError:
         return ATTR_SWITCH
 
-    return ATTR_LIGHT if "light" in consumption_type else ATTR_SWITCH
+    return ATTR_LIGHT if "light" in consumption_type.lower() else ATTR_SWITCH
 
 
 def mqtt_publish(topic, payload):
