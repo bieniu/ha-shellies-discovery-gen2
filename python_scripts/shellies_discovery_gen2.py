@@ -78,9 +78,9 @@ KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
 KEY_PAYLOAD = "pl"
-KEY_PAYLOAD_AVAILABLE = "payload_available"
+KEY_PAYLOAD_AVAILABLE = "pl_avail"
 KEY_PAYLOAD_CLOSE = "pl_cls"
-KEY_PAYLOAD_NOT_AVAILABLE = "payload_not_available"
+KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
 KEY_PAYLOAD_OFF = "pl_off"
 KEY_PAYLOAD_ON = "pl_on"
 KEY_PAYLOAD_OPEN = "pl_open"
@@ -103,13 +103,10 @@ KEY_STATE_TOPIC = "stat_t"
 KEY_SUBTYPE = "stype"
 KEY_SW_VERSION = "sw"
 KEY_TOPIC = "t"
-KEY_TOPIC_LONG = "topic"
-KEY_TOPIC_SUFFIX = "topic_suffix"
 KEY_TYPE = "type"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_UNIT = "unit_of_meas"
 KEY_VALUE_TEMPLATE = "val_tpl"
-KEY_VALUE_TEMPLATE_LONG = "value_template"
 
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1PM = "shellyplus1pm"
@@ -1360,20 +1357,19 @@ device_info = {
     KEY_CONFIGURATION_URL: device_url,
 }
 
-# do not use constants with an abbreviation here
 if wakeup_period > 0:
     availability = None
     expire_after = wakeup_period * 1.2
 else:
     availability = [
         {
-            KEY_TOPIC_LONG: TOPIC_ONLINE,
+            KEY_TOPIC: TOPIC_ONLINE,
             KEY_PAYLOAD_AVAILABLE: "true",
             KEY_PAYLOAD_NOT_AVAILABLE: "false",
         },
         {
-            KEY_TOPIC_LONG: TOPIC_STATUS_RPC,
-            KEY_VALUE_TEMPLATE_LONG: TPL_MQTT_CONNECTED,
+            KEY_TOPIC: TOPIC_STATUS_RPC,
+            KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
         },
     ]
     expire_after = None
