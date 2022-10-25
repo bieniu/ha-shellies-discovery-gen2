@@ -24,6 +24,7 @@ ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
+ATTR_UPDATES = "updates"
 
 BUTTON_RESTART = "restart"
 BUTTON_UPDATE_FIRMWARE = "update_firmware"
@@ -73,12 +74,15 @@ KEY_HW_VERSION = "hw"
 KEY_ICON = "icon"
 KEY_JSON_ATTRIBUTES_TEMPLATE = "json_attributes_template"
 KEY_JSON_ATTRIBUTES_TOPIC = "json_attributes_topic"
+KEY_LATEST_VERSION_TEMPLATE = "l_ver_tpl"
+KEY_LATEST_VERSION_TOPIC = "l_ver_t"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
 KEY_PAYLOAD = "pl"
 KEY_PAYLOAD_AVAILABLE = "pl_avail"
+KEY_PAYLOAD_INSTALL = "pl_inst"
 KEY_PAYLOAD_CLOSE = "pl_cls"
 KEY_PAYLOAD_NOT_AVAILABLE = "pl_not_avail"
 KEY_PAYLOAD_OFF = "pl_off"
@@ -232,13 +236,6 @@ DESCRIPTION_BUTTON_RESTART = {
     KEY_NAME: "Restart",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Reboot^}}",
 }
-DESCRIPTION_UPDATE_FIRMWARE = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
-    KEY_NAME: "Update Firmware",
-    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
-}
 DESCRIPTION_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -307,16 +304,6 @@ DESCRIPTION_SENSOR_ETH_IP = {
     KEY_NAME: "Ethernet IP",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_ETH_IP,
-}
-DESCRIPTION_SENSOR_FIRMWARE = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Firmware",
-    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
-    KEY_VALUE_TEMPLATE: TPL_FIRMWARE_STABLE,
-    KEY_JSON_ATTRIBUTES_TOPIC: TOPIC_STATUS_RPC,
-    KEY_JSON_ATTRIBUTES_TEMPLATE: TPL_FIRMWARE_STABLE_ATTRS,
 }
 DESCRIPTION_SENSOR_INPUT = {
     KEY_ENABLED_BY_DEFAULT: False,
@@ -523,6 +510,18 @@ DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL = {
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL_INDEPENDENT,
 }
+DESCRIPTION_UPDATE_FIRMWARE = {
+    KEY_DEVICE_CLASS: "firmware",
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_STABLE,
+    KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_RPC,
+    KEY_NAME: "Firmware",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
+    KEY_VALUE_TEMPLATE: TPL_FIRMWARE_STABLE,
+}
+
 
 SUPPORTED_MODELS = {
     MODEL_PLUS_1: {
@@ -530,11 +529,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNSW-001X16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 1,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -554,11 +553,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNSW-001P16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 1,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -589,11 +588,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNSW-002P16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_COVERS: 1,
         ATTR_COVER_SENSORS: {
@@ -654,11 +653,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNSW-0024X",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 4,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -676,11 +675,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNPL-00116US",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_RELAYS: 1,
         ATTR_RELAY_BINARY_SENSORS: {
@@ -708,11 +707,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-001XE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 2,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -733,11 +732,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-001PE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 2,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -770,11 +769,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-002XE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 2,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -795,11 +794,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-002PE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_COVERS: 1,
         ATTR_COVER_SENSORS: {
@@ -841,11 +840,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-003XE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 3,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -867,11 +866,11 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SPSW-004PE16EU",
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SENSOR_FIRMWARE,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {
             BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART,
-            BUTTON_UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            BUTTON_UPDATE_FIRMWARE: {},
         },
         ATTR_INPUTS: 4,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
@@ -1116,6 +1115,10 @@ def get_binary_sensor(
             f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
         )
 
+    if not description:
+        payload = ""
+        return topic, payload
+
     if profile == ATTR_COVER:
         payload = ""
         return topic, payload
@@ -1209,6 +1212,10 @@ def get_button(button, description):
     """Create configuration for Shelly button entity."""
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
 
+    if not description:
+        payload = ""
+        return topic, payload
+
     payload = {
         KEY_NAME: f"{device_name} {description[KEY_NAME]}",
         KEY_COMMAND_TOPIC: TOPIC_RPC,
@@ -1221,6 +1228,34 @@ def get_button(button, description):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
+    if description.get(KEY_DEVICE_CLASS):
+        payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = description[KEY_ENTITY_CATEGORY]
+    if description.get(KEY_ICON):
+        payload[KEY_ICON] = description[KEY_ICON]
+
+    return topic, payload
+
+
+def get_update(update, description):
+    """Create configuration for Shelly update entity."""
+    topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
+
+    payload = {
+        KEY_NAME: f"{device_name} {description[KEY_NAME]}",
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        KEY_UNIQUE_ID: f"{device_id}-{update}".lower(),
+        KEY_QOS: qos,
+        KEY_AVAILABILITY: availability,
+        KEY_DEVICE: device_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    if description.get(KEY_COMMAND_TOPIC):
+        payload[KEY_COMMAND_TOPIC] = TOPIC_RPC
+        payload[KEY_PAYLOAD_INSTALL] = (
+            description[KEY_PAYLOAD_INSTALL].format(device_id=device_id),
+        )
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
@@ -1291,6 +1326,10 @@ def configure_device():
 
     for button, descripton in buttons.items():
         topic, payload = get_button(button, descripton)
+        config[topic] = payload
+
+    for update, descripton in updates.items():
+        topic, payload = get_update(update, descripton)
         config[topic] = payload
 
     for sensor, description in sensors.items():
@@ -1385,6 +1424,7 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})
 
 covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
 cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
