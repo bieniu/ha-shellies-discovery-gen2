@@ -146,10 +146,13 @@ SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
+UPDATE_FIRMWARE = "firmware"
+
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
+TOPIC_DEVICE_INFO_RPC = "~device-info/rpc"
 TOPIC_HUMIDITY = "~status/humidity:0"
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_ONLINE = "~online"
@@ -181,6 +184,7 @@ TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT = (
 )
 TPL_HUMIDITY = "{{value_json.rh|round(1)}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
+TPL_INSTALLED_FIRMWARE = "{{value_json.result.ver}}"
 TPL_MQTT_CONNECTED = (
     "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
 )
@@ -514,8 +518,8 @@ DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_DEVICE_CLASS: "firmware",
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_STABLE,
-    KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_RPC,
+    KEY_LATEST_VERSION_TEMPLATE: TPL_INSTALLED_FIRMWARE,
+    KEY_LATEST_VERSION_TOPIC: TOPIC_DEVICE_INFO_RPC,
     KEY_NAME: "Firmware",
     KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
@@ -580,6 +584,9 @@ SUPPORTED_MODELS = {
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
