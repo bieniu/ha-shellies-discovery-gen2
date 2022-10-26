@@ -147,6 +147,7 @@ SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
 UPDATE_FIRMWARE = "firmware"
+UPDATE_FIRMWARE_BETA = "firmware_beta"
 
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
@@ -171,6 +172,7 @@ TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
+TPL_FIRMWARE_BETA = "{%if value_json.result.sys.available_updates.beta is defined%}{{value_json.result.sys.available_updates.beta.version}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
 TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable.version}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
 TPL_FIRMWARE_STABLE_INDEPENDENT = (
     "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
@@ -522,6 +524,17 @@ DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
 }
+DESCRIPTION_UPDATE_FIRMWARE_BETA = {
+    KEY_DEVICE_CLASS: "firmware",
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_BETA,
+    KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_RPC,
+    KEY_NAME: "Firmware beta",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
+    KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
+}
 
 
 SUPPORTED_MODELS = {
@@ -549,6 +562,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -587,6 +601,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -635,6 +650,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -680,6 +696,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -715,6 +732,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220211,
     },
@@ -743,6 +761,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -783,6 +802,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -811,6 +831,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -860,6 +881,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -889,6 +911,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
@@ -929,6 +952,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220308,
     },
