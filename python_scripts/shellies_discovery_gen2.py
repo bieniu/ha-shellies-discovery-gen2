@@ -171,7 +171,7 @@ TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.result.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
-TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
+TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable.version}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
 TPL_FIRMWARE_STABLE_INDEPENDENT = (
     "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 )
@@ -1289,7 +1289,7 @@ def get_update(update, description):
         KEY_DEVICE: device_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
-    if description.get(KEY_COMMAND_TOPIC):
+    if description.get(KEY_PAYLOAD_INSTALL):
         payload[KEY_COMMAND_TOPIC] = TOPIC_RPC
         payload[KEY_PAYLOAD_INSTALL] = (
             description[KEY_PAYLOAD_INSTALL].format(device_id=device_id),
