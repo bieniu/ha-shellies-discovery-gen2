@@ -1291,8 +1291,8 @@ def get_update(update, description):
     }
     if description.get(KEY_PAYLOAD_INSTALL):
         payload[KEY_COMMAND_TOPIC] = TOPIC_RPC
-        payload[KEY_PAYLOAD_INSTALL] = (
-            description[KEY_PAYLOAD_INSTALL].format(device_id=device_id),
+        payload[KEY_PAYLOAD_INSTALL] = description[KEY_PAYLOAD_INSTALL].format(
+            device_id=device_id
         )
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
