@@ -1,12 +1,17 @@
-let CONFIG = { topic_prefix: null };
+let topic_prefix = null;
+let installed_version = null;
 
 Shelly.call("MQTT.GetConfig", {}, function (config) {
-    CONFIG.topic_prefix = config.topic_prefix;
+    topic_prefix = config.topic_prefix;
 });
 
 function SendDeviceStatus() {
+    Shelly.call("Shelly.GetDeviceInfo", {}, function (device_info) {
+        installed_version = device_info.ver;
+    });
     Shelly.call("Shelly.GetStatus", {}, function (status) {
-        MQTT.publish(CONFIG.topic_prefix + "/status/rpc", JSON.stringify({ "result": status }));
+        status.sys.installed_version = installed_version;
+        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify({ "result": status }));
     });
 }
 
