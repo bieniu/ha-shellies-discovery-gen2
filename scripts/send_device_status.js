@@ -1,6 +1,5 @@
 let topic_prefix = null;
 let installed_version = null;
-let model = null;
 
 Shelly.call("MQTT.GetConfig", {}, function (config) {
     topic_prefix = config.topic_prefix;
@@ -9,7 +8,6 @@ Shelly.call("MQTT.GetConfig", {}, function (config) {
 function SendDeviceStatus() {
     let _device_info = Shelly.getDeviceInfo();
     installed_version = _device_info.ver;
-    model = _device_info.model;
     Shelly.call("Shelly.GetStatus", {}, function (status) {
         status.sys.installed_version = installed_version;
         status.sys.model = model;
