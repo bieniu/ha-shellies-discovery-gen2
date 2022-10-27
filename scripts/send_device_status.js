@@ -13,7 +13,7 @@ function SendDeviceStatus() {
     Shelly.call("Shelly.GetStatus", {}, function (status) {
         status.sys.installed_version = installed_version;
         status.sys.model = model;
-        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify({ "result": status }));
+        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify(status));
     });
 }
 
