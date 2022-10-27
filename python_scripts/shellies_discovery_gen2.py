@@ -166,14 +166,14 @@ TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:0"
 
 TPL_BATTERY = "{{value_json.battery.percent}}"
-TPL_CLOUD = "{%if value_json.result.cloud.connected%}ON{%else%}OFF{%endif%}"
+TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
-TPL_ETH_IP = "{{value_json.result.eth.ip}}"
+TPL_ETH_IP = "{{value_json.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
-TPL_FIRMWARE_BETA = "{%if value_json.result.sys.available_updates.beta is defined%}{{value_json.result.sys.available_updates.beta.version}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
-TPL_FIRMWARE_STABLE = "{%if value_json.result.sys.available_updates.stable is defined%}{{value_json.result.sys.available_updates.stable.version}}{%else%}{{value_json.result.sys.installed_version}}{%endif%}"
+TPL_FIRMWARE_BETA = "{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}"
+TPL_FIRMWARE_STABLE = "{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}"
 TPL_FIRMWARE_STABLE_INDEPENDENT = (
     "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 )
@@ -183,10 +183,8 @@ TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT = (
 )
 TPL_HUMIDITY = "{{value_json.rh|round(1)}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
-TPL_INSTALLED_FIRMWARE = "{{value_json.result.sys.installed_version}}"
-TPL_MQTT_CONNECTED = (
-    "{%if value_json.result.mqtt.connected%}online{%else%}offline{%endif%}"
-)
+TPL_INSTALLED_FIRMWARE = "{{value_json.sys.installed_version}}"
+TPL_MQTT_CONNECTED = "{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}"
 TPL_POWER = "{{value_json.apower|round(1)}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100|round}}"
 TPL_RELAY_OVERPOWER = (
@@ -200,14 +198,14 @@ TPL_RELAY_OVERVOLTAGE = (
 )
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC|round(1)}}"
-TPL_UPTIME = "{{(as_timestamp(now())-value_json.result.sys.uptime)|timestamp_local}}"
+TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VOLTAGE = "{{value_json.voltage|round(1)}}"
-TPL_WIFI_IP = "{{value_json.result.wifi.sta_ip}}"
+TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
-TPL_WIFI_SIGNAL = "{{value_json.result.wifi.rssi}}"
+TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
-TPL_WIFI_SSID = "{{value_json.result.wifi.ssid}}"
+TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"

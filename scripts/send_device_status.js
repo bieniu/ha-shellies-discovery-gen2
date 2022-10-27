@@ -6,13 +6,15 @@ Shelly.call("MQTT.GetConfig", {}, function (config) {
 });
 
 function SendDeviceStatus() {
-    Shelly.call("Shelly.GetDeviceInfo", {}, function (device_info) {
-        installed_version = device_info.ver;
-    });
+    let _device_info = Shelly.getDeviceInfo();
+    installed_version = _device_info.ver;
     Shelly.call("Shelly.GetStatus", {}, function (status) {
         status.sys.installed_version = installed_version;
-        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify({ "result": status }));
+        status.sys.model = model;
+        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify(status));
     });
 }
 
-let UpdateTimer = Timer.set(300000, true, SendDeviceStatus);
+
+MQTT.setConnectHandler(SendDeviceStatus)
+let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
