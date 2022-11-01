@@ -69,6 +69,7 @@ KEY_DEVICE = "dev"
 KEY_DEVICE_CLASS = "dev_cla"
 KEY_ENABLED_BY_DEFAULT = "en"
 KEY_ENTITY_CATEGORY = "entity_category"
+KEY_ENTITY_PICTURE = "ent_pic"
 KEY_EXPIRE_AFTER = "expire_after"
 KEY_HW_VERSION = "hw"
 KEY_ICON = "icon"
@@ -92,6 +93,7 @@ KEY_PAYLOAD_PRESS = "payload_press"
 KEY_PAYLOAD_STOP = "pl_stop"
 KEY_POSITION_TEMPLATE = "pos_tpl"
 KEY_POSITION_TOPIC = "pos_t"
+KEY_RELEASE_URL = "rel_u"
 KEY_QOS = "qos"
 KEY_SCHEMA = "schema"
 KEY_SET_POSITION_TEMPLATE = "set_pos_tpl"
@@ -106,6 +108,7 @@ KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
 KEY_SUBTYPE = "stype"
 KEY_SW_VERSION = "sw"
+KEY_TITLE = "tit"
 KEY_TOPIC = "t"
 KEY_TYPE = "type"
 KEY_UNIQUE_ID = "uniq_id"
@@ -1306,6 +1309,9 @@ def get_update(update, description):
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_LATEST_VERSION_TEMPLATE: description[KEY_LATEST_VERSION_TEMPLATE],
         KEY_LATEST_VERSION_TOPIC: description[KEY_LATEST_VERSION_TOPIC],
+        KEY_ENTITY_PICTURE: "https://brands.home-assistant.io/_/shelly/icon.png",
+        KEY_RELEASE_URL: "https://shelly-api-docs.shelly.cloud/gen2/changelog",
+        KEY_TITLE: f"{device_name} Firmware",
         KEY_QOS: qos,
         KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
