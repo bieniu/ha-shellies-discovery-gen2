@@ -12,8 +12,8 @@ function SendDeviceStatus() {
         status.sys.installed_version = installed_version;
         MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify(status));
     });
-}
+};
 
 
-MQTT.setConnectHandler(SendDeviceStatus)
+MQTT.setConnectHandler(SendDeviceStatus);
 let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
