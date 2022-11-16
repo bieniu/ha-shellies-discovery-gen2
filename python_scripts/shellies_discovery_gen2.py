@@ -152,6 +152,29 @@ SENSOR_WIFI_SIGNAL = "wifi_signal"
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
 
+SCRIPT_CODE = """let topic_prefix = null;
+let installed_version = null;
+
+Shelly.call(^MQTT.GetConfig^, {}, function (config) {
+    topic_prefix = config.topic_prefix;
+});
+
+function SendDeviceStatus() {
+    let _device_info = Shelly.getDeviceInfo();
+    installed_version = _device_info.ver;
+    Shelly.call(^Shelly.GetStatus^, {}, function (status) {
+        status.sys.installed_version = installed_version;
+        MQTT.publish(topic_prefix + ^/status/rpc^, JSON.stringify(status));
+    });
+};
+
+
+MQTT.setConnectHandler(SendDeviceStatus);
+let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
+"""
+
+SCRIPT_NAME = "shellies_discovery_gen2_device_status"
+
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
@@ -1409,6 +1432,18 @@ def configure_device():
     return config
 
 
+def install_script():
+    """Install the script on the device."""
+    topic = encode_config_topic(f"{device_id}/rpc")
+    payload = {
+        "id": 1,
+        "src": "shelies_discovery_script",
+        "method": "Script.PutCode",
+        "params": {"id": 1, "code": SCRIPT_CODE},
+    }
+    mqtt_publish(topic, payload)
+
+
 device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
@@ -1421,6 +1456,8 @@ if model not in SUPPORTED_MODELS:
 
 device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
+
+install_script()
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
