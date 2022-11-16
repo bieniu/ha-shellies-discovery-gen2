@@ -172,8 +172,8 @@ function SendDeviceStatus() {
 MQTT.setConnectHandler(SendDeviceStatus);
 let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
 """
-
-SCRIPT_NAME = "shellies_discovery_gen2_device_status"
+SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20221116"
+SCRIPT_OLD_NAMES = ["Send Device Status", "send_device_status", "send_device_status.js"]
 
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
@@ -1432,16 +1432,90 @@ def configure_device():
     return config
 
 
-def install_script():
+def install_script(script_id):
     """Install the script on the device."""
     topic = encode_config_topic(f"{device_id}/rpc")
+
+    logger.info("Installing script with ID: %s", script_id)  # noqa: F821
+
+    payload = {
+        "id": 1,
+        "src": "shelies_discovery_script",
+        "method": "Script.Create",
+        "params": {"name": SCRIPT_CURRENT_NAME},
+    }
+    mqtt_publish(topic, payload)
     payload = {
         "id": 1,
         "src": "shelies_discovery_script",
         "method": "Script.PutCode",
-        "params": {"id": 1, "code": SCRIPT_CODE},
+        "params": {"id": script_id, "code": SCRIPT_CODE},
     }
     mqtt_publish(topic, payload)
+    payload = {
+        "id": 1,
+        "src": "shelies_discovery_script",
+        "method": "Script.Start",
+        "params": {"id": script_id},
+    }
+    mqtt_publish(topic, payload)
+    payload = f"{{'id': 1, 'src': 'shelies_discovery_script', 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
+    mqtt_publish(topic, payload)
+
+
+def script_installed():
+    """Return True if the current version of the script is installed."""
+    script_id = 1
+
+    while True:
+        if f"script:{script_id}" in device_config:
+            if device_config[f"script:{script_id}"]["name"] == SCRIPT_CURRENT_NAME:
+                return True
+        else:
+            return False
+
+        script_id = script_id + 1
+
+
+def get_script_id():
+    """Return the script id."""
+    script_id = 1
+
+    while True:
+        if f"script:{script_id}" in device_config:
+            script_id = script_id + 1
+        else:
+            return script_id
+
+
+def remove_old_script_versions():
+    """Remove old script versions."""
+    script_id = 1
+    topic = encode_config_topic(f"{device_id}/rpc")
+
+    while True:
+        if f"script:{script_id}" in device_config:
+            script_name = device_config[f"script:{script_id}"]["name"]
+            if script_name in SCRIPT_OLD_NAMES:
+                logger.info("Removing old script %s", script_name)  # noqa: F821
+                payload = {
+                    "id": 1,
+                    "src": "shelies_discovery_script",
+                    "method": "Script.Stop",
+                    "params": {"id": script_id},
+                }
+                mqtt_publish(topic, payload)
+                payload = {
+                    "id": 1,
+                    "src": "shelies_discovery_script",
+                    "method": "Script.Delete",
+                    "params": {"id": script_id},
+                }
+                mqtt_publish(topic, payload)
+        else:
+            return None
+
+        script_id = script_id + 1
 
 
 device_id = data[ATTR_ID]  # noqa: F821
@@ -1457,7 +1531,12 @@ if model not in SUPPORTED_MODELS:
 device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
-install_script()
+if model != MODEL_PLUS_HT and script_installed() is False:
+    remove_old_script_versions()
+    script_id = get_script_id()
+    install_script(script_id)
+
+raise TypeError
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
