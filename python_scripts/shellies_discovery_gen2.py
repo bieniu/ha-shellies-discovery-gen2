@@ -1436,7 +1436,7 @@ def install_script(script_id):
     """Install the script on the device."""
     topic = encode_config_topic(f"{device_id}/rpc")
 
-    logger.info("Installing script with ID: %s", script_id)  # noqa: F821
+    logger.info("Installing the script with ID: %s", script_id)  # noqa: F821
 
     payload = {
         "id": 1,
@@ -1498,7 +1498,7 @@ def remove_old_script_versions():
         if f"script:{script_id}" in device_config:
             script_name = device_config[f"script:{script_id}"]["name"]
             if script_name in SCRIPT_OLD_NAMES:
-                logger.info("Removing old script %s", script_name)  # noqa: F821
+                logger.info("Removing the old script %s", script_name)  # noqa: F821
                 removed = True
                 payload = {
                     "id": 1,
@@ -1538,8 +1538,6 @@ if model != MODEL_PLUS_HT and script_installed() is False:
     if not removed:
         script_id = get_script_id()
         install_script(script_id)
-
-raise TypeError
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
