@@ -1478,7 +1478,7 @@ def script_installed():
 
 
 def get_script_id():
-    """Return the script id."""
+    """Return the script ID."""
     script_id = 1
 
     while True:
@@ -1491,6 +1491,7 @@ def get_script_id():
 def remove_old_script_versions():
     """Remove old script versions."""
     script_id = 1
+    removed = False
     topic = encode_config_topic(f"{device_id}/rpc")
 
     while True:
@@ -1498,6 +1499,7 @@ def remove_old_script_versions():
             script_name = device_config[f"script:{script_id}"]["name"]
             if script_name in SCRIPT_OLD_NAMES:
                 logger.info("Removing old script %s", script_name)  # noqa: F821
+                removed = True
                 payload = {
                     "id": 1,
                     "src": "shelies_discovery_script",
@@ -1513,7 +1515,7 @@ def remove_old_script_versions():
                 }
                 mqtt_publish(topic, payload)
         else:
-            return None
+            return removed
 
         script_id = script_id + 1
 
@@ -1532,9 +1534,10 @@ device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
 if model != MODEL_PLUS_HT and script_installed() is False:
-    remove_old_script_versions()
-    script_id = get_script_id()
-    install_script(script_id)
+    removed = remove_old_script_versions()
+    if not removed:
+        script_id = get_script_id()
+        install_script(script_id)
 
 raise TypeError
 
