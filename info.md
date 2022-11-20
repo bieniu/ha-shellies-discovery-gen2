@@ -62,7 +62,7 @@ logger:
 
 - the device name is taken from the device configuration
 - the relay name is taken from the device configuration
-- the relay consumption type is taken from the device configuration
+- the relay consumption type is taken from the device configuration (consumption type must contain `light` or `fan` to configure light or fan platform)
 - if the input type is set to button, device automation triggers are available
 - custom MQTT prefixes are supported
 
