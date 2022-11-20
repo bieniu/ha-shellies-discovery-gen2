@@ -108,6 +108,7 @@ KEY_STATE_OPENING = "stat_opening"
 KEY_STATE_STOPPED = "stat_stopped"
 KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
+KEY_STATE_VALUE_TEMPLATE = "stat_val_tpl"
 KEY_SUBTYPE = "stype"
 KEY_SW_VERSION = "sw"
 KEY_TITLE = "tit"
@@ -1131,9 +1132,9 @@ def get_fan(relay_id, relay_type, profile):
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_TEMPLATE: f"{{%if value=^on^%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
+        KEY_COMMAND_TEMPLATE: f"{{%if value==^ON^%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
-        KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_STATE_VALUE_TEMPLATE: "{%if value_json.output%}ON{%else%}OFF{%endif%}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
