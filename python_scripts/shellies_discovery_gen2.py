@@ -1115,6 +1115,7 @@ def get_light(relay_id, relay_type, profile):
     }
     return topic, payload
 
+
 def get_fan(relay_id, relay_type, profile):
     """Create configuration for Shelly relay as fan entity."""
     topic = encode_config_topic(f"{disc_prefix}/fan/{device_id}-{relay_id}/config")
@@ -1130,7 +1131,7 @@ def get_fan(relay_id, relay_type, profile):
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:bool(value)}}}}",
+        KEY_COMMAND_TEMPLATE: f"{{%if value=^on^%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_AVAILABILITY: availability,
