@@ -54,9 +54,11 @@ logger:
 
 - binary sensor
 - button
+- fan
 - light
 - sensor
 - switch
+- update
 
 ## Supported features
 
