@@ -1,11 +1,33 @@
+change-template: "- #$NUMBER $TITLE @$AUTHOR"
+sort-direction: ascending
+
 categories:
-  - title: "⚠ Breaking Changes"
-    labels:
-      - "breaking-change"
-  - title: "⬆️ Dependencies"
+  - title: ":boom: Breaking Changes"
+    label: "breaking-change"
+
+  - title: ":sparkles: New Features"
+    label: "new-feature"
+
+  - title: ":recycle: Refactor"
+    label: "refactor"
+
+  - title: ":green_heart: CI"
+    label: "ci"
+
+  - title: ":bug: Bug Fixes"
+    label: "bugfix"
+
+  - title: ":arrow_up: Dependency Updates"
+    label: "dependencies"
     collapse-after: 1
-    labels:
-      - "dependencies"
+
+include-labels:
+  - "breaking-change"
+  - "refactor"
+  - "new-feature"
+  - "bugfix"
+  - "dependencies"
+  - "ci"
+
 template: |
-  ## What's Changed
   $CHANGES
