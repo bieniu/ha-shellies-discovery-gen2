@@ -30,4 +30,6 @@ include-labels:
   - "ci"
 
 template: |
+  [![Downloads for this release](https://img.shields.io/github/downloads/bieniu/ha-shellies-discovery-gen2/x.x.x/total.svg)](https://github.com/bieniu/ha-shellies-discovery-gen2/releases/x.x.x)
+  
   $CHANGES
