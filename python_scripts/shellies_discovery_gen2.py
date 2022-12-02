@@ -1595,7 +1595,7 @@ if mac is None:
     raise ValueError("mac value None is not valid, check script configuration")
 
 device_name = device_config["sys"]["device"][ATTR_NAME]
-device_url = f"http://{device_config['mqtt']['topic_prefix']}.local/"
+device_url = f"http://{device_id}.local/"
 default_topic = f"{device_config['mqtt']['topic_prefix']}/"
 wakeup_period = device_config["sys"].get("sleep", {}).get("wakeup_period", 0)
 
