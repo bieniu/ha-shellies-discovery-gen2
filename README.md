@@ -8,6 +8,9 @@
 
 This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Assistant](https://home-assistant.io/).
 
+## Warning!!!
+Please do not update firmware to `0.12.0` if you are using `consumption type` for relays. The new firmware does not handle "consumption type" correctly.
+
 ![image](https://user-images.githubusercontent.com/478555/151659020-a6181434-ae19-42bb-9dbe-fed8002ee730.png)
 
 ## Prerequisites
