@@ -185,6 +185,7 @@ STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
+TOPIC_EVENTS_RPC = "~events/rpc"
 TOPIC_HUMIDITY = "~status/humidity:0"
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_LIGHT = "~status/light:{light}"
@@ -1180,9 +1181,9 @@ def get_light(light_id):
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
-        KEY_STATE_TOPIC: TOPIC_LIGHT.format(light=light_id),
-        KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
-        KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
+        KEY_STATE_TOPIC: TOPIC_EVENTS_RPC,
+        KEY_STATE_TEMPLATE: f"{{%if value_json.params[^light:{light_id}^].output%}}on{{%else%}}off{{%endif%}}",
+        KEY_BRIGHTNESS_TEMPLATE: f"{{{{value_json.params[^light:{light_id}^].brightness|float|multiply(2.55)|round}}}}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{light_id}".lower(),
         KEY_QOS: qos,
