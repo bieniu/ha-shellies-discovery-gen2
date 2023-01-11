@@ -28,6 +28,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus I4
 - Shelly Plus Plug S
 - Shelly Plus Plug US
+- Shelly Plus Smoke
 - Shelly Plus Wall Dimmer
 - Shelly Pro 1
 - Shelly Pro 1PM
