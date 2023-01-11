@@ -46,6 +46,7 @@ DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
 DEVICE_CLASS_RESTART = "restart"
 DEVICE_CLASS_SIGNAL_STRENGTH = "signal_strength"
+DEVICE_CLASS_SMOKE = "smoke"
 DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_TIMESTAMP = "timestamp"
 DEVICE_CLASS_UPDATE = "update"
@@ -127,6 +128,7 @@ MODEL_PLUS_HT = "shellyplusht"
 MODEL_PLUS_I4 = "shellyplusi4"
 MODEL_PLUS_PLUG_S = "shellyplusplugs"
 MODEL_PLUS_PLUG_US = "shellyplusplugus"
+MODEL_PLUS_SMOKE = "shellyplussmoke"
 MODEL_PLUS_WALL_DIMMER = "shellypluswdus"
 MODEL_PRO_1 = "shellypro1"
 MODEL_PRO_1PM = "shellypro1pm"
@@ -150,6 +152,7 @@ SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
+SENSOR_SMOKE = "smoke"
 SENSOR_SSID = "ssid"
 SENSOR_TEMPERATURE = "temperature"
 SENSOR_VOLTAGE = "voltage"
@@ -194,12 +197,13 @@ TOPIC_RPC = "~rpc"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_RPC = "~status/rpc"
+TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
 TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:0"
 
-TPL_BATTERY = "{{value_json.battery.percent}}"
+TPL_BATTERY = "{%if value_json.battery.percent%}{{value_json.battery.percent}}{%endif%}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
@@ -230,6 +234,7 @@ TPL_RELAY_OVERTEMP = (
 TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
+TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC|round(1)}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
@@ -482,6 +487,13 @@ DESCRIPTION_SLEEPING_SENSOR_CLOUD = {
     KEY_NAME: "Cloud",
     KEY_STATE_TOPIC: TOPIC_STATUS_CLOUD,
     KEY_VALUE_TEMPLATE: TPL_CLOUD_INDEPENDENT,
+}
+DESCRIPTION_SENSOR_SMOKE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SMOKE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Smoke",
+    KEY_STATE_TOPIC: TOPIC_STATUS_SMOKE,
+    KEY_VALUE_TEMPLATE: TPL_SMOKE,
 }
 DESCRIPTION_SLEEPING_SENSOR_FIRMWARE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
@@ -803,6 +815,24 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20220211,
+    },
+    MODEL_PLUS_SMOKE: {
+        ATTR_BATTERY_POWERED: True,
+        ATTR_NAME: "Shelly Plus Smoke",
+        ATTR_MODEL_ID: "SNSN-0031Z",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+            SENSOR_SMOKE: DESCRIPTION_SENSOR_SMOKE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_BATTERY: DESCRIPTION_BATTERY,
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20221209,
     },
     MODEL_PLUS_WALL_DIMMER: {
         ATTR_NAME: "Shelly Plus Wall Dimmer",
