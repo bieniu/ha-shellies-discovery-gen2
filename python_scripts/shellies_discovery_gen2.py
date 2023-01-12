@@ -28,6 +28,7 @@ ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
 ATTR_UPDATES = "updates"
 
+BUTTON_MUTE_ALARM = "mute_alarm"
 BUTTON_RESTART = "restart"
 BUTTON_UPDATE_FIRMWARE = "update_firmware"
 
@@ -59,9 +60,13 @@ EVENT_DOUBLE_PUSH = "double_push"
 EVENT_LONG_PUSH = "long_push"
 EVENT_SINGLE_PUSH = "single_push"
 
+HOME_ASSISTANT = "home-assistant"
+
 KEY_AUTOMATION_TYPE = "atype"
 KEY_AVAILABILITY = "avty"
 KEY_AVAILABILITY_MODE = "avty_mode"
+KEY_AVAILABILITY_TEMPLATE = "avty_tpl"
+KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
@@ -269,12 +274,21 @@ DEVICE_TRIGGER_MAP = {
     EVENT_SINGLE_PUSH: TRIGGER_BUTTON_SHORT_PRESS,
 }
 
+DESCRIPTION_BUTTON_MUTE_ALARM = {
+    KEY_ICON: "mdi:volume-mute",
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Mute Alarm",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^Smoke.Mute^}}",
+    KEY_AVAILABILITY_TOPIC: TOPIC_STATUS_SMOKE,
+    KEY_AVAILABILITY_TEMPLATE: "{%if value_json.alarm%}online{%else%}offline{%endif%}",
+}
 DESCRIPTION_BUTTON_RESTART = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_RESTART,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Restart",
-    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Reboot^}}",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Reboot^}}",
 }
 DESCRIPTION_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -564,7 +578,7 @@ DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_STABLE,
     KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_RPC,
     KEY_NAME: "Firmware",
-    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
 }
@@ -575,7 +589,7 @@ DESCRIPTION_UPDATE_FIRMWARE_BETA = {
     KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_BETA,
     KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_RPC,
     KEY_NAME: "Firmware beta",
-    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{device_id}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
 }
@@ -825,6 +839,7 @@ SUPPORTED_MODELS = {
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
             SENSOR_SMOKE: DESCRIPTION_SENSOR_SMOKE,
         },
+        ATTR_BUTTONS: {BUTTON_MUTE_ALARM: DESCRIPTION_BUTTON_MUTE_ALARM},
         ATTR_SENSORS: {
             SENSOR_BATTERY: DESCRIPTION_BATTERY,
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
@@ -1134,10 +1149,10 @@ def get_cover(cover_id, profile):
         KEY_VALUE_TEMPLATE: "{%if value_json.state!=^calibrating^%}{{value_json.state}}{%endif%}",
         KEY_POSITION_TEMPLATE: "{%if is_number(value_json.get(^current_pos^))%}{{value_json.current_pos}}{%endif%}",
         KEY_SET_POSITION_TOPIC: TOPIC_RPC,
-        KEY_SET_POSITION_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^pos^:{{{{position}}}}}}}}",
-        KEY_PAYLOAD_OPEN: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Open^,^params^:{{^id^:{cover_id}}}}}",
-        KEY_PAYLOAD_CLOSE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Close^,^params^:{{^id^:{cover_id}}}}}",
-        KEY_PAYLOAD_STOP: f"{{^id^:1,^src^:^{device_id}^,^method^:^Cover.Stop^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_SET_POSITION_TEMPLATE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^pos^:{{{{position}}}}}}}}",
+        KEY_PAYLOAD_OPEN: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Cover.Open^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_PAYLOAD_CLOSE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Cover.Close^,^params^:{{^id^:{cover_id}}}}}",
+        KEY_PAYLOAD_STOP: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Cover.Stop^,^params^:{{^id^:{cover_id}}}}}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{cover_id}".lower(),
         KEY_QOS: qos,
@@ -1162,8 +1177,8 @@ def get_switch(relay_id, relay_type, profile):
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
-        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_STATE_OFF: VALUE_OFF,
@@ -1193,8 +1208,8 @@ def get_relay_light(relay_id, relay_type, profile):
         KEY_SCHEMA: "template",
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_AVAILABILITY: availability,
@@ -1221,7 +1236,7 @@ def get_relay_fan(relay_id, relay_type, profile):
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_TEMPLATE: f"{{%if value==^ON^%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{device_id}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
+        KEY_COMMAND_TEMPLATE: f"{{%if value==^ON^%}}{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
         KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
         KEY_STATE_VALUE_TEMPLATE: "{%if value_json.output%}ON{%else%}OFF{%endif%}",
         KEY_AVAILABILITY: availability,
@@ -1245,8 +1260,8 @@ def get_light(light_id):
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{device_id}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{HOME_ASSISTANT}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
         KEY_STATE_TOPIC: TOPIC_LIGHT.format(light=light_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
@@ -1452,15 +1467,19 @@ def get_button(button, description):
     payload = {
         KEY_NAME: f"{device_name} {description[KEY_NAME]}",
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(device_id=device_id),
+        KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(source=HOME_ASSISTANT),
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
         KEY_QOS: qos,
-        KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
+    if description.get(KEY_AVAILABILITY_TOPIC):
+        payload[KEY_AVAILABILITY_TOPIC] = description[KEY_AVAILABILITY_TOPIC]
+        payload[KEY_AVAILABILITY_TEMPLATE] = description[KEY_AVAILABILITY_TEMPLATE]
+    elif availability:
+        payload[KEY_AVAILABILITY] = availability
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
@@ -1494,7 +1513,7 @@ def get_update(update, description):
     if description.get(KEY_PAYLOAD_INSTALL):
         payload[KEY_COMMAND_TOPIC] = TOPIC_RPC
         payload[KEY_PAYLOAD_INSTALL] = description[KEY_PAYLOAD_INSTALL].format(
-            device_id=device_id
+            source=HOME_ASSISTANT
         )
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
