@@ -42,6 +42,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro 2
 - Shelly Pro 2PM
 - Shelly Pro 3
+- Shelly Pro 3EM
 - Shelly Pro 4PM
 
 ## Battery powered devices
@@ -103,9 +104,9 @@ python_script:
       event: start
   variables:
     device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
-    device_ids:  # enter the list of device IDs here
+    device_ids:  # enter the list of device IDs (MQTT prefixes) here
       - shellyplus2pm-485519a1ff8c
-      - shellyplus1pm-112233445566
+      - custom-prefix/shelly-kitchen
   action:
     - repeat:
         for_each: "{{ device_ids }}"
