@@ -1492,10 +1492,6 @@ def get_binary_sensor(
             f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
         )
 
-    if not description:
-        payload = ""
-        return topic, payload
-
     if profile == ATTR_COVER:
         payload = ""
         return topic, payload
@@ -1588,10 +1584,6 @@ def get_input(input_id, input_type, event):
 def get_button(button, description):
     """Create configuration for Shelly button entity."""
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
-
-    if not description:
-        payload = ""
-        return topic, payload
 
     payload = {
         KEY_NAME: f"{device_name} {description[KEY_NAME]}",
