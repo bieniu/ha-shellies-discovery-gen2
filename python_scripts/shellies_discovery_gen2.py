@@ -7,6 +7,9 @@ ATTR_BUTTONS = "buttons"
 ATTR_COVER = "cover"
 ATTR_COVER_SENSORS = "cover_sensors"
 ATTR_COVERS = "covers"
+ATTR_EMETER_PHASES = "emeter_phases"
+ATTR_EMETER_SENSORS = "emeter_sensors"
+ATTR_EMETERS = "emeters"
 ATTR_FAN = "fan"
 ATTR_FW_ID = "fw_id"
 ATTR_ID = "id"
@@ -143,6 +146,8 @@ MODEL_PRO_3 = "shellypro3"
 MODEL_PRO_3EM = "shellypro3em"
 MODEL_PRO_4PM = "shellypro4pm"
 
+SENSOR_ACTIVE_POWER = "active_power"
+SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
 SENSOR_CLOUD = "cloud"
 SENSOR_CURRENT = "current"
@@ -195,6 +200,7 @@ STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
+TOPIC_EMETER = "~status/em:{emeter_id}"
 TOPIC_HUMIDITY = "~status/humidity:0"
 TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_LIGHT = "~status/light:{light}"
@@ -213,6 +219,11 @@ TPL_BATTERY = "{%if value_json.battery.percent%}{{value_json.battery.percent}}{%
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current|round(1)}}"
+TPL_EMETER_ACTIVE_POWER = "{{{{value_json.{phase}_act_power|round(1)}}}}"
+TPL_EMETER_APPARENT_POWER = "{{{{value_json.{phase}_aprt_power|round(1)}}}}"
+TPL_EMETER_CURRENT = "{{{{value_json.{phase}_current|round(1)}}}}"
+TPL_EMETER_POWER_FACTOR = "{{{{value_json.{phase}_pf}}}}"
+TPL_EMETER_VOLTEAGE = "{{{{value_json.{phase}_voltage|round(1)}}}}"
 TPL_ENERGY = "{{value_json.aenergy.total|round(2)}}"
 TPL_ETH_IP = "{{value_json.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
@@ -261,6 +272,7 @@ UNIT_AMPERE = "A"
 UNIT_CELSIUS = "°C"
 UNIT_DBM = "dBm"
 UNIT_PERCENT = "%"
+UNIT_VA = "VA"
 UNIT_VOLT = "V"
 UNIT_WATT = "W"
 UNIT_WATTH = "Wh"
@@ -324,6 +336,15 @@ DESCRIPTION_SENSOR_CURRENT = {
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
+DESCRIPTION_SENSOR_EMETER_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Phase {phase} Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_EMETER,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_EMETER_CURRENT,
 }
 DESCRIPTION_SENSOR_CURRENT_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -406,6 +427,23 @@ DESCRIPTION_SENSOR_POWER = {
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
 }
+DESCRIPTION_SENSOR_EMETER_ACTIVE_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Phase {phase} Active Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_EMETER,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_EMETER_ACTIVE_POWER,
+}
+DESCRIPTION_SENSOR_EMETER_APPARENT_POWER = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Phase {phase} Apparent Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_EMETER,
+    KEY_UNIT: UNIT_VA,
+    KEY_VALUE_TEMPLATE: TPL_EMETER_APPARENT_POWER,
+}
 DESCRIPTION_SENSOR_POWER_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -423,6 +461,14 @@ DESCRIPTION_SENSOR_POWER_FACTOR = {
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_POWER_FACTOR,
+}
+DESCRIPTION_SENSOR_EMETER_POWER_FACTOR = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Phase {phase} Power Factor",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_EMETER,
+    KEY_VALUE_TEMPLATE: TPL_EMETER_POWER_FACTOR,
 }
 DESCRIPTION_SENSOR_POWER_FACTOR_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER_FACTOR,
@@ -467,6 +513,15 @@ DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_EMETER_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Phase {phase} Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_EMETER,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_EMETER_VOLTEAGE,
 }
 DESCRIPTION_SENSOR_VOLTAGE_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
@@ -1050,6 +1105,8 @@ SUPPORTED_MODELS = {
     MODEL_PRO_3EM: {
         ATTR_NAME: "Shelly Pro 3EM",
         ATTR_MODEL_ID: "SPEM-003CEBEU",
+        ATTR_EMETERS: 1,
+        ATTR_EMETER_PHASES: ["a", "b", "c"],
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
@@ -1059,11 +1116,18 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_EMETER_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_EMETER_CURRENT,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_EMETER_VOLTAGE,
+            SENSOR_ACTIVE_POWER: DESCRIPTION_SENSOR_EMETER_ACTIVE_POWER,
+            SENSOR_APPARENT_POWER: DESCRIPTION_SENSOR_EMETER_APPARENT_POWER,
+            SENSOR_POWER_FACTOR: DESCRIPTION_SENSOR_EMETER_POWER_FACTOR,
+        },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
-        ATTR_MIN_FIRMWARE_DATE: 20221107,
+        ATTR_MIN_FIRMWARE_DATE: 20221221,
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
@@ -1293,9 +1357,21 @@ def get_light(light_id):
     return topic, payload
 
 
-def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
+def get_sensor(
+    sensor,
+    description,
+    profile=None,
+    relay_id=None,
+    cover_id=None,
+    emeter_id=None,
+    emeter_phase=None,
+):
     """Create configuration for Shelly sensor entity."""
-    if cover_id is not None:
+    if emeter_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{emeter_id}-{emeter_phase}-{sensor}/config"
+        )
+    elif cover_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-cover-{cover_id}-{sensor}/config"
         )
@@ -1328,13 +1404,17 @@ def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
         )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
+    elif emeter_id is not None:
+        unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
+        sensor_name = (
+            f"{device_name} {description[KEY_NAME].format(phase=emeter_phase.upper())}"
+        )
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = f"{device_name} {description[KEY_NAME]}"
 
     payload = {
         KEY_NAME: sensor_name,
-        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
@@ -1348,10 +1428,21 @@ def get_sensor(sensor, description, profile=None, relay_id=None, cover_id=None):
     if expire_after:
         payload[KEY_EXPIRE_AFTER] = expire_after
 
+    if emeter_id is not None:
+        payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE].format(
+            phase=emeter_phase
+        )
+    else:
+        payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE]
+
     if cover_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(cover=cover_id)
     elif relay_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
+    elif emeter_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
+            emeter_id=emeter_id
+        )
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -1563,6 +1654,14 @@ def configure_device():
     for light_id in range(lights):
         topic, payload = get_light(light_id)
         config[topic] = payload
+
+    for emeter_id in range(emeters):
+        for phase in emeter_phases:
+            for sensor, description in emeter_sensors.items():
+                topic, payload = get_sensor(
+                    sensor, description, emeter_id=emeter_id, emeter_phase=phase
+                )
+                config[topic] = payload
 
     for relay_id in range(relays):
         consumption_types = [
@@ -1795,6 +1894,10 @@ else:
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
+
+emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
+emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
+emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
 
 relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
 relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
