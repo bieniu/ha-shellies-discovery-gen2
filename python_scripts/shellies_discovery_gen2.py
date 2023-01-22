@@ -257,6 +257,7 @@ TPL_RELAY_OVERVOLTAGE = (
 )
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC|round(1)}}"
+TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC|round(1)}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC|round(1)}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
@@ -527,9 +528,9 @@ DESCRIPTION_SENSOR_DEVICE_TEMPERATURE = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Device temperature",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_TEMPERATURE,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_UNIT: UNIT_CELSIUS,
-    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_0,
 }
 DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
