@@ -37,6 +37,7 @@ BUTTON_UPDATE_FIRMWARE = "update_firmware"
 
 CONF_DISCOVERY_PREFIX = "discovery_prefix"
 CONF_QOS = "qos"
+CONF_SCRIPT_PREFIX = "script_prefix"
 
 DEFAULT_DISC_PREFIX = "homeassistant"
 
@@ -211,6 +212,7 @@ TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_LIGHT = "~status/light:{light}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
+TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shelies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_RPC = "~status/rpc"
@@ -1741,31 +1743,35 @@ def configure_device():
 def install_script(script_id):
     """Install the script on the device."""
     topic = encode_config_topic(f"{device_id}/rpc")
+    if script_prefix:
+        script_topic = f"{script_prefix}/TOPIC_SHELLIES_DISCOVERY_SCRIPT"
+    else:
+        script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
 
     logger.info("Installing the script with ID: %s", script_id)  # noqa: F821
 
     payload = {
         "id": 1,
-        "src": "shelies_discovery_script",
+        "src": script_topic,
         "method": "Script.Create",
         "params": {"name": SCRIPT_CURRENT_NAME},
     }
     mqtt_publish(topic, payload)
     payload = {
         "id": 1,
-        "src": "shelies_discovery_script",
+        "src": script_topic,
         "method": "Script.PutCode",
         "params": {"id": script_id, "code": SCRIPT_CODE},
     }
     mqtt_publish(topic, payload)
     payload = {
         "id": 1,
-        "src": "shelies_discovery_script",
+        "src": script_topic,
         "method": "Script.Start",
         "params": {"id": script_id},
     }
     mqtt_publish(topic, payload)
-    payload = f"{{'id': 1, 'src': 'shelies_discovery_script', 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
+    payload = f"{{'id': 1, 'src': {script_topic}, 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
     mqtt_publish(topic, payload)
 
 
@@ -1874,6 +1880,12 @@ if qos not in (0, 1, 2):
     raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
 disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
+
+script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
+if script_prefix[-1] == "/" or " " in script_prefix:
+    raise ValueError(
+        f"Script prefix value {script_prefix} is not valid, check script configuration"
+    )
 
 device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
