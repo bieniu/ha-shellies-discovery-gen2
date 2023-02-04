@@ -1882,7 +1882,7 @@ if qos not in (0, 1, 2):
 disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
 script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
-if script_prefix[-1] == "/" or " " in script_prefix:
+if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
     raise ValueError(
         f"Script prefix value {script_prefix} is not valid, check script configuration"
     )
