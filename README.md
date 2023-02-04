@@ -90,6 +90,7 @@ logger:
 key | optional | type | default | description
 -- | -- | -- | -- | --
 `discovery_prefix` | True | string | `homeassistant` | MQTT discovery prefix
+`script_prefix` | True | string | | MQTT prefix to install the script in the device
 `qos` | True | integer | `0` | MQTT QoS, you can use `0`, `1` or `2`
 
 ## Configuration
