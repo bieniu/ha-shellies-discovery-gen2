@@ -1932,7 +1932,13 @@ if model not in SUPPORTED_MODELS:
 device_config = data["device_config"]  # noqa: F821
 firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
-if model != MODEL_PLUS_HT and script_installed() is False:
+script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
+if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
+    raise ValueError(
+        f"Script prefix value {script_prefix} is not valid, check script configuration"
+    )
+
+if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE) and script_installed() is False:
     removed = remove_old_script_versions()
     if not removed:
         script_id = get_script_id()
@@ -1967,12 +1973,6 @@ if qos not in (0, 1, 2):
     raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
 disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
-
-script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
-if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
-    raise ValueError(
-        f"Script prefix value {script_prefix} is not valid, check script configuration"
-    )
 
 device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
