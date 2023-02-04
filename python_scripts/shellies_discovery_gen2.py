@@ -230,7 +230,9 @@ TPL_CURRENT = "{{value_json.current|round(1)}}"
 TPL_EMETER_ACTIVE_POWER = "{{{{value_json.{phase}_act_power|round(1)}}}}"
 TPL_EMETER_APPARENT_POWER = "{{{{value_json.{phase}_aprt_power|round(1)}}}}"
 TPL_EMETER_CURRENT = "{{{{value_json.{phase}_current|round(1)}}}}"
-TPL_EMETER_N_CURRENT = "{%if value_json.n_current%}{{value_json.n_current|round(1)}}{%else%}unknown{%endif%}"
+TPL_EMETER_N_CURRENT = (
+    "{%if value_json.n_current%}{{value_json.n_current|round(1)}}{%else%}null{%endif%}"
+)
 TPL_EMETER_POWER_FACTOR = "{{{{value_json.{phase}_pf}}}}"
 TPL_EMETER_TOTAL_ACTIVE_POWER = "{{value_json.total_act_power|round(1)}}"
 TPL_EMETER_TOTAL_APPARENT_POWER = "{{value_json.total_aprt_power|round(1)}}"
