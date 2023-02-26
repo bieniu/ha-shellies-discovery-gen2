@@ -230,16 +230,14 @@ TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:0"
 
-TPL_BATTERY = "{%if value_json.battery.percent%}{{value_json.battery.percent}}{%endif%}"
+TPL_BATTERY = "{{value_json.battery.percent}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
 TPL_EMETER_ACTIVE_POWER = "{{{{value_json.{phase}_act_power}}}}"
 TPL_EMETER_APPARENT_POWER = "{{{{value_json.{phase}_aprt_power}}}}"
 TPL_EMETER_CURRENT = "{{{{value_json.{phase}_current}}}}"
-TPL_EMETER_N_CURRENT = (
-    "{%if value_json.n_current%}{{value_json.n_current}}{%else%}unknown{%endif%}"
-)
+TPL_EMETER_N_CURRENT = "{{value_json.n_current}}"
 TPL_EMETER_PHASE_TOTAL_ACTIVE_ENERGY = "{{{{value_json.{phase}_total_act_energy}}}}"
 TPL_EMETER_PHASE_TOTAL_ACTIVE_RETURNED_ENERGY = (
     "{{{{value_json.{phase}_total_act_ret_energy}}}}"
