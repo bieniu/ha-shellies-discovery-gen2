@@ -1996,10 +1996,7 @@ if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
         f"Script prefix value {script_prefix} is not valid, check script configuration"
     )
 
-if script_prefix:
-    source_topic = f"{script_prefix}/{HOME_ASSISTANT}"
-else:
-    source_topic = HOME_ASSISTANT
+source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
 
 if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE) and script_installed() is False:
     removed = remove_old_script_versions()
@@ -2010,10 +2007,10 @@ if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE) and script_installed() is Fals
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
     firmware_date = int(firmware_id.split("-", 1)[0])
-except ValueError:
+except ValueError as exc:
     raise ValueError(
         f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
-    )
+    ) from exc
 if firmware_date < min_firmware_date:
     raise ValueError(
         f"firmware dated {min_firmware_date} is required, update your device {device_id}"
