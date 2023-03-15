@@ -1937,7 +1937,7 @@ def configure_device():
         config[topic] = payload
 
     if device_config["sys"]["device"].get("addon_type") == "sensor":
-        for sensor_id in range(100, 199):
+        for sensor_id in range(100, 200):
             if device_config.get(f"temperature:{sensor_id}"):
                 topic, payload = get_sensor(
                     "temperature",
