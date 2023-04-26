@@ -1946,6 +1946,15 @@ def configure_device():
             if input_config := device_config.get(f"input:{input_id}"):
                 input_type = input_config["type"]
 
+                for event in (
+                    EVENT_SINGLE_PUSH,
+                    EVENT_DOUBLE_PUSH,
+                    EVENT_LONG_PUSH,
+                    EVENT_TRIPLE_PUSH,
+                ):
+                    topic, payload = get_input(input_id, input_type, event)
+                    config[topic] = payload
+
                 topic, payload = get_binary_sensor(
                     "input",
                     DESCRIPTION_EXTERNAL_SENSOR_INPUT,
