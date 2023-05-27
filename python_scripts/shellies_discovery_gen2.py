@@ -2209,12 +2209,15 @@ else:
             KEY_TOPIC: TOPIC_ONLINE,
             KEY_PAYLOAD_AVAILABLE: "true",
             KEY_PAYLOAD_NOT_AVAILABLE: "false",
-        },
-        {
-            KEY_TOPIC: TOPIC_STATUS_RPC,
-            KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
-        },
+        }
     ]
+    if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
+        availability.append(
+            {
+                KEY_TOPIC: TOPIC_STATUS_RPC,
+                KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
+            }
+        )
     expire_after = None
 
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
