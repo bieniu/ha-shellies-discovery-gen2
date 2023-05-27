@@ -152,6 +152,7 @@ MODEL_PRO_3 = "shellypro3"
 MODEL_PRO_EM = "shellyproem50"
 MODEL_PRO_3EM = "shellypro3em"
 MODEL_PRO_4PM = "shellypro4pm"
+MODEL_WALL_DISPLAY = "ShellyWallDisplay"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_APPARENT_POWER = "apparent_power"
@@ -1417,6 +1418,29 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230209,
     },
+    MODEL_WALL_DISPLAY: {
+        ATTR_NAME: "Shelly Wall Display",
+        ATTR_MODEL_ID: "SAWD-0A1XX10EU1",
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20230526,
+    },
 }
 
 
@@ -1501,7 +1525,7 @@ def get_switch(relay_id, relay_type, profile):
         return topic, payload
 
     relay_name = (
-        device_config[f"switch:{relay_id}"][ATTR_NAME]
+        device_config[f"switch:{relay_id}"].get(ATTR_NAME)
         or f"{device_name} Relay {relay_id}"
     )
     payload = {
@@ -1651,7 +1675,7 @@ def get_sensor(
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     elif relay_id is not None:
         switch_name = (
-            device_config[f"switch:{relay_id}"][ATTR_NAME]
+            device_config[f"switch:{relay_id}"].get(ATTR_NAME, {})
             or f"{device_name} Relay {relay_id}"
         )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
@@ -1745,7 +1769,7 @@ def get_binary_sensor(
         )
     elif entity_id is not None:
         name = (
-            device_config[f"switch:{entity_id}"][ATTR_NAME]
+            device_config[f"switch:{entity_id}"].get(ATTR_NAME, {})
             or f"{device_name} Relay {entity_id}"
         )
     if entity_id is not None:
@@ -1919,7 +1943,9 @@ def configure_device():
     for relay_id in range(relays):
         consumption_types = [
             item.lower()
-            for item in device_config["sys"]["ui_data"].get("consumption_types", [])
+            for item in device_config["sys"]
+            .get("ui_data", {})
+            .get("consumption_types", [])
         ]
         relay_type = get_consumption_type(consumption_types, relay_id)
 
