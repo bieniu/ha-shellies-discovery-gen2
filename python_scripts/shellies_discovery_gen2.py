@@ -2163,7 +2163,10 @@ if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
 
 source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
 
-if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE) and script_installed() is False:
+if (
+    model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+    and script_installed() is False
+):
     removed = remove_old_script_versions()
     if not removed:
         script_id = get_script_id()
