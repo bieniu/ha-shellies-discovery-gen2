@@ -231,7 +231,7 @@ TOPIC_STATUS_SYS = "~status/sys"
 TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:{sensor}"
-TOPIC_VOLTMETER= "~status/voltmeter:{sensor}"
+TOPIC_VOLTMETER = "~status/voltmeter:{sensor}"
 
 TPL_BATTERY = "{{value_json.battery.percent}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -2040,7 +2040,7 @@ def configure_device():
                     sensor_id=sensor_id,
                 )
                 config[topic] = payload
-            
+
             if device_config.get(f"voltmeter:{sensor_id}"):
                 topic, payload = get_sensor(
                     "voltmeter",
