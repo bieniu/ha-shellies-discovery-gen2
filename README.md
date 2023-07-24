@@ -29,6 +29,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 ## Supported devices
 
 - Shelly Plus 1
+- Shelly Plus 1 Mini
 - Shelly Plus 1PM
 - Shelly Plus 2PM
 - Shelly Plus Add-on
