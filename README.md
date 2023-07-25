@@ -31,6 +31,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus 1
 - Shelly Plus 1 Mini
 - Shelly Plus 1PM
+- Shelly Plus 1PM Mini
 - Shelly Plus 2PM
 - Shelly Plus Add-on
 - Shelly Plus H&T
