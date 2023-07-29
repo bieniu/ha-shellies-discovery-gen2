@@ -1700,10 +1700,7 @@ def get_cover(cover_id, profile):
         payload = ""
         return topic, payload
 
-    cover_name = (
-        device_config[f"cover:{cover_id}"][ATTR_NAME]
-        or f"{device_name} Cover {cover_id}"
-    )
+    cover_name = device_config[f"cover:{cover_id}"][ATTR_NAME] or f"Cover {cover_id}"
     payload = {
         KEY_NAME: cover_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
@@ -1734,8 +1731,7 @@ def get_switch(relay_id, relay_type, profile):
         return topic, payload
 
     relay_name = (
-        device_config[f"switch:{relay_id}"].get(ATTR_NAME)
-        or f"{device_name} Relay {relay_id}"
+        device_config[f"switch:{relay_id}"].get(ATTR_NAME) or f"Relay {relay_id}"
     )
     payload = {
         KEY_NAME: relay_name,
@@ -1763,10 +1759,7 @@ def get_relay_light(relay_id, relay_type, profile):
         payload = ""
         return topic, payload
 
-    relay_name = (
-        device_config[f"switch:{relay_id}"][ATTR_NAME]
-        or f"{device_name} Relay {relay_id}"
-    )
+    relay_name = device_config[f"switch:{relay_id}"][ATTR_NAME] or f"Relay {relay_id}"
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: relay_name,
@@ -1792,10 +1785,7 @@ def get_relay_fan(relay_id, relay_type, profile):
         payload = ""
         return topic, payload
 
-    relay_name = (
-        device_config[f"switch:{relay_id}"][ATTR_NAME]
-        or f"{device_name} Relay {relay_id}"
-    )
+    relay_name = device_config[f"switch:{relay_id}"][ATTR_NAME] or f"Relay {relay_id}"
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
@@ -1815,10 +1805,7 @@ def get_light(light_id):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
 
-    light_name = (
-        device_config[f"light:{light_id}"][ATTR_NAME]
-        or f"{device_name} Light {light_id}"
-    )
+    light_name = device_config[f"light:{light_id}"][ATTR_NAME] or f"Light {light_id}"
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
@@ -1877,29 +1864,26 @@ def get_sensor(
 
     if cover_id is not None:
         switch_name = (
-            device_config[f"cover:{cover_id}"][ATTR_NAME]
-            or f"{device_name} Cover {cover_id}"
+            device_config[f"cover:{cover_id}"][ATTR_NAME] or f"Cover {cover_id}"
         )
         unique_id = f"{device_id}-cover-{cover_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     elif relay_id is not None:
         switch_name = (
             device_config[f"switch:{relay_id}"].get(ATTR_NAME, {})
-            or f"{device_name} Relay {relay_id}"
+            or f"Relay {relay_id}"
         )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     elif emeter_id is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
-        sensor_name = (
-            f"{device_name} {description[KEY_NAME].format(phase=emeter_phase.upper())}"
-        )
+        sensor_name = f"{description[KEY_NAME].format(phase=emeter_phase.upper())}"
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
-        sensor_name = f"{device_name} {device_config[f'{sensor}:{sensor_id}']['name'] or description[KEY_NAME].format(sensor=sensor_id)}"
+        sensor_name = f"{device_config[f'{sensor}:{sensor_id}']['name'] or description[KEY_NAME].format(sensor=sensor_id)}"
     else:
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{device_name} {description[KEY_NAME]}"
+        sensor_name = f"{description[KEY_NAME]}"
 
     payload = {
         KEY_NAME: sensor_name,
@@ -1972,14 +1956,11 @@ def get_binary_sensor(
         return topic, payload
 
     if is_input:
-        name = (
-            device_config[f"input:{entity_id}"][ATTR_NAME]
-            or f"{device_name} Input {entity_id}"
-        )
+        name = device_config[f"input:{entity_id}"][ATTR_NAME] or f"Input {entity_id}"
     elif entity_id is not None:
         name = (
             device_config[f"switch:{entity_id}"].get(ATTR_NAME, {})
-            or f"{device_name} Relay {entity_id}"
+            or f"Relay {entity_id}"
         )
     if entity_id is not None:
         unique_id = f"{device_id}-{entity_id}-{sensor}".lower()
@@ -1988,7 +1969,7 @@ def get_binary_sensor(
         )
     else:
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{device_name} {description[KEY_NAME]}"
+        sensor_name = f"{description[KEY_NAME]}"
 
     if is_input and input_type != ATTR_SWITCH:
         payload = ""
@@ -2091,7 +2072,7 @@ def get_button(button, description):
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
 
     payload = {
-        KEY_NAME: f"{device_name} {description[KEY_NAME]}",
+        KEY_NAME: f"{description[KEY_NAME]}",
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(source=source_topic),
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
@@ -2121,7 +2102,7 @@ def get_update(update, description):
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
 
     payload = {
-        KEY_NAME: f"{device_name} {description[KEY_NAME]}",
+        KEY_NAME: f"{description[KEY_NAME]}",
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{update}".lower(),
         KEY_STATE_TOPIC: description[KEY_STATE_TOPIC],
