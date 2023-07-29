@@ -1877,13 +1877,15 @@ def get_sensor(
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
     elif emeter_id is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
-        sensor_name = f"{description[KEY_NAME].format(phase=emeter_phase.upper())}"
+        sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
-        sensor_name = f"{device_config[f'{sensor}:{sensor_id}']['name'] or description[KEY_NAME].format(sensor=sensor_id)}"
+        sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
+            KEY_NAME
+        ].format(sensor=sensor_id)
     else:
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{description[KEY_NAME]}"
+        sensor_name = description[KEY_NAME]
 
     payload = {
         KEY_NAME: sensor_name,
@@ -1969,7 +1971,7 @@ def get_binary_sensor(
         )
     else:
         unique_id = f"{device_id}-{sensor}".lower()
-        sensor_name = f"{description[KEY_NAME]}"
+        sensor_name = description[KEY_NAME]
 
     if is_input and input_type != ATTR_SWITCH:
         payload = ""
@@ -2072,7 +2074,7 @@ def get_button(button, description):
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
 
     payload = {
-        KEY_NAME: f"{description[KEY_NAME]}",
+        KEY_NAME: description[KEY_NAME],
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(source=source_topic),
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
@@ -2102,7 +2104,7 @@ def get_update(update, description):
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
 
     payload = {
-        KEY_NAME: f"{description[KEY_NAME]}",
+        KEY_NAME: description[KEY_NAME],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{update}".lower(),
         KEY_STATE_TOPIC: description[KEY_STATE_TOPIC],
