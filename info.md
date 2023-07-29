@@ -71,6 +71,7 @@ logger:
 
 - binary sensor
 - button
+- event
 - fan
 - light
 - sensor
