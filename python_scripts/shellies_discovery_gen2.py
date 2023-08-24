@@ -1,4 +1,5 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
+VERSION = "2.18.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -2491,6 +2492,7 @@ device_info = {
 }
 origin_info = {
     "name": "Shellies Discovery Gen2",
+    "sw": VERSION,
     "url": "https://github.com/bieniu/ha-shellies-discovery-gen2",
 }
 
