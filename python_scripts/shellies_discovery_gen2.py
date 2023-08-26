@@ -132,6 +132,7 @@ KEY_STATE_TOPIC = "stat_t"
 KEY_STATE_VALUE_TEMPLATE = "stat_val_tpl"
 KEY_SUBTYPE = "stype"
 KEY_SUGGESTED_DISPLAY_PRECISION = "sug_dsp_prc"
+KEY_SUPPORT_URL = "url"
 KEY_SW_VERSION = "sw"
 KEY_TITLE = "tit"
 KEY_TOPIC = "t"
@@ -2491,9 +2492,9 @@ device_info = {
     KEY_CONFIGURATION_URL: device_url,
 }
 origin_info = {
-    "name": "Shellies Discovery Gen2",
-    "sw": VERSION,
-    "url": "https://github.com/bieniu/ha-shellies-discovery-gen2",
+    KEY_NAME: "Shellies Discovery Gen2",
+    KEY_SW_VERSION: VERSION,
+    KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
 }
 
 if wakeup_period > 0:
