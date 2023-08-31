@@ -1,4 +1,5 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
+VERSION = "2.18.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -102,6 +103,7 @@ KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
 KEY_NAME = "name"
+KEY_ORIGIN = "o"
 KEY_PAYLOAD = "pl"
 KEY_PAYLOAD_AVAILABLE = "pl_avail"
 KEY_PAYLOAD_CLOSE = "pl_cls"
@@ -130,6 +132,7 @@ KEY_STATE_TOPIC = "stat_t"
 KEY_STATE_VALUE_TEMPLATE = "stat_val_tpl"
 KEY_SUBTYPE = "stype"
 KEY_SUGGESTED_DISPLAY_PRECISION = "sug_dsp_prc"
+KEY_SUPPORT_URL = "url"
 KEY_SW_VERSION = "sw"
 KEY_TITLE = "tit"
 KEY_TOPIC = "t"
@@ -1749,6 +1752,7 @@ def get_cover(cover_id, profile):
         KEY_UNIQUE_ID: f"{device_id}-{cover_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
@@ -1778,6 +1782,7 @@ def get_switch(relay_id, relay_type, profile):
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
@@ -1804,6 +1809,7 @@ def get_relay_light(relay_id, relay_type, profile):
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
@@ -1828,6 +1834,7 @@ def get_relay_fan(relay_id, relay_type, profile):
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
@@ -1851,6 +1858,7 @@ def get_light(light_id):
         KEY_UNIQUE_ID: f"{device_id}-{light_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
@@ -1925,6 +1933,7 @@ def get_sensor(
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
@@ -2016,6 +2025,7 @@ def get_binary_sensor(
         KEY_UNIQUE_ID: unique_id,
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
@@ -2094,6 +2104,7 @@ def get_event(input_id, input_type):
         KEY_QOS: qos,
         KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
         KEY_DEVICE_CLASS: DEVICE_CLASS_BUTTON,
     }
@@ -2113,6 +2124,7 @@ def get_button(button, description):
         KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
@@ -2149,6 +2161,7 @@ def get_update(update, description):
         KEY_QOS: qos,
         KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
     if description.get(KEY_PAYLOAD_INSTALL):
@@ -2477,6 +2490,11 @@ device_info = {
     KEY_HW_VERSION: f"gen2 ({SUPPORTED_MODELS[model].get(ATTR_MODEL_ID)})",
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
     KEY_CONFIGURATION_URL: device_url,
+}
+origin_info = {
+    KEY_NAME: "Shellies Discovery Gen2",
+    KEY_SW_VERSION: VERSION,
+    KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
 }
 
 if wakeup_period > 0:
