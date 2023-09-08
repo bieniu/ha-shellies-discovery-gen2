@@ -1,7 +1,5 @@
 [![Community Forum][forum-shield]][forum]  [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]  [![PayPal_Me][paypal-me-shield]][paypal-me]
 
-## :warning:  WARNING
-Firmware `0.12.x`, `0.13.x` and `0.14.x` don't support `consumption type` for relays.
 
 This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Assistant](https://home-assistant.io/).
 
