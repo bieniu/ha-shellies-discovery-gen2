@@ -229,7 +229,9 @@ STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
 TOPIC_EMDATA = "~status/emdata:{emeter_id}"
+TOPIC_EMDATA1 = "~status/em1data:{emeter_id}"
 TOPIC_EMETER = "~status/em:{emeter_id}"
+TOPIC_EMETER1 = "~status/em1:{emeter_id}"
 TOPIC_EVENTS_RPC = "~events/rpc"
 TOPIC_HUMIDITY = "~status/humidity:{sensor}"
 TOPIC_INPUT = "~status/input:{relay}"
@@ -1566,8 +1568,7 @@ SUPPORTED_MODELS = {
     MODEL_PRO_EM: {
         ATTR_NAME: "Shelly Pro EM",
         ATTR_MODEL_ID: "SPEM-002CEBEU50",
-        ATTR_EMETERS: 1,
-        ATTR_EMETER_PHASES: ["a", "b"],
+        ATTR_EMETERS: 2,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_RELAYS: 1,
@@ -1881,9 +1882,13 @@ def get_sensor(
     sensor_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
-    if emeter_id is not None:
+    if emeter_id is not None and emeter_phase is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{emeter_id}-{emeter_phase}-{sensor}/config"
+        )
+    elif emeter_id is not None and emeter_phase is None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{emeter_id}-{sensor}/config"
         )
     elif cover_id is not None:
         topic = encode_config_topic(
@@ -1921,9 +1926,12 @@ def get_sensor(
         )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
-    elif emeter_id is not None:
+    elif emeter_id is not None and emeter_phase is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
+    elif emeter_id is not None and emeter_phase is None:
+        unique_id = f"{device_id}-{emeter_id}-{sensor}".lower()
+        sensor_name = description[KEY_NAME].format(emeter_id=emeter_id)
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
         sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
@@ -2209,11 +2217,16 @@ def configure_device():
         config[topic] = payload
 
     for emeter_id in range(emeters):
-        for phase in emeter_phases:
+        if emeter_phases:
+            for phase in emeter_phases:
+                for sensor, description in emeter_sensors.items():
+                    topic, payload = get_sensor(
+                        sensor, description, emeter_id=emeter_id, emeter_phase=phase
+                    )
+                    config[topic] = payload
+        else:
             for sensor, description in emeter_sensors.items():
-                topic, payload = get_sensor(
-                    sensor, description, emeter_id=emeter_id, emeter_phase=phase
-                )
+                topic, payload = get_sensor(sensor, description, emeter_id=emeter_id)
                 config[topic] = payload
 
     for relay_id in range(relays):
