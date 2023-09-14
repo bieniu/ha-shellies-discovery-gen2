@@ -11,6 +11,8 @@ This script needs Home Assistant `python_script` component so, if you never used
 
 For the device to work with the script, it must have MQTT configured and options **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
 
+MQTT integration must be configured in Home Assistant.
+
 ## Installation
 
 You can download `shellies_discovery_gen2.py` file and save it in `<config>/python_scripts` folder.
