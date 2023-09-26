@@ -2568,7 +2568,7 @@ mac = device_config["sys"]["device"][ATTR_MAC]
 if mac is None:
     raise ValueError("mac value None is not valid, check script configuration")
 
-device_name = device_config["sys"]["device"][ATTR_NAME]
+device_name = device_config["sys"]["device"].get(ATTR_NAME)
 device_url = f"http://{device_id}.local/"
 wakeup_period = device_config["sys"].get("sleep", {}).get("wakeup_period", 0)
 
