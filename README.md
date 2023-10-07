@@ -15,7 +15,7 @@ This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Ass
 
 This script needs Home Assistant `python_script` component so, if you never used it, I strongly suggest you to follow the [official instruction](https://www.home-assistant.io/integrations/python_script#writing-your-first-script) and check that `python_script` is properly configured and it's working.
 
-For the device to work with the script, it must have MQTT configured and options **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
+For the device to work with the script, it must have MQTT configured and options **Enable "MQTT Control"**, **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
 
 MQTT integration must be configured in Home Assistant.
 
@@ -141,6 +141,10 @@ python_script:
     data:
       id: "{{ trigger.payload_json.src }}"
       device_config: "{{ trigger.payload_json.result }}"
+  - service: mqtt.publish
+    data:
+      topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
+      payload: "status_update"
 ```
 
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
