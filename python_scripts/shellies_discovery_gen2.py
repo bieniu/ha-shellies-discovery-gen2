@@ -2548,6 +2548,7 @@ def remove_old_script_versions():
         script_id = script_id + 1
 
 
+logger.info("Shellies Discovery Gen2 version: %s", VERSION)  # noqa: F821
 device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
