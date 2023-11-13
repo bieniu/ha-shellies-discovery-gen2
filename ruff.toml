@@ -54,6 +54,7 @@ ignore = [
     "FBT002",   # Boolean default value in function definition
     "FBT003",   # Boolean positional value in function call
     "INP001",   # Add an `__init__.py`
+    "ISC001",   # Single line implicit string concatenation
     "PLR0912",  # Too many branches
     "PLR0913",  # Too many arguments to function cal
     "PLR0915",  # Too many statements
