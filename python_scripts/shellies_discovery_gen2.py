@@ -30,6 +30,10 @@ ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
+ATTR_TEMPERATURE_MAX = "temperature_max"
+ATTR_TEMPERATURE_MIN = "temperature_min"
+ATTR_TEMPERATURE_STEP = "temperature_step"
+ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
 
 BUTTON_MUTE_ALARM = "mute_alarm"
@@ -73,6 +77,22 @@ EVENT_TRIPLE_PUSH = "triple_push"
 
 HOME_ASSISTANT = "home-assistant"
 
+KEY_ACTION_TEMPLATE = "act_tpl"
+KEY_CURRENT_TEMPERATURE_TOPIC = "curr_temp_t"
+KEY_CURRENT_TEMPERATURE_TEMPLATE = "curr_temp_tpl"
+KEY_TEMPERATURE_STATE_TEMPLATE = "temp_stat_tpl"
+KEY_TEMPERATURE_STATE_TOPIC = "temp_stat_t"
+KEY_TEMPERATURE_COMMAND_TEMPLATE = "temp_cmd_tpl"
+KEY_TEMPERATURE_COMMAND_TOPIC = "temp_cmd_t"
+KEY_TEMP_STEP = "temp_step"
+KEY_MIN_TEMP = "min_temp"
+KEY_MAX_TEMP = "max_temp"
+KEY_MODES = "modes"
+KEY_MODE_STATE_TOPIC = "mode_stat_t"
+KEY_ACTION_TOPIC = "act_t"
+KEY_MODE_COMMAND_TOPIC = "mode_cmd_t"
+KEY_MODE_COMMAND_TEMPLATE = "mode_cmd_tpl"
+KEY_MODE_STATE_TEMPLATE = "mode_stat_tpl"
 KEY_AUTOMATION_TYPE = "atype"
 KEY_AVAILABILITY = "avty"
 KEY_AVAILABILITY_MODE = "avty_mode"
@@ -248,6 +268,7 @@ TOPIC_STATUS_SYS = "~status/sys"
 TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
 TOPIC_TEMPERATURE = "~status/temperature:{sensor}"
+TOPIC_THERMOSTAT = "~status/thermostat:{thermostat}"
 TOPIC_VOLTMETER = "~status/voltmeter:{sensor}"
 
 TPL_BATTERY = "{{value_json.battery.percent}}"
@@ -318,6 +339,10 @@ TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
+TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
+TPL_CURRENT_TEMPERATURE = "{{value_json.current_C}}"
+TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
+TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -1015,6 +1040,11 @@ DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER = {
     KEY_STATE_TOPIC: TOPIC_VOLTMETER,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_THERMOSTAT = {
+    ATTR_TEMPERATURE_MIN: 5,
+    ATTR_TEMPERATURE_MAX: 35,
+    ATTR_TEMPERATURE_STEP: 0.5,
 }
 
 SUPPORTED_MODELS = {
@@ -1793,7 +1823,8 @@ SUPPORTED_MODELS = {
             SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
             SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
         },
-        ATTR_MIN_FIRMWARE_DATE: 20230526,
+        ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT},
+        ATTR_MIN_FIRMWARE_DATE: 20231117,
     },
 }
 
@@ -1860,6 +1891,53 @@ def get_cover(cover_id, profile):
         KEY_PAYLOAD_STOP: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Cover.Stop^,^params^:{{^id^:{cover_id}}}}}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{cover_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
+def get_climate(thermostat_id, description):
+    """Create configuration for Shelly climate entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
+    )
+
+    thermostat_type = device_config.get(f"thermostat:{thermostat_id}", {}).get(
+        "type", "heating"
+    )
+    thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
+
+    thermostat_name = (
+        device_config.get(f"thermostat:{thermostat_id}", {}).get(ATTR_NAME)
+        or f"Thermostat {thermostat_id}"
+    )
+
+    thermostat_topic = TOPIC_THERMOSTAT.format(thermostat=thermostat_id)
+    payload = {
+        KEY_NAME: thermostat_name,
+        KEY_ACTION_TOPIC: thermostat_topic,
+        KEY_ACTION_TEMPLATE: TPL_ACTION_TEMPLATE.format(action=thermostat_type),
+        KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
+        KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
+        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
+        KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat_id},^target_C^:value}}}}}}|tojson}}}}",
+        KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
+        KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
+        KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
+        KEY_MODES: ["off", thermostat_default_mode],
+        KEY_MODE_STATE_TOPIC: thermostat_topic,
+        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
+            action=thermostat_default_mode
+        ),
+        KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_MODE_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^{{^id^:{thermostat_id},^enable^:value}}}}}}|tojson}}}}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_ORIGIN: origin_info,
@@ -2340,6 +2418,10 @@ def configure_device():
                 topic, payload = get_sensor(sensor, description, emeter_id=emeter_id)
                 config[topic] = payload
 
+    for thermostat_id, description in thermostats.items():
+        topic, payload = get_climate(thermostat_id, description)
+        config[topic] = payload
+
     for relay_id in range(relays):
         consumption_types = [
             item.lower()
@@ -2659,6 +2741,8 @@ emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
 relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
 relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
 relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
+
+thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
 lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
 
