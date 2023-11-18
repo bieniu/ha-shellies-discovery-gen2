@@ -1958,6 +1958,11 @@ def get_switch(relay_id, relay_type, profile):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
+    if f"switch:{relay_id}" in device_config.get(f"thermostat:{relay_id}", {}).get(
+        "actuator", ""
+    ):
+        return topic, ""
+
     if relay_type != ATTR_SWITCH or profile == ATTR_COVER:
         return topic, ""
 
