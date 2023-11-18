@@ -45,7 +45,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro 4PM
 - Shelly Pro Dual Cover PM
 - Shelly Pro EM
-- Shelly Wall Display
+- Shelly Wall Display (relay and thermostat mode)
 
 ## Battery powered devices
 
@@ -71,6 +71,7 @@ logger:
 
 - binary sensor
 - button
+- climate
 - cover
 - device trigger
 - event
