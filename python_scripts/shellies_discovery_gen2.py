@@ -271,10 +271,12 @@ TOPIC_TEMPERATURE = "~status/temperature:{sensor}"
 TOPIC_THERMOSTAT = "~status/thermostat:{thermostat}"
 TOPIC_VOLTMETER = "~status/voltmeter:{sensor}"
 
+TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
 TPL_BATTERY = "{{value_json.battery.percent}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
+TPL_CURRENT_TEMPERATURE = "{{value_json.current_C}}"
 TPL_EMETER_ACTIVE_POWER = "{{value_json.act_power}}"
 TPL_EMETER_PHASE_ACTIVE_POWER = "{{{{value_json.{phase}_act_power}}}}"
 TPL_EMETER_APPARENT_POWER = "{{value_json.aprt_power}}"
@@ -326,10 +328,14 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
+TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
+TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
+TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
+TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VOLTAGE = "{{value_json.voltage}}"
@@ -339,10 +345,6 @@ TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
-TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
-TPL_CURRENT_TEMPERATURE = "{{value_json.current_C}}"
-TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
-TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -1925,7 +1927,9 @@ def get_climate(thermostat_id, description):
         KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_TEMPERATURE_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat_id},^target_C^:value}}}}}}|tojson}}}}",
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
@@ -1935,7 +1939,9 @@ def get_climate(thermostat_id, description):
             action=thermostat_default_mode
         ),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: f"{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat_id},^enable^:enable}}}}}}|tojson}}}}",
+        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
         KEY_QOS: qos,
