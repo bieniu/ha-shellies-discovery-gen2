@@ -1875,8 +1875,7 @@ def get_cover(cover_id, profile):
     topic = encode_config_topic(f"{disc_prefix}/cover/{device_id}-{cover_id}/config")
 
     if profile != ATTR_COVER:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     cover_name = device_config[f"cover:{cover_id}"][ATTR_NAME] or f"Cover {cover_id}"
     payload = {
@@ -1906,6 +1905,9 @@ def get_climate(thermostat_id, description):
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
+
+    if f"thermostat:{thermostat_id}" not in device_config:
+        return topic, ""
 
     thermostat_type = device_config.get(f"thermostat:{thermostat_id}", {}).get(
         "type", "heating"
@@ -1957,8 +1959,7 @@ def get_switch(relay_id, relay_type, profile):
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_SWITCH or profile == ATTR_COVER:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     relay_name = (
         device_config.get(f"switch:{relay_id}", {}).get(ATTR_NAME)
@@ -1988,8 +1989,7 @@ def get_relay_light(relay_id, relay_type, profile):
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_LIGHT or profile == ATTR_COVER:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     relay_name = device_config[f"switch:{relay_id}"][ATTR_NAME] or f"Relay {relay_id}"
     payload = {
@@ -2015,8 +2015,7 @@ def get_relay_fan(relay_id, relay_type, profile):
     topic = encode_config_topic(f"{disc_prefix}/fan/{device_id}-{relay_id}/config")
 
     if relay_type != ATTR_FAN or profile == ATTR_COVER:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     relay_name = device_config[f"switch:{relay_id}"][ATTR_NAME] or f"Relay {relay_id}"
     payload = {
@@ -2094,12 +2093,10 @@ def get_sensor(
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
 
     if profile == ATTR_COVER and cover_id is None:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     if profile == ATTR_SWITCH and relay_id is None:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     if cover_id is not None:
         switch_name = (
@@ -2204,8 +2201,7 @@ def get_binary_sensor(
         )
 
     if profile == ATTR_COVER:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     if is_input:
         name = device_config[f"input:{entity_id}"][ATTR_NAME] or f"Input {entity_id}"
@@ -2224,8 +2220,7 @@ def get_binary_sensor(
         sensor_name = description[KEY_NAME]
 
     if is_input and input_type != ATTR_SWITCH:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     payload = {
         KEY_NAME: sensor_name,
@@ -2273,8 +2268,7 @@ def get_input(input_id, input_type, event):
     )
 
     if input_type != ATTR_BUTTON:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     payload = {
         KEY_AUTOMATION_TYPE: VALUE_TRIGGER,
@@ -2297,8 +2291,7 @@ def get_event(input_id, input_type):
     )
 
     if input_type != ATTR_BUTTON:
-        payload = ""
-        return topic, payload
+        return topic, ""
 
     input_name = (
         device_config[f"input:{input_id}"].get(ATTR_NAME) or f"Button {input_id}"
