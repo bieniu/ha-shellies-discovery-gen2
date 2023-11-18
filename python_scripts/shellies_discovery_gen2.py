@@ -304,7 +304,9 @@ TPL_ENERGY = "{{value_json.aenergy.total}}"
 TPL_ETH_IP = "{{value_json.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
 TPL_FIRMWARE_BETA = "{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}"
+TPL_FIRMWARE_BETA_SYS = "{%if value_json.available_updates.beta is defined%}{{value_json.available_updates.beta.version}}{%else%}{{value_json.ver}}{%endif%}"
 TPL_FIRMWARE_STABLE = "{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}"
+TPL_FIRMWARE_STABLE_SYS = "{%if value_json.available_updates.stable is defined%}{{value_json.available_updates.stable.version}}{%else%}{{value_json.ver}}{%endif%}"
 TPL_FIRMWARE_STABLE_INDEPENDENT = (
     "{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}"
 )
@@ -315,6 +317,7 @@ TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT = (
 TPL_HUMIDITY = "{{value_json.rh}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_INSTALLED_FIRMWARE = "{{value_json.sys.installed_version}}"
+TPL_INSTALLED_FIRMWARE_SYS = "{{value_json.ver}}"
 TPL_MQTT_CONNECTED = "{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}"
 TPL_POWER = "{{value_json.apower}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100}}"
@@ -998,6 +1001,17 @@ DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
 }
+DESCRIPTION_UPDATE_FIRMWARE_SYS = {
+    KEY_DEVICE_CLASS: "firmware",
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_STABLE_SYS,
+    KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_SYS,
+    KEY_NAME: "Firmware",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^stable^}}}}",
+    KEY_STATE_TOPIC: TOPIC_STATUS_SYS,
+    KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE_SYS,
+}
 DESCRIPTION_UPDATE_FIRMWARE_BETA = {
     KEY_DEVICE_CLASS: "firmware",
     KEY_ENABLED_BY_DEFAULT: False,
@@ -1008,6 +1022,17 @@ DESCRIPTION_UPDATE_FIRMWARE_BETA = {
     KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
+}
+DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS = {
+    KEY_DEVICE_CLASS: "firmware",
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_LATEST_VERSION_TEMPLATE: TPL_FIRMWARE_BETA_SYS,
+    KEY_LATEST_VERSION_TOPIC: TOPIC_STATUS_SYS,
+    KEY_NAME: "Firmware beta",
+    KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
+    KEY_STATE_TOPIC: TOPIC_STATUS_SYS,
+    KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE_SYS,
 }
 DESCRIPTION_EXTERNAL_SENSOR_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
@@ -1826,6 +1851,10 @@ SUPPORTED_MODELS = {
             SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT},
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
+        },
         ATTR_MIN_FIRMWARE_DATE: 20231117,
     },
 }
