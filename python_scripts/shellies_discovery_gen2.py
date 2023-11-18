@@ -1935,7 +1935,7 @@ def get_climate(thermostat_id, description):
             action=thermostat_default_mode
         ),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^{{^id^:{thermostat_id},^enable^:value}}}}}}|tojson}}}}",
+        KEY_MODE_COMMAND_TEMPLATE: f"{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat_id},^enable^:enable}}}}}}|tojson}}}}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
         KEY_QOS: qos,
