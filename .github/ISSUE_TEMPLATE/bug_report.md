@@ -41,7 +41,6 @@ assignees: ''
 -->
 
 
-
 **Debug log:**
 <!--
   Please provide a log file for the following logger configuration:
