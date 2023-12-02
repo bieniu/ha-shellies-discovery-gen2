@@ -163,7 +163,7 @@ KEY_UNIQUE_ID = "uniq_id"
 KEY_UNIT = "unit_of_meas"
 KEY_VALUE_TEMPLATE = "val_tpl"
 
-#Gen2 devices
+# Gen2 devices
 MODEL_PLUS_1 = "shellyplus1"
 MODEL_PLUS_1_MINI = "shelly1mini"
 MODEL_PLUS_1PM = "shellyplus1pm"
