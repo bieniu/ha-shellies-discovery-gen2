@@ -29,7 +29,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 ## Supported devices
 
 - Shelly Plus 1
-- Shelly Plus 1 Mini
+- Shelly Plus 1 Mini (Gen2 & Gen3)
 - Shelly Plus 1PM
 - Shelly Plus 1PM Mini (Gen2 & Gen3)
 - Shelly Plus 2PM
@@ -40,7 +40,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus Plug S
 - Shelly Plus Plug UK
 - Shelly Plus Plug US
-- Shelly Plus PM Mini
+- Shelly Plus PM Mini (Gen2 & Gen3)
 - Shelly Plus Smoke
 - Shelly Plus Wall Dimmer
 - Shelly Pro 1
