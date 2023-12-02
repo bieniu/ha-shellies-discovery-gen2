@@ -1,7 +1,7 @@
 [![Community Forum][forum-shield]][forum]  [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]  [![PayPal_Me][paypal-me-shield]][paypal-me]
 
 
-This script adds MQTT discovery support for Shelly Gen2 devices in the [Home Assistant](https://home-assistant.io/).
+This script adds MQTT discovery support for Shelly Gen2 and Gen3 devices in the [Home Assistant](https://home-assistant.io/).
 
 ![image](https://user-images.githubusercontent.com/478555/151659044-47afc47e-5235-42e9-bd2c-007cf7a8de90.png)
 
@@ -24,7 +24,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus 1
 - Shelly Plus 1 Mini
 - Shelly Plus 1PM
-- Shelly Plus 1PM Mini
+- Shelly Plus 1PM Mini (Gen2 & Gen3)
 - Shelly Plus 2PM
 - Shelly Plus Add-on
 - Shelly Plus H&T
