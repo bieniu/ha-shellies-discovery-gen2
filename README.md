@@ -50,6 +50,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro 3
 - Shelly Pro 3EM
 - Shelly Pro 4PM
+- Shelly Pro Dimmer 2
 - Shelly Pro Dual Cover PM
 - Shelly Pro EM
 - Shelly Wall Display (relay and thermostat mode)
