@@ -20,6 +20,7 @@ ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
 ATTR_LIGHTS = "lights"
+ATTR_LIGHT_SENSORS = "light_sensors"
 ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
 ATTR_MIN_FIRMWARE_DATE = "min_firmware_date"
@@ -185,6 +186,7 @@ MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_3 = "shellypro3"
 MODEL_PRO_3EM = "shellypro3em"
 MODEL_PRO_4PM = "shellypro4pm"
+MODEL_PRO_DIMMER_2 = "shellyprodimmer2"
 MODEL_PRO_DUAL_COVER_PM = "shellypro2cover"
 MODEL_PRO_EM = "shellyproem50"
 MODEL_WALL_DISPLAY = "ShellyWallDisplay"
@@ -441,6 +443,16 @@ DESCRIPTION_SENSOR_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
 }
+DESCRIPTION_SENSOR_LIGHT_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_LIGHT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
 DESCRIPTION_SENSOR_EMETER_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -507,6 +519,16 @@ DESCRIPTION_SENSOR_ENERGY = {
     KEY_NAME: "Energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_LIGHT_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_LIGHT,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
@@ -582,6 +604,16 @@ DESCRIPTION_SENSOR_POWER = {
     KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
+DESCRIPTION_SENSOR_LIGHT_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_LIGHT,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
@@ -781,6 +813,17 @@ DESCRIPTION_SENSOR_RELAY_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
 }
+DESCRIPTION_SENSOR_LIGHT_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_LIGHT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
+}
 DESCRIPTION_SENSOR_RELAY_TEMPERATURE_STATUS = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -820,6 +863,16 @@ DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_LIGHT_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_LIGHT,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
@@ -1811,6 +1864,42 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
     },
+    MODEL_PRO_DIMMER_2: {
+        ATTR_NAME: "Shelly Pro Dimmer 2",
+        ATTR_MODEL_ID: "SPDM-002PE01EU",
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_INPUTS: 4,
+        ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
+        ATTR_INPUT_EVENTS: [
+            EVENT_BUTTON_DOWN,
+            EVENT_BUTTON_UP,
+            EVENT_DOUBLE_PUSH,
+            EVENT_LONG_PUSH,
+            EVENT_SINGLE_PUSH,
+            EVENT_TRIPLE_PUSH,
+        ],
+        ATTR_LIGHTS: 2,
+        ATTR_LIGHT_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_LIGHT_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_ETH_IP: DESCRIPTION_SENSOR_ETH_IP,
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20231005,
+    },
     MODEL_PRO_DUAL_COVER_PM: {
         ATTR_NAME: "Shelly Pro Dual Cover PM",
         ATTR_MODEL_ID: "SPSH-002PE16EU",
@@ -2232,6 +2321,7 @@ def get_sensor(
     description,
     profile=None,
     relay_id=None,
+    light_id=None,
     cover_id=None,
     emeter_id=None,
     emeter_phase=None,
@@ -2253,6 +2343,10 @@ def get_sensor(
     elif relay_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{relay_id}-{sensor}/config"
+        )
+    elif light_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{light_id}-{sensor}/config"
         )
     elif sensor_id is not None:
         topic = encode_config_topic(
@@ -2280,6 +2374,12 @@ def get_sensor(
         )
         unique_id = f"{device_id}-{relay_id}-{sensor}".lower()
         sensor_name = f"{switch_name} {description[KEY_NAME]}"
+    elif light_id is not None:
+        light_name = (
+            device_config[f"light:{light_id}"].get(ATTR_NAME, {}) or f"Light {light_id}"
+        )
+        unique_id = f"{device_id}-{light_id}-{sensor}".lower()
+        sensor_name = f"{light_name} {description[KEY_NAME]}"
     elif emeter_id is not None and emeter_phase is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
@@ -2329,6 +2429,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(cover=cover_id)
     elif relay_id is not None and description[KEY_STATE_TOPIC] != TOPIC_STATUS_RPC:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
+    elif light_id is not None and description[KEY_STATE_TOPIC]:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(light=light_id)
     elif emeter_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
             emeter_id=emeter_id
@@ -2589,6 +2691,11 @@ def configure_device():
     for thermostat_id, description in thermostats.items():
         topic, payload = get_climate(thermostat_id, description)
         config[topic] = payload
+
+    for light_id in range(lights):
+        for sensor, description in light_sensors.items():
+            topic, payload = get_sensor(sensor, description, light_id=light_id)
+            config[topic] = payload
 
     for relay_id in range(relays):
         consumption_types = [
@@ -2914,6 +3021,7 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
 lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
+light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
