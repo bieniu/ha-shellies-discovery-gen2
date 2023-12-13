@@ -186,7 +186,7 @@ MODEL_PRO_2PM = "shellypro2pm"
 MODEL_PRO_3 = "shellypro3"
 MODEL_PRO_3EM = "shellypro3em"
 MODEL_PRO_4PM = "shellypro4pm"
-MODEL_PRO_DIMMER_2 = "shellyprodimmer2"
+MODEL_PRO_DIMMER_2PM = "shellyprodm2pm"
 MODEL_PRO_DUAL_COVER_PM = "shellypro2cover"
 MODEL_PRO_EM = "shellyproem50"
 MODEL_WALL_DISPLAY = "ShellyWallDisplay"
@@ -1864,8 +1864,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
     },
-    MODEL_PRO_DIMMER_2: {
-        ATTR_NAME: "Shelly Pro Dimmer 2",
+    MODEL_PRO_DIMMER_2PM: {
+        ATTR_NAME: "Shelly Pro Dimmer 2PM",
         ATTR_MODEL_ID: "SPDM-002PE01EU",
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
