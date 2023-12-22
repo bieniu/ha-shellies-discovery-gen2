@@ -2764,6 +2764,12 @@ def configure_device():
             )
             config[topic] = payload
 
+    if device_config["sys"]["device"].get("addon_type") == "prooutput":
+        for switch_id in range(100, 200):
+            if device_config.get(f"switch:{switch_id}"):
+                topic, payload = get_switch(switch_id, ATTR_SWITCH, ATTR_SWITCH)
+                config[topic] = payload
+
     for input_id in range(inputs):
         input_type = device_config[f"input:{input_id}"]["type"]
 
