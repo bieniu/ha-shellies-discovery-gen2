@@ -194,9 +194,9 @@ MODEL_PRO_DUAL_COVER_PM = "shellypro2cover"
 MODEL_PRO_EM = "shellyproem50"
 MODEL_WALL_DISPLAY = "ShellyWallDisplay"
 # Gen3 devices
-MODEL_PLUS_1_MINI_G3 = "shelly1minig3"
-MODEL_PLUS_1PM_MINI_G3 = "shelly1pmminig3"
-MODEL_PLUS_PM_MINI_G3 = "shellypmminig3"
+MODEL_1_MINI_G3 = "shelly1minig3"
+MODEL_1PM_MINI_G3 = "shelly1pmminig3"
+MODEL_PM_MINI_G3 = "shellypmminig3"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_APPARENT_POWER = "apparent_power"
@@ -1216,8 +1216,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
     },
-    MODEL_PLUS_1_MINI_G3: {
-        ATTR_NAME: "Shelly Plus 1 Mini",
+    MODEL_1_MINI_G3: {
+        ATTR_NAME: "Shelly 1 Mini Gen3",
         ATTR_MODEL_ID: "S3SW-001X8EU",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
@@ -1331,8 +1331,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
     },
-    MODEL_PLUS_1PM_MINI_G3: {
-        ATTR_NAME: "Shelly Plus 1PM Mini",
+    MODEL_1PM_MINI_G3: {
+        ATTR_NAME: "Shelly 1PM Mini Gen3",
         ATTR_MODEL_ID: "S3SW-001P8EU",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
@@ -1614,8 +1614,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
     },
-    MODEL_PLUS_PM_MINI_G3: {
-        ATTR_NAME: "Shelly Plus PM Mini",
+    MODEL_PM_MINI_G3: {
+        ATTR_NAME: "Shelly PM Mini Gen3",
         ATTR_MODEL_ID: "S3PM-001PCEU16",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
