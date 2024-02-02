@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.11"
+          - "3.12"
 
     steps:
     - name: Check out repository
@@ -37,4 +37,3 @@ jobs:
     - name: Check code formatting with ruff
       run: |
         ruff format --check python_scripts
-
