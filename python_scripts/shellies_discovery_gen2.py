@@ -2920,30 +2920,31 @@ def configure_device():
                     input_type=input_type,
                 )
                 config[topic] = payload
-        for sensor_id in range(100, 200):
-            if device_config.get(f"temperature:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "temperature",
-                    DESCRIPTION_EXTERNAL_SENSOR_TEMPERATURE,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
 
-            if device_config.get(f"humidity:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "humidity",
-                    DESCRIPTION_EXTERNAL_SENSOR_HUMIDITY,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
+    for sensor_id in range(100, 200):
+        if device_config.get(f"temperature:{sensor_id}"):
+            topic, payload = get_sensor(
+                "temperature",
+                DESCRIPTION_EXTERNAL_SENSOR_TEMPERATURE,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
 
-            if device_config.get(f"voltmeter:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "voltmeter",
-                    DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
+        if device_config.get(f"humidity:{sensor_id}"):
+            topic, payload = get_sensor(
+                "humidity",
+                DESCRIPTION_EXTERNAL_SENSOR_HUMIDITY,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
+
+        if device_config.get(f"voltmeter:{sensor_id}"):
+            topic, payload = get_sensor(
+                "voltmeter",
+                DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
 
     return config
 
