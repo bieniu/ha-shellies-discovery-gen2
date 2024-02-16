@@ -3061,17 +3061,19 @@ if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
 
 source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
 
-if model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
+if (
+    model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+    and not current_script_installed()
+):
     device_topic = encode_config_topic(f"{default_topic}rpc")
     if script_prefix:
         script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
     else:
         script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
 
-    if not current_script_installed():
-        script_id = get_script_id()
-        install_script(script_id, device_topic, script_topic)
-        remove_old_script_versions(device_topic, script_topic)
+    script_id = get_script_id()
+    install_script(script_id, device_topic, script_topic)
+    remove_old_script_versions(device_topic, script_topic)
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
