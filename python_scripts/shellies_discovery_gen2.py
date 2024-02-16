@@ -2973,7 +2973,7 @@ def install_script(script_id, device_topic, script_topic):
         "params": {"id": script_id},
     }
     mqtt_publish(device_topic, payload)
-    payload = f"{{'id':1,'src':'{script_topic}','method':'Script.SetConfig','params':{{'id': {script_id},'config':{{'enable':true}}}}}}"
+    payload = f"{{'id':1,'src':'{script_topic}','method':'Script.SetConfig','params':{{'id':{script_id},'config':{{'enable':true}}}}}}"
     mqtt_publish(device_topic, payload)
 
 
