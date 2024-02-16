@@ -256,8 +256,13 @@ function SendDeviceStatus() {
 MQTT.setConnectHandler(SendDeviceStatus);
 let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
 """
-SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20221116"
-SCRIPT_OLD_NAMES = ["Send Device Status", "send_device_status", "send_device_status.js"]
+SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20240216"
+SCRIPT_OLD_NAMES = [
+    "Send Device Status",
+    "send_device_status",
+    "send_device_status.js",
+    "shellies_discovery_gen2_script_20221116",
+]
 
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
@@ -274,7 +279,7 @@ TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_LIGHT = "~status/light:{light}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
-TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shelies_discovery_script"
+TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
@@ -2943,15 +2948,9 @@ def configure_device():
     return config
 
 
-def install_script(script_id):
+def install_script(script_id, device_topic, script_topic):
     """Install the script on the device."""
-    topic = encode_config_topic(f"{default_topic}rpc")
-    if script_prefix:
-        script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
-    else:
-        script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
-
-    logger.info("Installing the script with ID: %s", script_id)  # noqa: F821
+    logger.info("Installing the script %s, ID: %s", SCRIPT_CURRENT_NAME, script_id)  # noqa: F821
 
     payload = {
         "id": 1,
@@ -2959,26 +2958,26 @@ def install_script(script_id):
         "method": "Script.Create",
         "params": {"name": SCRIPT_CURRENT_NAME},
     }
-    mqtt_publish(topic, payload)
+    mqtt_publish(device_topic, payload)
     payload = {
         "id": 1,
         "src": script_topic,
         "method": "Script.PutCode",
         "params": {"id": script_id, "code": SCRIPT_CODE},
     }
-    mqtt_publish(topic, payload)
+    mqtt_publish(device_topic, payload)
     payload = {
         "id": 1,
         "src": script_topic,
         "method": "Script.Start",
         "params": {"id": script_id},
     }
-    mqtt_publish(topic, payload)
-    payload = f"{{'id': 1, 'src': {script_topic}, 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
-    mqtt_publish(topic, payload)
+    mqtt_publish(device_topic, payload)
+    payload = f"{{'id':1,'src':'{script_topic}','method':'Script.SetConfig','params':{{'id':{script_id},'config':{{'enable':true}}}}}}"
+    mqtt_publish(device_topic, payload)
 
 
-def script_installed():
+def current_script_installed():
     """Return True if the current version of the script is installed."""
     script_id = 1
 
@@ -3003,36 +3002,29 @@ def get_script_id():
             return script_id
 
 
-def remove_old_script_versions():
+def remove_old_script_versions(device_topic, script_topic):
     """Remove old script versions."""
-    script_id = 1
-    removed = False
-    topic = encode_config_topic(f"{device_id}/rpc")
-
-    while True:
+    for script_id in range(1, 100):
         if f"script:{script_id}" in device_config:
             script_name = device_config[f"script:{script_id}"]["name"]
             if script_name in SCRIPT_OLD_NAMES:
-                logger.info("Removing the old script %s", script_name)  # noqa: F821
-                removed = True
+                logger.info(  # noqa: F821
+                    "Removing the old script %s, ID: %s", script_name, script_id
+                )
                 payload = {
                     "id": 1,
-                    "src": "shelies_discovery_script",
+                    "src": script_topic,
                     "method": "Script.Stop",
                     "params": {"id": script_id},
                 }
-                mqtt_publish(topic, payload)
+                mqtt_publish(device_topic, payload)
                 payload = {
                     "id": 1,
-                    "src": "shelies_discovery_script",
+                    "src": script_topic,
                     "method": "Script.Delete",
                     "params": {"id": script_id},
                 }
-                mqtt_publish(topic, payload)
-        else:
-            return removed
-
-        script_id = script_id + 1
+                mqtt_publish(device_topic, payload)
 
 
 logger.info("Shellies Discovery Gen2 version: %s", VERSION)  # noqa: F821
@@ -3070,13 +3062,18 @@ if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
 source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
 
 if (
-    model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
-    and script_installed() is False
+    model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+    and not current_script_installed()
 ):
-    removed = remove_old_script_versions()
-    if not removed:
-        script_id = get_script_id()
-        install_script(script_id)
+    device_topic = encode_config_topic(f"{default_topic}rpc")
+    if script_prefix:
+        script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
+    else:
+        script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
+
+    script_id = get_script_id()
+    install_script(script_id, device_topic, script_topic)
+    remove_old_script_versions(device_topic, script_topic)
 
 min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
 try:
