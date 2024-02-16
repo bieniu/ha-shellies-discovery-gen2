@@ -17,6 +17,7 @@ ATTR_GEN = "gen"
 ATTR_ID = "id"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
+ATTR_INPUT_SENSORS = "input_sensors"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
 ATTR_LIGHTS = "lights"
@@ -204,6 +205,7 @@ SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
 SENSOR_CLOUD = "cloud"
+SENSOR_COUNTER = "counter"
 SENSOR_CURRENT = "current"
 SENSOR_DEVICE_TEMPERATURE = "device_temperature"
 SENSOR_ENERGY = "energy"
@@ -268,14 +270,14 @@ STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
 TOPIC_COVER = "~status/cover:{cover}"
-TOPIC_EMDATA = "~status/emdata:{emeter_id}"
-TOPIC_EMDATA1 = "~status/em1data:{emeter_id}"
-TOPIC_EMETER = "~status/em:{emeter_id}"
-TOPIC_EMETER1 = "~status/em1:{emeter_id}"
+TOPIC_EMDATA = "~status/emdata:{emeter}"
+TOPIC_EMDATA1 = "~status/em1data:{emeter}"
+TOPIC_EMETER = "~status/em:{emeter}"
+TOPIC_EMETER1 = "~status/em1:{emeter}"
 TOPIC_EVENTS_RPC = "~events/rpc"
 TOPIC_HUMIDITY = "~status/humidity:{sensor}"
 TOPIC_ILLUMINANCE = "~status/illuminance:{sensor}"
-TOPIC_INPUT = "~status/input:{relay}"
+TOPIC_INPUT = "~status/input:{input}"
 TOPIC_LIGHT = "~status/light:{light}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
@@ -294,6 +296,7 @@ TOPIC_VOLTMETER = "~status/voltmeter:{sensor}"
 
 TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
 TPL_BATTERY = "{{value_json.battery.percent}}"
+TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
@@ -483,12 +486,20 @@ DESCRIPTION_SENSOR_EMETER_PHASE_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_PHASE_CURRENT,
 }
+DESCRIPTION_SENSOR_COUNTER = (
+    {
+        KEY_NAME: "Pulse counter {input}",
+        KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+        KEY_STATE_TOPIC: TOPIC_INPUT,
+        KEY_VALUE_TEMPLATE: TPL_COUNTER,
+    },
+)
 DESCRIPTION_SENSOR_N_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "N current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_N_CURRENT,
@@ -498,7 +509,7 @@ DESCRIPTION_SENSOR_TOTAL_CURRENT = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Total current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_CURRENT,
@@ -693,7 +704,7 @@ DESCRIPTION_SENSOR_EMETER0_TOTAL_ACTIVE_ENERGY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_ENERGY,
@@ -713,7 +724,7 @@ DESCRIPTION_SENSOR_EMETER0_TOTAL_ACTIVE_RETURNED_ENERGY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active returned energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_RETURNED_ENERGY,
@@ -723,7 +734,7 @@ DESCRIPTION_SENSOR_EMETER_TOTAL_ACTIVE_POWER = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_POWER,
@@ -753,7 +764,7 @@ DESCRIPTION_SENSOR_EMETER_TOTAL_APPARENT_POWER = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total apparent power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VA,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_APPARENT_POWER,
@@ -1651,6 +1662,7 @@ SUPPORTED_MODELS = {
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 3,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
+        ATTR_INPUT_SENSORS: {SENSOR_COUNTER: DESCRIPTION_SENSOR_COUNTER},
         ATTR_INPUT_EVENTS: [
             EVENT_BUTTON_DOWN,
             EVENT_BUTTON_UP,
@@ -2455,6 +2467,7 @@ def get_sensor(
     emeter_id=None,
     emeter_phase=None,
     sensor_id=None,
+    input_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -2481,6 +2494,7 @@ def get_sensor(
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{sensor_id}-{sensor}/config"
         )
+
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
 
@@ -2514,12 +2528,17 @@ def get_sensor(
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
     elif emeter_id is not None and emeter_phase is None:
         unique_id = f"{device_id}-{emeter_id}-{sensor}".lower()
-        sensor_name = description[KEY_NAME].format(emeter_id=emeter_id)
+        sensor_name = description[KEY_NAME].format(emeter=emeter_id)
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
         sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
             KEY_NAME
         ].format(sensor=sensor_id)
+    elif input_id is not None:
+        unique_id = f"{device_id}-{input_id}-{sensor}".lower()
+        sensor_name = device_config[f"input:{input_id}"][ATTR_NAME] or description[
+            KEY_NAME
+        ].format(input=input_id)
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
@@ -2561,11 +2580,11 @@ def get_sensor(
     elif light_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(light=light_id)
     elif emeter_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
-            emeter_id=emeter_id
-        )
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(emeter=emeter_id)
     elif sensor_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(sensor=sensor_id)
+    elif input_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(input=input_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -2882,6 +2901,16 @@ def configure_device():
             )
             config[topic] = payload
 
+        for sensor, description in input_sensors.items():
+            topic, payload = get_sensor(
+                sensor,
+                description,
+                input_id,
+                is_input=True,
+                input_type=input_type,
+            )
+            config[topic] = payload
+
     for button, descripton in buttons.items():
         topic, payload = get_button(button, descripton)
         config[topic] = payload
@@ -3144,6 +3173,7 @@ else:
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
+input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
 
 emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
 emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
