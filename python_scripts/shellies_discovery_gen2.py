@@ -274,7 +274,7 @@ TOPIC_INPUT = "~status/input:{relay}"
 TOPIC_LIGHT = "~status/light:{light}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
-TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shelies_discovery_script"
+TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
@@ -2951,7 +2951,7 @@ def install_script(script_id):
     else:
         script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
 
-    logger.info("Installing the script with ID: %s", script_id)  # noqa: F821
+    logger.warning("Installing the script with ID: %s", script_id)  # noqa: F821
 
     payload = {
         "id": 1,
@@ -2974,7 +2974,7 @@ def install_script(script_id):
         "params": {"id": script_id},
     }
     mqtt_publish(topic, payload)
-    payload = f"{{'id': 1, 'src': {script_topic}, 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
+    payload = f"{{'id': 1, 'src': '{script_topic}', 'method': 'Script.SetConfig', 'params': {{'id': {script_id}, 'config': {{'enable': true}}}}}}"
     mqtt_publish(topic, payload)
 
 
