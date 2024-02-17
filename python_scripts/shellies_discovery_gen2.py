@@ -8,6 +8,7 @@ ATTR_BUTTONS = "buttons"
 ATTR_COVER = "cover"
 ATTR_COVER_SENSORS = "cover_sensors"
 ATTR_COVERS = "covers"
+ATTR_REMOVAL_CONDITION = "removal_condition"
 ATTR_EMETER_PHASES = "emeter_phases"
 ATTR_EMETER_SENSORS = "emeter_sensors"
 ATTR_EMETERS = "emeters"
@@ -17,6 +18,7 @@ ATTR_GEN = "gen"
 ATTR_ID = "id"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
+ATTR_INPUT_SENSORS = "input_sensors"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
 ATTR_LIGHTS = "lights"
@@ -204,6 +206,8 @@ SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
 SENSOR_CLOUD = "cloud"
+SENSOR_COUNTER = "counter"
+SENSOR_COUNTER_VALUE = "counter_value"
 SENSOR_CURRENT = "current"
 SENSOR_DEVICE_TEMPERATURE = "device_temperature"
 SENSOR_ENERGY = "energy"
@@ -267,16 +271,16 @@ SCRIPT_OLD_NAMES = [
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
-TOPIC_COVER = "~status/cover:{cover}"
-TOPIC_EMDATA = "~status/emdata:{emeter_id}"
-TOPIC_EMDATA1 = "~status/em1data:{emeter_id}"
-TOPIC_EMETER = "~status/em:{emeter_id}"
-TOPIC_EMETER1 = "~status/em1:{emeter_id}"
+TOPIC_COVER = "~status/cover:{id}"
+TOPIC_EMDATA = "~status/emdata:{id}"
+TOPIC_EMDATA1 = "~status/em1data:{id}"
+TOPIC_EMETER = "~status/em:{id}"
+TOPIC_EMETER1 = "~status/em1:{id}"
 TOPIC_EVENTS_RPC = "~events/rpc"
-TOPIC_HUMIDITY = "~status/humidity:{sensor}"
-TOPIC_ILLUMINANCE = "~status/illuminance:{sensor}"
-TOPIC_INPUT = "~status/input:{relay}"
-TOPIC_LIGHT = "~status/light:{light}"
+TOPIC_HUMIDITY = "~status/humidity:{id}"
+TOPIC_ILLUMINANCE = "~status/illuminance:{id}"
+TOPIC_INPUT = "~status/input:{id}"
+TOPIC_LIGHT = "~status/light:{id}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
@@ -287,13 +291,15 @@ TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
 TOPIC_STATUS_WIFI = "~status/wifi"
-TOPIC_SWITCH_RELAY = "~status/switch:{relay}"
-TOPIC_TEMPERATURE = "~status/temperature:{sensor}"
-TOPIC_THERMOSTAT = "~status/thermostat:{thermostat}"
-TOPIC_VOLTMETER = "~status/voltmeter:{sensor}"
+TOPIC_SWITCH_RELAY = "~status/switch:{id}"
+TOPIC_TEMPERATURE = "~status/temperature:{id}"
+TOPIC_THERMOSTAT = "~status/thermostat:{id}"
+TOPIC_VOLTMETER = "~status/voltmeter:{id}"
 
 TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
 TPL_BATTERY = "{{value_json.battery.percent}}"
+TPL_COUNTER = "{{value_json.counts.total}}"
+TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
@@ -483,12 +489,30 @@ DESCRIPTION_SENSOR_EMETER_PHASE_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_PHASE_CURRENT,
 }
+DESCRIPTION_SENSOR_COUNTER = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Pulse counter {input}",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_INPUT,
+    KEY_VALUE_TEMPLATE: TPL_COUNTER,
+}
+DESCRIPTION_SENSOR_COUNTER_VALUE = {
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(f"input:{input_id}", {})
+    .get("xcounts", {})
+    .get("expr")
+    is None,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Counter value {input}",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_INPUT,
+    KEY_VALUE_TEMPLATE: TPL_COUNTER_VALUE,
+}
 DESCRIPTION_SENSOR_N_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "N current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_N_CURRENT,
@@ -498,7 +522,7 @@ DESCRIPTION_SENSOR_TOTAL_CURRENT = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Total current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_CURRENT,
@@ -693,7 +717,7 @@ DESCRIPTION_SENSOR_EMETER0_TOTAL_ACTIVE_ENERGY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMDATA.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_ENERGY,
@@ -713,7 +737,7 @@ DESCRIPTION_SENSOR_EMETER0_TOTAL_ACTIVE_RETURNED_ENERGY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active returned energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_EMDATA.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMDATA.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_RETURNED_ENERGY,
@@ -723,7 +747,7 @@ DESCRIPTION_SENSOR_EMETER_TOTAL_ACTIVE_POWER = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total active power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_ACTIVE_POWER,
@@ -753,7 +777,7 @@ DESCRIPTION_SENSOR_EMETER_TOTAL_APPARENT_POWER = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Total apparent power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_EMETER.format(emeter_id=0),
+    KEY_STATE_TOPIC: TOPIC_EMETER.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VA,
     KEY_VALUE_TEMPLATE: TPL_EMETER_TOTAL_APPARENT_POWER,
@@ -1015,7 +1039,7 @@ DESCRIPTION_SENSOR_ILLUMINANCE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Illuminance",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_ILLUMINANCE.format(sensor=0),
+    KEY_STATE_TOPIC: TOPIC_ILLUMINANCE.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 0,
     KEY_UNIT: UNIT_LUX,
     KEY_VALUE_TEMPLATE: TPL_ILLUMINANCE,
@@ -1025,7 +1049,7 @@ DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Humidity",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_HUMIDITY.format(sensor=0),
+    KEY_STATE_TOPIC: TOPIC_HUMIDITY.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
@@ -1035,7 +1059,7 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Temperature",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_TEMPERATURE.format(sensor=0),
+    KEY_STATE_TOPIC: TOPIC_TEMPERATURE.format(id=0),
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
@@ -1651,6 +1675,10 @@ SUPPORTED_MODELS = {
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 3,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
+        ATTR_INPUT_SENSORS: {
+            SENSOR_COUNTER: DESCRIPTION_SENSOR_COUNTER,
+            SENSOR_COUNTER_VALUE: DESCRIPTION_SENSOR_COUNTER_VALUE,
+        },
         ATTR_INPUT_EVENTS: [
             EVENT_BUTTON_DOWN,
             EVENT_BUTTON_UP,
@@ -2263,8 +2291,8 @@ def get_cover(cover_id, profile):
     payload = {
         KEY_NAME: cover_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_POSITION_TOPIC: TOPIC_COVER.format(cover=cover_id),
-        KEY_STATE_TOPIC: TOPIC_COVER.format(cover=cover_id),
+        KEY_POSITION_TOPIC: TOPIC_COVER.format(id=cover_id),
+        KEY_STATE_TOPIC: TOPIC_COVER.format(id=cover_id),
         KEY_VALUE_TEMPLATE: "{%if value_json.state!=^calibrating^%}{{value_json.state}}{%endif%}",
         KEY_POSITION_TEMPLATE: "{%if is_number(value_json.get(^current_pos^))%}{{value_json.current_pos}}{%endif%}",
         KEY_SET_POSITION_TOPIC: TOPIC_RPC,
@@ -2301,7 +2329,7 @@ def get_climate(thermostat_id, description):
         or f"Thermostat {thermostat_id}"
     )
 
-    thermostat_topic = TOPIC_THERMOSTAT.format(thermostat=thermostat_id)
+    thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
     payload = {
         KEY_NAME: thermostat_name,
         KEY_ACTION_TOPIC: thermostat_topic,
@@ -2357,7 +2385,7 @@ def get_switch(relay_id, relay_type, profile):
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(id=relay_id),
         KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
@@ -2385,7 +2413,7 @@ def get_relay_light(relay_id, relay_type, profile):
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(id=relay_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
@@ -2409,7 +2437,7 @@ def get_relay_fan(relay_id, relay_type, profile):
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_TEMPLATE: f"{{%if value==^ON^%}}{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}{{%endif%}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(relay=relay_id),
+        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(id=relay_id),
         KEY_STATE_VALUE_TEMPLATE: "{%if value_json.output%}ON{%else%}OFF{%endif%}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{relay_id}".lower(),
@@ -2432,7 +2460,7 @@ def get_light(light_id):
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
-        KEY_STATE_TOPIC: TOPIC_LIGHT.format(light=light_id),
+        KEY_STATE_TOPIC: TOPIC_LIGHT.format(id=light_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
         KEY_AVAILABILITY: availability,
@@ -2455,6 +2483,7 @@ def get_sensor(
     emeter_id=None,
     emeter_phase=None,
     sensor_id=None,
+    input_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -2483,6 +2512,13 @@ def get_sensor(
         )
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
+
+    if (
+        input_id is not None
+        and description.get(ATTR_REMOVAL_CONDITION)
+        and description[ATTR_REMOVAL_CONDITION](device_config, input_id)
+    ):
+        return topic, ""
 
     if profile == ATTR_COVER and cover_id is None:
         return topic, ""
@@ -2514,12 +2550,17 @@ def get_sensor(
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
     elif emeter_id is not None and emeter_phase is None:
         unique_id = f"{device_id}-{emeter_id}-{sensor}".lower()
-        sensor_name = description[KEY_NAME].format(emeter_id=emeter_id)
+        sensor_name = description[KEY_NAME].format(emeter=emeter_id)
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
         sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
             KEY_NAME
         ].format(sensor=sensor_id)
+    elif input_id is not None:
+        unique_id = f"{device_id}-{input_id}-{sensor}".lower()
+        sensor_name = device_config[f"input:{input_id}"][ATTR_NAME] or description[
+            KEY_NAME
+        ].format(input=input_id)
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
@@ -2555,17 +2596,17 @@ def get_sensor(
         payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE]
 
     if cover_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(cover=cover_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=cover_id)
     elif relay_id is not None and description[KEY_STATE_TOPIC] != TOPIC_STATUS_RPC:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=relay_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=relay_id)
     elif light_id is not None and description[KEY_STATE_TOPIC]:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(light=light_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=light_id)
     elif emeter_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
-            emeter_id=emeter_id
-        )
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=emeter_id)
     elif sensor_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(sensor=sensor_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=sensor_id)
+    elif input_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=input_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -2640,7 +2681,7 @@ def get_binary_sensor(
         payload[KEY_EXPIRE_AFTER] = expire_after
 
     if entity_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=entity_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=entity_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -2882,6 +2923,14 @@ def configure_device():
             )
             config[topic] = payload
 
+        for sensor, description in input_sensors.items():
+            topic, payload = get_sensor(
+                sensor,
+                description,
+                input_id=input_id,
+            )
+            config[topic] = payload
+
     for button, descripton in buttons.items():
         topic, payload = get_button(button, descripton)
         config[topic] = payload
@@ -2920,30 +2969,31 @@ def configure_device():
                     input_type=input_type,
                 )
                 config[topic] = payload
-        for sensor_id in range(100, 200):
-            if device_config.get(f"temperature:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "temperature",
-                    DESCRIPTION_EXTERNAL_SENSOR_TEMPERATURE,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
 
-            if device_config.get(f"humidity:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "humidity",
-                    DESCRIPTION_EXTERNAL_SENSOR_HUMIDITY,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
+    for sensor_id in range(100, 200):
+        if device_config.get(f"temperature:{sensor_id}"):
+            topic, payload = get_sensor(
+                "temperature",
+                DESCRIPTION_EXTERNAL_SENSOR_TEMPERATURE,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
 
-            if device_config.get(f"voltmeter:{sensor_id}"):
-                topic, payload = get_sensor(
-                    "voltmeter",
-                    DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER,
-                    sensor_id=sensor_id,
-                )
-                config[topic] = payload
+        if device_config.get(f"humidity:{sensor_id}"):
+            topic, payload = get_sensor(
+                "humidity",
+                DESCRIPTION_EXTERNAL_SENSOR_HUMIDITY,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
+
+        if device_config.get(f"voltmeter:{sensor_id}"):
+            topic, payload = get_sensor(
+                "voltmeter",
+                DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER,
+                sensor_id=sensor_id,
+            )
+            config[topic] = payload
 
     return config
 
@@ -3143,6 +3193,7 @@ else:
 inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
 input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
+input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
 
 emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
 emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
