@@ -486,14 +486,13 @@ DESCRIPTION_SENSOR_EMETER_PHASE_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_EMETER_PHASE_CURRENT,
 }
-DESCRIPTION_SENSOR_COUNTER = (
-    {
-        KEY_NAME: "Pulse counter {input}",
-        KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-        KEY_STATE_TOPIC: TOPIC_INPUT,
-        KEY_VALUE_TEMPLATE: TPL_COUNTER,
-    },
-)
+DESCRIPTION_SENSOR_COUNTER = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Pulse counter {input}",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_INPUT,
+    KEY_VALUE_TEMPLATE: TPL_COUNTER,
+}
 DESCRIPTION_SENSOR_N_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -2659,7 +2658,7 @@ def get_binary_sensor(
         payload[KEY_EXPIRE_AFTER] = expire_after
 
     if entity_id is not None:
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(relay=entity_id)
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(input=entity_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -2905,9 +2904,7 @@ def configure_device():
             topic, payload = get_sensor(
                 sensor,
                 description,
-                input_id,
-                is_input=True,
-                input_type=input_type,
+                input_id=input_id,
             )
             config[topic] = payload
 
