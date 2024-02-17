@@ -2493,7 +2493,6 @@ def get_sensor(
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{sensor_id}-{sensor}/config"
         )
-
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
 
