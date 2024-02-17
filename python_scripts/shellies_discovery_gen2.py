@@ -8,6 +8,7 @@ ATTR_BUTTONS = "buttons"
 ATTR_COVER = "cover"
 ATTR_COVER_SENSORS = "cover_sensors"
 ATTR_COVERS = "covers"
+ATTR_REMOVAL_CONDITION = "removal_condition"
 ATTR_EMETER_PHASES = "emeter_phases"
 ATTR_EMETER_SENSORS = "emeter_sensors"
 ATTR_EMETERS = "emeters"
@@ -206,6 +207,7 @@ SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
 SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
+SENSOR_COUNTER_VALUE = "counter_value"
 SENSOR_CURRENT = "current"
 SENSOR_DEVICE_TEMPERATURE = "device_temperature"
 SENSOR_ENERGY = "energy"
@@ -297,6 +299,7 @@ TOPIC_VOLTMETER = "~status/voltmeter:{id}"
 TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
 TPL_BATTERY = "{{value_json.battery.percent}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
+TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
@@ -492,6 +495,17 @@ DESCRIPTION_SENSOR_COUNTER = {
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_INPUT,
     KEY_VALUE_TEMPLATE: TPL_COUNTER,
+}
+DESCRIPTION_SENSOR_COUNTER_VALUE = {
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(f"input:{input_id}", {})
+    .get("xcounts", {})
+    .get("expr")
+    is None,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Counter value {input}",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_INPUT,
+    KEY_VALUE_TEMPLATE: TPL_COUNTER_VALUE,
 }
 DESCRIPTION_SENSOR_N_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -1661,7 +1675,10 @@ SUPPORTED_MODELS = {
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 3,
         ATTR_INPUT_BINARY_SENSORS: {SENSOR_INPUT: DESCRIPTION_SENSOR_INPUT},
-        ATTR_INPUT_SENSORS: {SENSOR_COUNTER: DESCRIPTION_SENSOR_COUNTER},
+        ATTR_INPUT_SENSORS: {
+            SENSOR_COUNTER: DESCRIPTION_SENSOR_COUNTER,
+            SENSOR_COUNTER_VALUE: DESCRIPTION_SENSOR_COUNTER_VALUE,
+        },
         ATTR_INPUT_EVENTS: [
             EVENT_BUTTON_DOWN,
             EVENT_BUTTON_UP,
@@ -2495,6 +2512,13 @@ def get_sensor(
         )
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
+
+    if (
+        input_id is not None
+        and description.get(ATTR_REMOVAL_CONDITION)
+        and description[ATTR_REMOVAL_CONDITION](device_config, input_id)
+    ):
+        return topic, ""
 
     if profile == ATTR_COVER and cover_id is None:
         return topic, ""
