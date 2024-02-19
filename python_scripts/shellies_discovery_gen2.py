@@ -491,6 +491,10 @@ DESCRIPTION_SENSOR_EMETER_PHASE_CURRENT = {
     KEY_VALUE_TEMPLATE: TPL_EMETER_PHASE_CURRENT,
 }
 DESCRIPTION_SENSOR_COUNTER = {
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(
+        f"input:{input_id}", {}
+    ).get("type")
+    != "count",
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Pulse counter {input}",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
