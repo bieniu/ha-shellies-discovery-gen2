@@ -2584,7 +2584,7 @@ def get_sensor(
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
     elif emeter_id is not None and emeter_phase is None:
         unique_id = f"{device_id}-{emeter_id}-{sensor}".lower()
-        sensor_name = description[KEY_NAME].format(emeter=emeter_id)
+        sensor_name = description[KEY_NAME].format(emeter_id=emeter_id)
     elif sensor_id is not None:
         unique_id = f"{device_id}-{sensor_id}-{sensor}".lower()
         sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
