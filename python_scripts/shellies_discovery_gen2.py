@@ -30,6 +30,7 @@ ATTR_MIN_FIRMWARE_DATE = "min_firmware_date"
 ATTR_MODEL = "model"
 ATTR_MODEL_ID = "model_id"
 ATTR_NAME = "name"
+ATTR_PROFILE = "profile"
 ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
@@ -2504,9 +2505,12 @@ def get_relay_fan(relay_id, relay_type, profile):
     return topic, payload
 
 
-def get_light(light_id):
+def get_light(light_id, profile):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
+
+    if profile != ATTR_LIGHT:
+        return topic, ""
 
     light_name = device_config[f"light:{light_id}"][ATTR_NAME] or f"Light {light_id}"
     payload = {
@@ -2883,8 +2887,10 @@ def configure_device():
 
     if model == MODEL_PRO_DUAL_COVER_PM:
         profile = ATTR_COVER
+    elif model == MODEL_PLUS_RGBW_PM:
+        profile = device_config["sys"]["device"].get(ATTR_PROFILE, ATTR_LIGHT)
     else:
-        profile = device_config["sys"]["device"].get("profile", ATTR_SWITCH)
+        profile = device_config["sys"]["device"].get(ATTR_PROFILE, ATTR_SWITCH)
 
     for cover_id in range(covers):
         topic, payload = get_cover(cover_id, profile)
@@ -2897,7 +2903,7 @@ def configure_device():
             config[topic] = payload
 
     for light_id in range(lights):
-        topic, payload = get_light(light_id)
+        topic, payload = get_light(light_id, profile)
         config[topic] = payload
 
     for emeter_id in range(emeters):
@@ -3147,7 +3153,7 @@ device_config = data["device_config"]  # noqa: F821
 
 if (
     model == MODEL_PRO_3EM
-    and device_config["sys"]["device"].get("profile") == "monophase"
+    and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
 ):
     model = MODEL_PRO_3EM_MONOPHASE
 
