@@ -34,6 +34,9 @@ ATTR_PROFILE = "profile"
 ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
+ATTR_RGB = "rgb"
+ATTR_RGB_LIGHTS = "rgb_lights"
+ATTR_RGBW_LIGHTS = "rgbw_lights"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
 ATTR_TEMPERATURE_MAX = "temperature_max"
@@ -106,6 +109,9 @@ KEY_AVAILABILITY = "avty"
 KEY_AVAILABILITY_MODE = "avty_mode"
 KEY_AVAILABILITY_TEMPLATE = "avty_tpl"
 KEY_AVAILABILITY_TOPIC = "avty_t"
+KEY_BLUE_TEMPLATE = "b_tpl"
+KEY_GREEN_TEMPLATE = "g_tpl"
+KEY_RED_TEMPLATE = "r_tpl"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
@@ -292,6 +298,7 @@ TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
+TOPIC_STATUS_RGB = "~status/rgb:{id}"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
@@ -1744,6 +1751,8 @@ SUPPORTED_MODELS = {
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 4,
         ATTR_LIGHTS: 4,
+        ATTR_RGB_LIGHTS: 1,
+        ATTR_RGBW_LIGHTS: 1,
         ATTR_SENSORS: {
             SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
@@ -2532,6 +2541,38 @@ def get_light(light_id, profile):
     return topic, payload
 
 
+def get_rgb_light(light_id, profile):
+    """Create configuration for Shelly RGB light entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/light/{device_id}-rgb-{light_id}/config"
+    )
+
+    if profile != ATTR_RGB:
+        return topic, ""
+
+    light_name = device_config[f"rgb:{light_id}"][ATTR_NAME] or f"Light {light_id}"
+    payload = {
+        KEY_SCHEMA: "template",
+        KEY_NAME: light_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGB.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGB.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if blue is defined and green is defined and red is defined%}},^rgb^:{{{{[red,green,blue]}}}}{{%elif blue is defined and green is defined%}},^rgb^:{{{{[0,green,blue]}}}}{{%elif red is defined and green is defined%}},^rgb^:{{{{[red,green,0]}}}}{{%elif blue is defined and red is defined%}},^rgb^:{{{{[red,0,blue]}}}}{{%elif blue is defined%}},^rgb^:{{{{[0,0,blue]}}}}{{%elif green is defined%}},^rgb^:{{{{[0,green,0]}}}}{{%elif red is defined%}},^rgb^:{{{{[red,0,0]}}}}{{%endif%}}}}}}",
+        KEY_STATE_TOPIC: TOPIC_STATUS_RGB.format(id=light_id),
+        KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
+        KEY_BLUE_TEMPLATE: "{{value_json.rgb[2]}}",
+        KEY_GREEN_TEMPLATE: "{{value_json.rgb[1]}}",
+        KEY_RED_TEMPLATE: "{{value_json.rgb[0]}}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-rgb-{light_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
 def get_sensor(
     sensor,
     description,
@@ -2906,6 +2947,10 @@ def configure_device():
         topic, payload = get_light(light_id, profile)
         config[topic] = payload
 
+    for light_id in range(rgb_lights):
+        topic, payload = get_rgb_light(light_id, profile)
+        config[topic] = payload
+
     for emeter_id in range(emeters):
         if emeter_phases:
             for phase in emeter_phases:
@@ -3268,6 +3313,10 @@ thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
 lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
 light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+
+rgb_lights = SUPPORTED_MODELS[model].get(ATTR_RGB_LIGHTS, 0)
+
+rgbw_lights = SUPPORTED_MODELS[model].get(ATTR_RGBW_LIGHTS, 0)
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
