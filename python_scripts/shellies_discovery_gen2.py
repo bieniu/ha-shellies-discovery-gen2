@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "2.27.3"
+VERSION = "2.28.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -30,9 +30,13 @@ ATTR_MIN_FIRMWARE_DATE = "min_firmware_date"
 ATTR_MODEL = "model"
 ATTR_MODEL_ID = "model_id"
 ATTR_NAME = "name"
+ATTR_PROFILE = "profile"
 ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
+ATTR_RGB = "rgb"
+ATTR_RGB_LIGHTS = "rgb_lights"
+ATTR_RGB_SENSORS = "rgb_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
 ATTR_TEMPERATURE_MAX = "temperature_max"
@@ -84,6 +88,8 @@ EVENT_TRIPLE_PUSH = "triple_push"
 
 HOME_ASSISTANT = "home-assistant"
 
+MIN_LIGHT_TRANSITION = 1
+
 KEY_ACTION_TEMPLATE = "act_tpl"
 KEY_CURRENT_TEMPERATURE_TOPIC = "curr_temp_t"
 KEY_CURRENT_TEMPERATURE_TEMPLATE = "curr_temp_tpl"
@@ -105,6 +111,9 @@ KEY_AVAILABILITY = "avty"
 KEY_AVAILABILITY_MODE = "avty_mode"
 KEY_AVAILABILITY_TEMPLATE = "avty_tpl"
 KEY_AVAILABILITY_TOPIC = "avty_t"
+KEY_BLUE_TEMPLATE = "b_tpl"
+KEY_GREEN_TEMPLATE = "g_tpl"
+KEY_RED_TEMPLATE = "r_tpl"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
@@ -180,6 +189,7 @@ MODEL_PLUS_PLUG_IT = "shellyplusplugit"
 MODEL_PLUS_PLUG_S = "shellyplusplugs"
 MODEL_PLUS_PLUG_UK = "shellypluspluguk"
 MODEL_PLUS_PLUG_US = "shellyplugus"
+MODEL_PLUS_RGBW_PM = "shellyplusrgbwpm"
 MODEL_PLUS_UNI = "shellyplusuni"
 MODEL_PLUS_PM_MINI = "shellypmmini"
 MODEL_PLUS_SMOKE = "shellyplussmoke"
@@ -290,6 +300,7 @@ TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
+TOPIC_STATUS_RGB = "~status/rgb:{id}"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
@@ -475,6 +486,16 @@ DESCRIPTION_SENSOR_LIGHT_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
 }
+DESCRIPTION_SENSOR_RGB_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
 DESCRIPTION_SENSOR_EMETER_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -599,6 +620,16 @@ DESCRIPTION_SENSOR_LIGHT_ENERGY = {
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
+DESCRIPTION_SENSOR_RGB_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
 DESCRIPTION_SENSOR_ENERGY_PM = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -680,6 +711,16 @@ DESCRIPTION_SENSOR_LIGHT_POWER = {
     KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_LIGHT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
+DESCRIPTION_SENSOR_RGB_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
@@ -890,6 +931,17 @@ DESCRIPTION_SENSOR_LIGHT_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
 }
+DESCRIPTION_SENSOR_RGB_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
+}
 DESCRIPTION_SENSOR_RELAY_TEMPERATURE_STATUS = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -939,6 +991,16 @@ DESCRIPTION_SENSOR_LIGHT_VOLTAGE = {
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_LIGHT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_RGB_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
@@ -1734,6 +1796,38 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
     },
+    MODEL_PLUS_RGBW_PM: {
+        ATTR_NAME: "Shelly Plus RGBW PM",
+        ATTR_MODEL_ID: "SNDC-0D4P10WW",
+        ATTR_GEN: 2,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_INPUTS: 4,
+        ATTR_LIGHTS: 4,
+        ATTR_LIGHT_SENSORS: {
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
+        },
+        ATTR_RGB_LIGHTS: 1,
+        ATTR_RGB_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_RGB_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_RGB_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_RGB_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RGB_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_RGB_VOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20240208,
+    },
     MODEL_PM_MINI_G3: {
         ATTR_NAME: "Shelly PM Mini Gen3",
         ATTR_MODEL_ID: "S3PM-001PCEU16",
@@ -2483,22 +2577,55 @@ def get_relay_fan(relay_id, relay_type, profile):
     return topic, payload
 
 
-def get_light(light_id):
+def get_light(light_id, profile):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
+
+    if model == MODEL_PLUS_RGBW_PM and profile != ATTR_LIGHT:
+        return topic, ""
 
     light_name = device_config[f"light:{light_id}"][ATTR_NAME] or f"Light {light_id}"
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
         KEY_STATE_TOPIC: TOPIC_LIGHT.format(id=light_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{light_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
+def get_rgb_light(rgb_id, profile):
+    """Create configuration for Shelly RGB light entity."""
+    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-rgb-{rgb_id}/config")
+
+    if profile != ATTR_RGB:
+        return topic, ""
+
+    light_name = device_config[f"rgb:{rgb_id}"][ATTR_NAME] or f"Light {rgb_id}"
+    payload = {
+        KEY_SCHEMA: "template",
+        KEY_NAME: light_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGB.Set^,^params^:{{^id^:{rgb_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGB.Set^,^params^:{{^id^:{rgb_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if blue is defined and green is defined and red is defined%}},^rgb^:{{{{[red,green,blue]}}}}{{%elif blue is defined and green is defined%}},^rgb^:{{{{[0,green,blue]}}}}{{%elif red is defined and green is defined%}},^rgb^:{{{{[red,green,0]}}}}{{%elif blue is defined and red is defined%}},^rgb^:{{{{[red,0,blue]}}}}{{%elif blue is defined%}},^rgb^:{{{{[0,0,blue]}}}}{{%elif green is defined%}},^rgb^:{{{{[0,green,0]}}}}{{%elif red is defined%}},^rgb^:{{{{[red,0,0]}}}}{{%endif%}}}}}}",
+        KEY_STATE_TOPIC: TOPIC_STATUS_RGB.format(id=rgb_id),
+        KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
+        KEY_BLUE_TEMPLATE: "{{value_json.rgb[2]}}",
+        KEY_GREEN_TEMPLATE: "{{value_json.rgb[1]}}",
+        KEY_RED_TEMPLATE: "{{value_json.rgb[0]}}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-rgb-{rgb_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_ORIGIN: origin_info,
@@ -2513,6 +2640,7 @@ def get_sensor(
     profile=None,
     relay_id=None,
     light_id=None,
+    rgb_id=None,
     cover_id=None,
     emeter_id=None,
     emeter_phase=None,
@@ -2540,6 +2668,10 @@ def get_sensor(
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{light_id}-{sensor}/config"
         )
+    elif rgb_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-rgb-{rgb_id}-{sensor}/config"
+        )
     elif sensor_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{sensor_id}-{sensor}/config"
@@ -2552,6 +2684,12 @@ def get_sensor(
         and description.get(ATTR_REMOVAL_CONDITION)
         and description[ATTR_REMOVAL_CONDITION](device_config, input_id)
     ):
+        return topic, ""
+
+    if profile == ATTR_LIGHT and light_id is None:
+        return topic, ""
+
+    if profile == ATTR_RGB and rgb_id is None:
         return topic, ""
 
     if profile == ATTR_COVER and cover_id is None:
@@ -2579,6 +2717,12 @@ def get_sensor(
         )
         unique_id = f"{device_id}-{light_id}-{sensor}".lower()
         sensor_name = f"{light_name} {description[KEY_NAME]}"
+    elif rgb_id is not None:
+        rgb_name = (
+            device_config[f"rgb:{rgb_id}"].get(ATTR_NAME, {}) or f"Light {rgb_id}"
+        )
+        unique_id = f"{device_id}-rgb-{rgb_id}-{sensor}".lower()
+        sensor_name = f"{rgb_name} {description[KEY_NAME]}"
     elif emeter_id is not None and emeter_phase is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
@@ -2635,6 +2779,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=relay_id)
     elif light_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=light_id)
+    elif rgb_id is not None and description[KEY_STATE_TOPIC]:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgb_id)
     elif emeter_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=emeter_id)
     elif sensor_id is not None:
@@ -2862,8 +3008,10 @@ def configure_device():
 
     if model == MODEL_PRO_DUAL_COVER_PM:
         profile = ATTR_COVER
+    elif model == MODEL_PLUS_RGBW_PM:
+        profile = device_config["sys"]["device"][ATTR_PROFILE]
     else:
-        profile = device_config["sys"]["device"].get("profile", ATTR_SWITCH)
+        profile = device_config["sys"]["device"].get(ATTR_PROFILE, ATTR_SWITCH)
 
     for cover_id in range(covers):
         topic, payload = get_cover(cover_id, profile)
@@ -2876,8 +3024,24 @@ def configure_device():
             config[topic] = payload
 
     for light_id in range(lights):
-        topic, payload = get_light(light_id)
+        topic, payload = get_light(light_id, profile)
         config[topic] = payload
+
+        for sensor, description in light_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, light_id=light_id, profile=profile
+            )
+            config[topic] = payload
+
+    for rgb_id in range(rgb_lights):
+        topic, payload = get_rgb_light(rgb_id, profile)
+        config[topic] = payload
+
+        for sensor, description in rgb_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, rgb_id=rgb_id, profile=profile
+            )
+            config[topic] = payload
 
     for emeter_id in range(emeters):
         if emeter_phases:
@@ -2895,11 +3059,6 @@ def configure_device():
     for thermostat_id, description in thermostats.items():
         topic, payload = get_climate(thermostat_id, description)
         config[topic] = payload
-
-    for light_id in range(lights):
-        for sensor, description in light_sensors.items():
-            topic, payload = get_sensor(sensor, description, light_id=light_id)
-            config[topic] = payload
 
     for relay_id in range(relays):
         consumption_types = [
@@ -3126,7 +3285,7 @@ device_config = data["device_config"]  # noqa: F821
 
 if (
     model == MODEL_PRO_3EM
-    and device_config["sys"]["device"].get("profile") == "monophase"
+    and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
 ):
     model = MODEL_PRO_3EM_MONOPHASE
 
@@ -3241,6 +3400,9 @@ thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
 lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
 light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+
+rgb_lights = SUPPORTED_MODELS[model].get(ATTR_RGB_LIGHTS, 0)
+rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
