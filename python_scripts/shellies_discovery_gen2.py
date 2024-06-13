@@ -209,7 +209,7 @@ MODEL_PRO_EM = "shellyproem50"
 MODEL_WALL_DISPLAY = "ShellyWallDisplay"
 # Gen3 devices
 MODEL_1_G3 = "shelly1g3"
-MODEL_1_MINI_G3 = "shelly1g3"
+MODEL_1_MINI_G3 = "shelly1minig3"
 MODEL_1PM_MINI_G3 = "shelly1pmminig3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
