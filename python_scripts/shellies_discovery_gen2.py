@@ -216,7 +216,7 @@ MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
-MODEL_XMOD1 = "shellyxmod1"
+MODEL_X_MOD1 = "shellyxmod1"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -2510,8 +2510,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20231117,
     },
-    MODEL_XMOD1: {
-        ATTR_NAME: "Shelly XMOD1",
+    MODEL_X_MOD1: {
+        ATTR_NAME: "Shelly X MOD1",
         ATTR_MODEL_ID: "S3MX-0A",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
