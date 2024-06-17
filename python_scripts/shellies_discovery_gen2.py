@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "2.29.0"
+VERSION = "2.30.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -91,6 +91,8 @@ HOME_ASSISTANT = "home-assistant"
 MIN_LIGHT_TRANSITION = 1
 
 KEY_ACTION_TEMPLATE = "act_tpl"
+KEY_CURRENT_HUMIDITY_TOPIC = "curr_hum_t"
+KEY_CURRENT_HUMIDITY_TEMPLATE = "curr_hum_tpl"
 KEY_CURRENT_TEMPERATURE_TOPIC = "curr_temp_t"
 KEY_CURRENT_TEMPERATURE_TEMPLATE = "curr_temp_tpl"
 KEY_TEMPERATURE_STATE_TEMPLATE = "temp_stat_tpl"
@@ -2632,6 +2634,11 @@ def get_climate(thermostat_id, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if f"humidity:{thermostat_id}" in device_config:
+        payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
+        payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = TPL_HUMIDITY
+
     return topic, payload
 
 
