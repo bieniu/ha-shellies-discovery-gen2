@@ -2,7 +2,7 @@ name: Pre-commit auto-update
 on:
   schedule:
     # Run on fridays
-    - cron: "0 0 * * 5"
+    - cron: "0 0 * * 1"
 
 jobs:
   auto-update:
