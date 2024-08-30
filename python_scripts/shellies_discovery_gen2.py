@@ -140,6 +140,7 @@ KEY_LATEST_VERSION_TOPIC = "l_ver_t"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
 KEY_MODEL = "mdl"
+KEY_MODEL_ID = "mdl_id"
 KEY_NAME = "name"
 KEY_ORIGIN = "o"
 KEY_PAYLOAD = "pl"
@@ -3586,8 +3587,9 @@ device_info = {
     KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
     KEY_NAME: device_name,
     KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+    KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
     KEY_SW_VERSION: firmware_id,
-    KEY_HW_VERSION: f"gen{gen} ({SUPPORTED_MODELS[model].get(ATTR_MODEL_ID)})",
+    KEY_HW_VERSION: f"gen{gen}",
     KEY_MANUFACTURER: ATTR_MANUFACTURER,
     KEY_CONFIGURATION_URL: device_url,
 }
