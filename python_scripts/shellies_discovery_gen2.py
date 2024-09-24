@@ -173,6 +173,10 @@ KEY_SUBTYPE = "stype"
 KEY_SUGGESTED_DISPLAY_PRECISION = "sug_dsp_prc"
 KEY_SUPPORT_URL = "url"
 KEY_SW_VERSION = "sw"
+KEY_TILT_COMMAND_TEMPLATE = "tilt_cmd_tpl"
+KEY_TILT_COMMAND_TOPIC = "tilt_cmd_t"
+KEY_TILT_STATUS_TEMPLATE = "tilt_status_tpl"
+KEY_TILT_STATUS_TOPIC = "tilt_status_t"
 KEY_TITLE = "tit"
 KEY_TOPIC = "t"
 KEY_TYPE = "type"
@@ -2702,6 +2706,17 @@ def get_cover(cover_id, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if device_config[f"cover:{cover_id}"].get("slat", {}).get("enabled", False):
+        payload[KEY_TILT_COMMAND_TEMPLATE] = (
+            f"{{^id^:1,^src^:^{source_topic}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^slat_pos^:{{{{tilt_position}}}}}}}}"
+        )
+        payload[KEY_TILT_COMMAND_TOPIC] = TOPIC_RPC
+        payload[KEY_TILT_STATUS_TEMPLATE] = (
+            "{%if is_number(value_json.get(^slat_pos^))%}{{value_json.slat_pos}}{%endif%}"
+        )
+        payload[KEY_TILT_STATUS_TOPIC] = TOPIC_COVER.format(id=cover_id)
+
     return topic, payload
 
 
