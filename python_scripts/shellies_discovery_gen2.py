@@ -2708,9 +2708,13 @@ def get_cover(cover_id, profile):
     }
 
     if device_config[f"cover:{cover_id}"].get("slat", {}).get("enabled", False):
-        payload[KEY_TILT_COMMAND_TEMPLATE] = f"{{^id^:1,^src^:^{source_topic}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^slat_pos^:{{{{tilt_position}}}}}}}}"
+        payload[KEY_TILT_COMMAND_TEMPLATE] = (
+            f"{{^id^:1,^src^:^{source_topic}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^slat_pos^:{{{{tilt_position}}}}}}}}"
+        )
         payload[KEY_TILT_COMMAND_TOPIC] = TOPIC_RPC
-        payload[KEY_TILT_STATUS_TEMPLATE] = "{%if is_number(value_json.get(^slat_pos^))%}{{value_json.slat_pos}}{%endif%}"
+        payload[KEY_TILT_STATUS_TEMPLATE] = (
+            "{%if is_number(value_json.get(^slat_pos^))%}{{value_json.slat_pos}}{%endif%}"
+        )
         payload[KEY_TILT_STATUS_TOPIC] = TOPIC_COVER.format(id=cover_id)
 
     return topic, payload
