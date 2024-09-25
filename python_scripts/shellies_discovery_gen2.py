@@ -22,7 +22,6 @@ ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUT_SENSORS = "input_sensors"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
-ATTR_LIGHTS = "lights"
 ATTR_LIGHT_SENSORS = "light_sensors"
 ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
@@ -1291,6 +1290,10 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_STEP: 0.5,
 }
 
+def get_component_number(component: str, config) -> int:
+    """Return the number of components."""
+    return len([key for key in config if key.startswith(f"{component}:")])
+
 SUPPORTED_MODELS = {
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -1383,7 +1386,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 1,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2009,7 +2011,6 @@ SUPPORTED_MODELS = {
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 4,
-        ATTR_LIGHTS: 4,
         ATTR_LIGHT_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
@@ -2082,7 +2083,6 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNDM-0013US",
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
-        ATTR_LIGHTS: 1,
         ATTR_SENSORS: {
             SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
@@ -2304,7 +2304,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 1,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2340,7 +2339,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 2,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2583,14 +2581,12 @@ SUPPORTED_MODELS = {
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 5,
-        ATTR_LIGHTS: 5,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
         },
-        ATTR_RGB_LIGHTS: 1,
         ATTR_RGB_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_RGB_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_RGB_ENERGY,
@@ -2899,12 +2895,9 @@ def get_relay_fan(relay_id, relay_type, profile):
     return topic, payload
 
 
-def get_light(light_id, profile):
+def get_light(light_id: str, profile: str):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
-
-    if model == MODEL_PLUS_RGBW_PM and profile != ATTR_LIGHT:
-        return topic, ""
 
     light_name = device_config[f"light:{light_id}"][ATTR_NAME] or f"Light {light_id}"
     payload = {
@@ -3723,10 +3716,10 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 
 thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
-lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
+lights = get_component_number(ATTR_LIGHT, device_config)
 light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
 
-rgb_lights = SUPPORTED_MODELS[model].get(ATTR_RGB_LIGHTS, 0)
+rgb_lights = get_component_number(ATTR_RGB, device_config)
 rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
