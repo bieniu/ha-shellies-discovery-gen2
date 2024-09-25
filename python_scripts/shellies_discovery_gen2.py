@@ -1,11 +1,13 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "2.33.0"
+VERSION = "2.34.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
 ATTR_BUTTONS = "buttons"
+ATTR_CCT = "cct"
+ATTR_CCT_SENSORS = "cct_sensors"
 ATTR_COVER = "cover"
 ATTR_COVER_SENSORS = "cover_sensors"
 ATTR_COVERS = "covers"
@@ -22,7 +24,6 @@ ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUT_SENSORS = "input_sensors"
 ATTR_INPUTS = "inputs"
 ATTR_LIGHT = "light"
-ATTR_LIGHTS = "lights"
 ATTR_LIGHT_SENSORS = "light_sensors"
 ATTR_MAC = "mac"
 ATTR_MANUFACTURER = "Allterco Robotics"
@@ -35,7 +36,6 @@ ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
 ATTR_RGB = "rgb"
-ATTR_RGB_LIGHTS = "rgb_lights"
 ATTR_RGB_SENSORS = "rgb_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
@@ -105,6 +105,8 @@ KEY_MAX_TEMP = "max_temp"
 KEY_MODES = "modes"
 KEY_MODE_STATE_TOPIC = "mode_stat_t"
 KEY_ACTION_TOPIC = "act_t"
+KEY_MAX_MIREDS = "max_mirs"
+KEY_MIN_MIREDS = "min_mirs"
 KEY_MODE_COMMAND_TOPIC = "mode_cmd_t"
 KEY_MODE_COMMAND_TEMPLATE = "mode_cmd_tpl"
 KEY_MODE_STATE_TEMPLATE = "mode_stat_tpl"
@@ -117,6 +119,7 @@ KEY_BLUE_TEMPLATE = "b_tpl"
 KEY_GREEN_TEMPLATE = "g_tpl"
 KEY_RED_TEMPLATE = "r_tpl"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
+KEY_COLOR_TEMP_TEMPLATE = "clr_temp_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TEMPLATE = "cmd_tpl"
@@ -215,6 +218,7 @@ MODEL_PRO_DIMMER_2PM = "shellyprodm2pm"
 MODEL_PRO_DUAL_COVER_PM = "shellypro2cover"
 MODEL_PRO_EM = "shellyproem50"
 MODEL_WALL_DISPLAY = "ShellyWallDisplay"
+MODEL_PRO_RGBWW_PM = "shellyprorgbwwpm"
 # Gen3 devices
 MODEL_1_G3 = "shelly1g3"
 MODEL_1PM_G3 = "shelly1pmg3"
@@ -314,6 +318,7 @@ TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
+TOPIC_STATUS_CCT = "~status/cct:{id}"
 TOPIC_STATUS_RGB = "~status/rgb:{id}"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
@@ -490,6 +495,16 @@ DESCRIPTION_SENSOR_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
 }
+DESCRIPTION_SENSOR_CCT_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_CCT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
 DESCRIPTION_SENSOR_LIGHT_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -624,6 +639,16 @@ DESCRIPTION_SENSOR_ENERGY = {
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
+DESCRIPTION_SENSOR_CCT_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_STATUS_CCT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
 DESCRIPTION_SENSOR_LIGHT_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -715,6 +740,16 @@ DESCRIPTION_SENSOR_POWER = {
     KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
+DESCRIPTION_SENSOR_CCT_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_CCT,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
@@ -934,6 +969,17 @@ DESCRIPTION_SENSOR_RELAY_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
 }
+DESCRIPTION_SENSOR_CCT_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_CCT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
+}
 DESCRIPTION_SENSOR_LIGHT_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -995,6 +1041,16 @@ DESCRIPTION_SENSOR_VOLTAGE = {
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_CCT_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_CCT,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
@@ -1290,6 +1346,12 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_STEP: 0.5,
 }
 
+
+def get_component_number(component: str, config) -> int:
+    """Return the number of components."""
+    return len([key for key in config if key.startswith(f"{component}:")])
+
+
 SUPPORTED_MODELS = {
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -1382,7 +1444,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 1,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2008,12 +2069,10 @@ SUPPORTED_MODELS = {
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_INPUTS: 4,
-        ATTR_LIGHTS: 4,
         ATTR_LIGHT_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
         },
-        ATTR_RGB_LIGHTS: 1,
         ATTR_RGB_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_RGB_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_RGB_ENERGY,
@@ -2081,7 +2140,6 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "SNDM-0013US",
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
-        ATTR_LIGHTS: 1,
         ATTR_SENSORS: {
             SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
@@ -2303,7 +2361,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 1,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2339,7 +2396,6 @@ SUPPORTED_MODELS = {
             EVENT_SINGLE_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        ATTR_LIGHTS: 2,
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
@@ -2574,6 +2630,46 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+    },
+    MODEL_PRO_RGBWW_PM: {
+        ATTR_NAME: "Shelly Pro RGBWW PM",
+        ATTR_MODEL_ID: "SPDC-0D5PE16EU",
+        ATTR_GEN: 2,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_INPUTS: 5,
+        ATTR_CCT_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_CCT_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_CCT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_CCT_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_CCT_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_CCT_VOLTAGE,
+        },
+        ATTR_LIGHT_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_LIGHT_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
+        },
+        ATTR_RGB_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_RGB_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_RGB_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_RGB_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RGB_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_RGB_VOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20240816,
     },
     MODEL_WALL_DISPLAY: {
         ATTR_NAME: "Shelly Wall Display",
@@ -2864,12 +2960,9 @@ def get_relay_fan(relay_id, relay_type, profile):
     return topic, payload
 
 
-def get_light(light_id, profile):
+def get_light(light_id: int):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
-
-    if model == MODEL_PLUS_RGBW_PM and profile != ATTR_LIGHT:
-        return topic, ""
 
     light_name = device_config[f"light:{light_id}"][ATTR_NAME] or f"Light {light_id}"
     payload = {
@@ -2891,14 +2984,38 @@ def get_light(light_id, profile):
     return topic, payload
 
 
-def get_rgb_light(rgb_id, profile):
+def get_cct_light(cct_id: int):
+    """Create configuration for Shelly CCT light entity."""
+    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-cct-{cct_id}/config")
+
+    light_name = device_config[f"cct:{cct_id}"][ATTR_NAME] or f"CCT light {cct_id}"
+    payload = {
+        KEY_SCHEMA: "template",
+        KEY_NAME: light_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^CCT.Set^,^params^:{{^id^:{cct_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^CCT.Set^,^params^:{{^id^:{cct_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if color_temp is defined%}},^ct^:{{{{(1000000/color_temp)|round}}}}{{%endif%}}}}}}",
+        KEY_STATE_TOPIC: TOPIC_STATUS_CCT.format(id=cct_id),
+        KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
+        KEY_COLOR_TEMP_TEMPLATE: "{{(1000000/value_json.ct)|round}}",
+        KEY_MIN_MIREDS: round(1000000 / device_config[f"cct:{cct_id}"]["ct_range"][0]),
+        KEY_MAX_MIREDS: round(1000000 / device_config[f"cct:{cct_id}"]["ct_range"][1]),
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-cct-{cct_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
+def get_rgb_light(rgb_id: int):
     """Create configuration for Shelly RGB light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-rgb-{rgb_id}/config")
 
-    if profile != ATTR_RGB:
-        return topic, ""
-
-    light_name = device_config[f"rgb:{rgb_id}"][ATTR_NAME] or f"Light {rgb_id}"
+    light_name = device_config[f"rgb:{rgb_id}"][ATTR_NAME] or f"RGB light {rgb_id}"
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
@@ -2928,6 +3045,7 @@ def get_sensor(
     relay_id=None,
     light_id=None,
     rgb_id=None,
+    cct_id=None,
     cover_id=None,
     emeter_id=None,
     emeter_phase=None,
@@ -2958,6 +3076,10 @@ def get_sensor(
     elif rgb_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-rgb-{rgb_id}-{sensor}/config"
+        )
+    elif cct_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-cct-{cct_id}-{sensor}/config"
         )
     elif sensor_id is not None:
         topic = encode_config_topic(
@@ -3006,10 +3128,16 @@ def get_sensor(
         sensor_name = f"{light_name} {description[KEY_NAME]}"
     elif rgb_id is not None:
         rgb_name = (
-            device_config[f"rgb:{rgb_id}"].get(ATTR_NAME, {}) or f"Light {rgb_id}"
+            device_config[f"rgb:{rgb_id}"].get(ATTR_NAME, {}) or f"RGB light {rgb_id}"
         )
         unique_id = f"{device_id}-rgb-{rgb_id}-{sensor}".lower()
         sensor_name = f"{rgb_name} {description[KEY_NAME]}"
+    elif cct_id is not None:
+        cct_name = (
+            device_config[f"cct:{cct_id}"].get(ATTR_NAME, {}) or f"CCT light {cct_id}"
+        )
+        unique_id = f"{device_id}-cct-{cct_id}-{sensor}".lower()
+        sensor_name = f"{cct_name} {description[KEY_NAME]}"
     elif emeter_id is not None and emeter_phase is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
@@ -3068,6 +3196,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=light_id)
     elif rgb_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgb_id)
+    elif cct_id is not None and description[KEY_STATE_TOPIC]:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=cct_id)
     elif emeter_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=emeter_id)
     elif sensor_id is not None:
@@ -3313,7 +3443,7 @@ def configure_device():
             config[topic] = payload
 
     for light_id in range(lights):
-        topic, payload = get_light(light_id, profile)
+        topic, payload = get_light(light_id)
         config[topic] = payload
 
         for sensor, description in light_sensors.items():
@@ -3322,8 +3452,18 @@ def configure_device():
             )
             config[topic] = payload
 
+    for cct_id in range(cct_lights):
+        topic, payload = get_cct_light(cct_id)
+        config[topic] = payload
+
+        for sensor, description in cct_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, cct_id=cct_id, profile=profile
+            )
+            config[topic] = payload
+
     for rgb_id in range(rgb_lights):
-        topic, payload = get_rgb_light(rgb_id, profile)
+        topic, payload = get_rgb_light(rgb_id)
         config[topic] = payload
 
         for sensor, description in rgb_sensors.items():
@@ -3688,10 +3828,13 @@ relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {}
 
 thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
 
-lights = SUPPORTED_MODELS[model].get(ATTR_LIGHTS, 0)
+lights = get_component_number(ATTR_LIGHT, device_config)
 light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
 
-rgb_lights = SUPPORTED_MODELS[model].get(ATTR_RGB_LIGHTS, 0)
+cct_lights = get_component_number(ATTR_CCT, device_config)
+cct_sensors = SUPPORTED_MODELS[model].get(ATTR_CCT_SENSORS, {})
+
+rgb_lights = get_component_number(ATTR_RGB, device_config)
 rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
 
 buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
