@@ -1289,9 +1289,11 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_STEP: 0.5,
 }
 
+
 def get_component_number(component: str, config) -> int:
     """Return the number of components."""
     return len([key for key in config if key.startswith(f"{component}:")])
+
 
 SUPPORTED_MODELS = {
     MODEL_1_G3: {
@@ -2582,6 +2584,7 @@ SUPPORTED_MODELS = {
         ATTR_LIGHT_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_LIGHT_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_LIGHT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_LIGHT_POWER,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_LIGHT_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_LIGHT_VOLTAGE,
         },
@@ -2893,7 +2896,7 @@ def get_relay_fan(relay_id, relay_type, profile):
     return topic, payload
 
 
-def get_light(light_id: str, profile: str):
+def get_light(light_id: int):
     """Create configuration for Shelly light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-{light_id}/config")
 
@@ -2917,14 +2920,11 @@ def get_light(light_id: str, profile: str):
     return topic, payload
 
 
-def get_rgb_light(rgb_id, profile):
+def get_rgb_light(rgb_id: int):
     """Create configuration for Shelly RGB light entity."""
     topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-rgb-{rgb_id}/config")
 
-    if profile != ATTR_RGB:
-        return topic, ""
-
-    light_name = device_config[f"rgb:{rgb_id}"][ATTR_NAME] or f"Light {rgb_id}"
+    light_name = device_config[f"rgb:{rgb_id}"][ATTR_NAME] or f"RGB light {rgb_id}"
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
@@ -3032,7 +3032,7 @@ def get_sensor(
         sensor_name = f"{light_name} {description[KEY_NAME]}"
     elif rgb_id is not None:
         rgb_name = (
-            device_config[f"rgb:{rgb_id}"].get(ATTR_NAME, {}) or f"Light {rgb_id}"
+            device_config[f"rgb:{rgb_id}"].get(ATTR_NAME, {}) or f"RGB light {rgb_id}"
         )
         unique_id = f"{device_id}-rgb-{rgb_id}-{sensor}".lower()
         sensor_name = f"{rgb_name} {description[KEY_NAME]}"
@@ -3339,7 +3339,7 @@ def configure_device():
             config[topic] = payload
 
     for light_id in range(lights):
-        topic, payload = get_light(light_id, profile)
+        topic, payload = get_light(light_id)
         config[topic] = payload
 
         for sensor, description in light_sensors.items():
@@ -3349,7 +3349,7 @@ def configure_device():
             config[topic] = payload
 
     for rgb_id in range(rgb_lights):
-        topic, payload = get_rgb_light(rgb_id, profile)
+        topic, payload = get_rgb_light(rgb_id)
         config[topic] = payload
 
         for sensor, description in rgb_sensors.items():
