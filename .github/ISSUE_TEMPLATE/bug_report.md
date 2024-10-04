@@ -37,7 +37,7 @@ assignees: ''
 
 **Shelly device MQTT settings:**
 <!--
-  Please provide a screenshot of the Settings -> MQTT section from the device's WebUI.
+  Please provide a screenshot of the Settings -> MQTT section from the device's WebUI (not from Shelly app!).
 -->
 
 
