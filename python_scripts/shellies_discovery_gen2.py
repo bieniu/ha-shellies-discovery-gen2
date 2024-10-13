@@ -2,6 +2,8 @@
 
 VERSION = "3.0.0"
 
+BTHOME_COMPONENTS = {"bthomedevice", "bthomesensor"}
+
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
@@ -3680,9 +3682,6 @@ device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
 
-if "components" in data:  # noqa: F821
-    raise NotImplementedError("dynamic components are not supported")
-
 model = device_id.rsplit("-", 1)[0]
 if model not in SUPPORTED_MODELS:
     raise ValueError(
@@ -3691,141 +3690,165 @@ if model not in SUPPORTED_MODELS:
 
 device_config = data["device_config"]  # noqa: F821
 
-if (
-    model == MODEL_PRO_3EM
-    and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
-):
-    model = MODEL_PRO_3EM_MONOPHASE
+if "components" in device_config:
+    components = {
+        comp["key"]: comp["config"]
+        for comp in device_config["components"]
+        if comp["key"].startswith("bt")
+    }
+    bthome_devices = {
+        key: {"config": conf, "components": []}
+        for key, conf in components.items()
+        if key.startswith("bthomedevice")
+    }
+    for device_config in bthome_devices.values():
+        for comp, conf in components.items():
+            if (
+                not comp.startswith("bthomedevice")
+                and conf["addr"] == device_config["config"]["addr"]
+            ):
+                device_config["components"].append({comp: conf})
 
-default_topic = f"{device_config['mqtt']['topic_prefix']}/"
-if " " in default_topic:
-    raise ValueError(
-        f"MQTT prefix value {default_topic} is not valid, check device configuration"
-    )
-firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
-
-script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
-if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
-    raise ValueError(
-        f"Script prefix value {script_prefix} is not valid, check script configuration"
-    )
-
-source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
-
-if (
-    model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
-    and not current_script_installed()
-):
-    device_topic = encode_config_topic(f"{default_topic}rpc")
-    if script_prefix:
-        script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
-    else:
-        script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
-
-    script_id = get_script_id()
-    install_script(script_id, device_topic, script_topic)
-    remove_old_script_versions(device_topic, script_topic)
-
-min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
-try:
-    firmware_date = int(firmware_id.split("-", 1)[0])
-except ValueError as exc:
-    raise ValueError(
-        f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
-    ) from exc
-if firmware_date < min_firmware_date:
-    raise ValueError(
-        f"firmware dated {min_firmware_date} is required, update your device {device_id}"
-    )
-
-mac = device_config["sys"]["device"][ATTR_MAC]
-if mac is None:
-    raise ValueError("mac value None is not valid, check script configuration")
-
-device_name = device_config["sys"]["device"].get(ATTR_NAME)
-device_url = f"http://{device_id}.local/"
-
-if not device_name:
-    device_name = SUPPORTED_MODELS[model][ATTR_NAME]
-
-qos = data.get(CONF_QOS, 0)  # noqa: F821
-if qos not in (0, 1, 2):
-    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
-
-disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
-
-gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
-device_info = {
-    KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
-    KEY_NAME: device_name,
-    KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
-    KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
-    KEY_SW_VERSION: firmware_id,
-    KEY_HW_VERSION: f"gen{gen}",
-    KEY_MANUFACTURER: ATTR_MANUFACTURER,
-    KEY_CONFIGURATION_URL: device_url,
-}
-origin_info = {
-    KEY_NAME: "Shellies Discovery Gen2",
-    KEY_SW_VERSION: VERSION,
-    KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
-}
-
-wakeup_period = SUPPORTED_MODELS[model].get(ATTR_WAKEUP_PERIOD, 0)
-if wakeup_period > 0:
-    availability = None
-    expire_after = wakeup_period * 1.2
+    logger.info(bthome_devices)  # noqa: F821
+    raise NotImplementedError("dynamic components are not supported")
 else:
-    availability = [
-        {
-            KEY_TOPIC: TOPIC_ONLINE,
-            KEY_PAYLOAD_AVAILABLE: "true",
-            KEY_PAYLOAD_NOT_AVAILABLE: "false",
-        }
-    ]
-    if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
-        availability.append(
-            {
-                KEY_TOPIC: TOPIC_STATUS_RPC,
-                KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
-            }
+    if (
+        model == MODEL_PRO_3EM
+        and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
+    ):
+        model = MODEL_PRO_3EM_MONOPHASE
+
+    default_topic = f"{device_config['mqtt']['topic_prefix']}/"
+    if " " in default_topic:
+        raise ValueError(
+            f"MQTT prefix value {default_topic} is not valid, check device configuration"
         )
-    expire_after = None
+    firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
-inputs = get_component_number(ATTR_INPUT, device_config)
-input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
-input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
-input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
+    script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
+    if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
+        raise ValueError(
+            f"Script prefix value {script_prefix} is not valid, check script configuration"
+        )
 
-emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
-emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
-emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
+    source_topic = (
+        f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
+    )
 
-relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
-relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
-relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
+    if (
+        model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+        and not current_script_installed()
+    ):
+        device_topic = encode_config_topic(f"{default_topic}rpc")
+        if script_prefix:
+            script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
+        else:
+            script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
 
-thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
+        script_id = get_script_id()
+        install_script(script_id, device_topic, script_topic)
+        remove_old_script_versions(device_topic, script_topic)
 
-lights = get_component_number(ATTR_LIGHT, device_config)
-light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+    min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
+    try:
+        firmware_date = int(firmware_id.split("-", 1)[0])
+    except ValueError as exc:
+        raise ValueError(
+            f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
+        ) from exc
+    if firmware_date < min_firmware_date:
+        raise ValueError(
+            f"firmware dated {min_firmware_date} is required, update your device {device_id}"
+        )
 
-cct_lights = get_component_number(ATTR_CCT, device_config)
-cct_sensors = SUPPORTED_MODELS[model].get(ATTR_CCT_SENSORS, {})
+    mac = device_config["sys"]["device"][ATTR_MAC]
+    if mac is None:
+        raise ValueError("mac value None is not valid, check script configuration")
 
-rgb_lights = get_component_number(ATTR_RGB, device_config)
-rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
+    device_name = device_config["sys"]["device"].get(ATTR_NAME)
+    device_url = f"http://{device_id}.local/"
 
-buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
-sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
-binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
-updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})
+    if not device_name:
+        device_name = SUPPORTED_MODELS[model][ATTR_NAME]
 
-covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
-cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+    qos = data.get(CONF_QOS, 0)  # noqa: F821
+    if qos not in (0, 1, 2):
+        raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
-config_data = configure_device()
+    disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
-if config_data:
-    for config_topic, config_payload in config_data.items():
-        mqtt_publish(config_topic, config_payload)
+    gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
+    device_info = {
+        KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
+        KEY_NAME: device_name,
+        KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+        KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
+        KEY_SW_VERSION: firmware_id,
+        KEY_HW_VERSION: f"gen{gen}",
+        KEY_MANUFACTURER: ATTR_MANUFACTURER,
+        KEY_CONFIGURATION_URL: device_url,
+    }
+    origin_info = {
+        KEY_NAME: "Shellies Discovery Gen2",
+        KEY_SW_VERSION: VERSION,
+        KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
+    }
+
+    wakeup_period = SUPPORTED_MODELS[model].get(ATTR_WAKEUP_PERIOD, 0)
+    if wakeup_period > 0:
+        availability = None
+        expire_after = wakeup_period * 1.2
+    else:
+        availability = [
+            {
+                KEY_TOPIC: TOPIC_ONLINE,
+                KEY_PAYLOAD_AVAILABLE: "true",
+                KEY_PAYLOAD_NOT_AVAILABLE: "false",
+            }
+        ]
+        if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
+            availability.append(
+                {
+                    KEY_TOPIC: TOPIC_STATUS_RPC,
+                    KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
+                }
+            )
+        expire_after = None
+
+    inputs = get_component_number(ATTR_INPUT, device_config)
+    input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
+    input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
+    input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
+
+    emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
+    emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
+    emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
+
+    relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
+    relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
+    relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
+
+    thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
+
+    lights = get_component_number(ATTR_LIGHT, device_config)
+    light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+
+    cct_lights = get_component_number(ATTR_CCT, device_config)
+    cct_sensors = SUPPORTED_MODELS[model].get(ATTR_CCT_SENSORS, {})
+
+    rgb_lights = get_component_number(ATTR_RGB, device_config)
+    rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
+
+    buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+    sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+    binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+    updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})
+
+    covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
+    cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+
+    config_data = configure_device()
+
+    if config_data:
+        for config_topic, config_payload in config_data.items():
+            mqtt_publish(config_topic, config_payload)
