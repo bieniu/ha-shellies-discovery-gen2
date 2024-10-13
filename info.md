@@ -125,7 +125,8 @@ python_script:
     - platform: homeassistant
       event: start
   variables:
-    get_config_payload:  "{{ {'id': 1, 'src': 'shellies_discovery', 'method': 'Shelly.GetConfig'} | to_json }}"
+    get_config_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
+    dynamic_components_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.DynamicComponents', 'params': {'dynamic_only': true}} | to_json }}"
     device_ids:  # enter the list of device IDs (MQTT prefixes) here
       - shellyplus2pm-485519a1ff8c
       - custom-prefix/shelly-kitchen
@@ -137,6 +138,10 @@ python_script:
             data:
               topic: "{{ repeat.item }}/rpc"
               payload: "{{ get_config_payload }}"
+          - service: mqtt.publish
+            data:
+              topic: "{{ repeat.item }}/rpc"
+              payload: "{{ dynamic_components_payload }}"
 
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"

@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "2.34.1"
+VERSION = "3.0.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -3679,6 +3679,9 @@ logger.info("Shellies Discovery Gen2 version: %s", VERSION)  # noqa: F821
 device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
+
+if "components" in data:  # noqa: F821
+    raise NotImplementedError("dynamic components are not supported")
 
 model = device_id.rsplit("-", 1)[0]
 if model not in SUPPORTED_MODELS:
