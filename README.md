@@ -162,7 +162,9 @@ python_script:
     data:
       id: "{{ trigger.payload_json.src }}"
       device_config: "{{ trigger.payload_json.result }}"
-  - action: mqtt.publish
+  - condition: template
+    value_template: "{{ 'mqtt' in trigger.payload_json.result }}"
+  - service: mqtt.publish
     data:
       topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
       payload: "status_update"
