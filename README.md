@@ -132,18 +132,18 @@ python_script:
     - platform: homeassistant
       event: start
   variables:
-    device_info_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
+    get_config_payload:  "{{ {'id': 1, 'src': 'shellies_discovery', 'method': 'Shelly.GetConfig'} | to_json }}"
     device_ids:  # enter the list of device IDs (MQTT prefixes) here
       - shellyplus2pm-485519a1ff8c
       - custom-prefix/shelly-kitchen
-  action:
+  actions:
     - repeat:
         for_each: "{{ device_ids }}"
         sequence:
-          - service: mqtt.publish
+          - action: mqtt.publish
             data:
               topic: "{{ repeat.item }}/rpc"
-              payload: "{{ device_info_payload }}"
+              payload: "{{ get_config_payload }}"
 
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"
@@ -152,12 +152,12 @@ python_script:
   trigger:
   - platform: mqtt
     topic: shellies_discovery/rpc
-  action:
-  - service: python_script.shellies_discovery_gen2
+  actions:
+  - action: python_script.shellies_discovery_gen2
     data:
       id: "{{ trigger.payload_json.src }}"
       device_config: "{{ trigger.payload_json.result }}"
-  - service: mqtt.publish
+  - action: mqtt.publish
     data:
       topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
       payload: "status_update"
