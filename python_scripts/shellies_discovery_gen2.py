@@ -2,8 +2,6 @@
 
 VERSION = "3.0.0"
 
-BTHOME_COMPONENTS = {"bthomedevice", "bthomesensor"}
-
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
 ATTR_BUTTON = "button"
@@ -227,6 +225,7 @@ MODEL_1PM_G3 = "shelly1pmg3"
 MODEL_1_MINI_G3 = "shelly1minig3"
 MODEL_1PM_MINI_G3 = "shelly1pmminig3"
 MODEL_2PM_G3 = "shelly2pmg3"
+MODEL_BLU_GATEWAY_G3 = "shellyblugwg3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
@@ -1461,6 +1460,23 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240331,
+    },
+    MODEL_BLU_GATEWAY_G3: {
+        ATTR_NAME: "Shelly BLU Gateway Gen3",
+        ATTR_MODEL_ID: "S3GW-1DBT001",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_MIN_FIRMWARE_DATE: 20241007,
     },
     MODEL_HT_G3: {
         ATTR_BATTERY_POWERED: True,
@@ -2853,6 +2869,65 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
+def get_blu_climate(thermostat_id, description):
+    """Create configuration for Shelly BLU climate entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
+    )
+
+    if f"blutrv:{thermostat_id}" not in device_config:
+        return topic, ""
+
+    thermostat_type = device_config.get(f"blutrv:{thermostat_id}", {}).get(
+        "type", "heating"
+    )
+    thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
+
+    thermostat_name = (
+        device_config.get(f"thermostat:{thermostat_id}", {}).get(ATTR_NAME)
+        or f"Thermostat {thermostat_id}"
+    )
+
+    thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
+    payload = {
+        KEY_NAME: thermostat_name,
+        KEY_ACTION_TOPIC: thermostat_topic,
+        KEY_ACTION_TEMPLATE: TPL_ACTION_TEMPLATE.format(action=thermostat_type),
+        KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
+        KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
+        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
+        KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
+        KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
+        KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
+        KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
+        KEY_MODES: ["off", thermostat_default_mode],
+        KEY_MODE_STATE_TOPIC: thermostat_topic,
+        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
+            action=thermostat_default_mode
+        ),
+        KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if f"humidity:{thermostat_id}" in device_config:
+        payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
+        payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = TPL_HUMIDITY
+
+    return topic, payload
+
+
 def get_switch(relay_id, relay_type, profile):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
@@ -3694,22 +3769,41 @@ if "components" in device_config:
     components = {
         comp["key"]: comp["config"]
         for comp in device_config["components"]
-        if comp["key"].startswith("bt")
+        if comp["key"].startswith(("blu", "bt", "mqtt"))
     }
+
+    default_topic = f"{components['mqtt']['topic_prefix']}/"
+    if " " in default_topic:
+        raise ValueError(
+            f"MQTT prefix value {default_topic} is not valid, check device configuration"
+        )
+
     bthome_devices = {
         key: {"config": conf, "components": []}
         for key, conf in components.items()
         if key.startswith("bthomedevice")
     }
+    blutrv_devices = {
+        key: {"config": conf, "components": []}
+        for key, conf in components.items()
+        if key.startswith("blutrv")
+    }
     for device_config in bthome_devices.values():
         for comp, conf in components.items():
             if (
                 not comp.startswith("bthomedevice")
-                and conf["addr"] == device_config["config"]["addr"]
+                and conf.get("addr") == device_config["config"]["addr"]
+            ):
+                device_config["components"].append({comp: conf})
+    for device_config in blutrv_devices.values():
+        for comp, conf in components.items():
+            if (
+                not comp.startswith("blutrv")
+                and conf.get("addr") == device_config["config"]["addr"]
             ):
                 device_config["components"].append({comp: conf})
 
-    logger.info(bthome_devices)  # noqa: F821
+    logger.info(blutrv_devices)  # noqa: F821
     raise NotImplementedError("dynamic components are not supported")
 else:
     if (
