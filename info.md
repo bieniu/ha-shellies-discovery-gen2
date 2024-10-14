@@ -126,7 +126,7 @@ python_script:
       event: start
   variables:
     get_config_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetConfig'} | to_json }}"
-    get_components_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetComponents', 'params': {'dynamic_only': true}} | to_json }"
+    get_components_payload:  "{{ {'id': 1, 'src':'shellies_discovery', 'method':'Shelly.GetComponents'} | to_json }"
     device_ids:  # enter the list of device IDs (MQTT prefixes) here
       - shellyplus2pm-485519a1ff8c
       - custom-prefix/shelly-kitchen

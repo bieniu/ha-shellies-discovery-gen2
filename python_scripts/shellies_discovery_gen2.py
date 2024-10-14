@@ -231,6 +231,8 @@ MODEL_I4_G3 = "shellyi4g3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
+# BLU devices
+MODEL_BLU_TRV = "shellyblutrvshellyblutrv"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -1346,6 +1348,11 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MAX: 35,
     ATTR_TEMPERATURE_STEP: 0.5,
 }
+DESCRIPTION_BLU_TRV_THERMOSTAT = {
+    ATTR_TEMPERATURE_MIN: 5,
+    ATTR_TEMPERATURE_MAX: 30,
+    ATTR_TEMPERATURE_STEP: 0.1,
+}
 
 
 def get_component_number(component: str, config) -> int:
@@ -1354,6 +1361,10 @@ def get_component_number(component: str, config) -> int:
 
 
 SUPPORTED_MODELS = {
+    MODEL_BLU_TRV: {
+        ATTR_NAME: "Shelly BLU TRV",
+        ATTR_MODEL_ID: "SB????",
+    },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
         ATTR_MODEL_ID: "S3SW-001X16EU",
@@ -2875,24 +2886,11 @@ def get_blu_climate(thermostat_id, description):
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
 
-    if f"blutrv:{thermostat_id}" not in device_config:
-        return topic, ""
-
-    thermostat_type = device_config.get(f"blutrv:{thermostat_id}", {}).get(
-        "type", "heating"
-    )
-    thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
-
-    thermostat_name = (
-        device_config.get(f"thermostat:{thermostat_id}", {}).get(ATTR_NAME)
-        or f"Thermostat {thermostat_id}"
-    )
+    thermostat_name = "Thermostat"
 
     thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
     payload = {
         KEY_NAME: thermostat_name,
-        KEY_ACTION_TOPIC: thermostat_topic,
-        KEY_ACTION_TEMPLATE: TPL_ACTION_TEMPLATE.format(action=thermostat_type),
         KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
         KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
@@ -2904,11 +2902,9 @@ def get_blu_climate(thermostat_id, description):
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
-        KEY_MODES: ["off", thermostat_default_mode],
+        KEY_MODES: ["off", "heat"],
         KEY_MODE_STATE_TOPIC: thermostat_topic,
-        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
-            action=thermostat_default_mode
-        ),
+        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(action="ble"),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
             source=source_topic, thermostat=thermostat_id
@@ -2920,10 +2916,6 @@ def get_blu_climate(thermostat_id, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
-
-    if f"humidity:{thermostat_id}" in device_config:
-        payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
-        payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = TPL_HUMIDITY
 
     return topic, payload
 
@@ -3765,6 +3757,12 @@ if model not in SUPPORTED_MODELS:
 
 device_config = data["device_config"]  # noqa: F821
 
+origin_info = {
+    KEY_NAME: "Shellies Discovery Gen2",
+    KEY_SW_VERSION: VERSION,
+    KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
+}
+
 if "components" in device_config:
     components = {
         comp["key"]: comp["config"]
@@ -3784,7 +3782,7 @@ if "components" in device_config:
         if key.startswith("bthomedevice")
     }
     blutrv_devices = {
-        key: {"config": conf, "components": []}
+        key: {**conf, "components": []}
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
@@ -3792,7 +3790,7 @@ if "components" in device_config:
         for comp, conf in components.items():
             if (
                 not comp.startswith("bthomedevice")
-                and conf.get("addr") == device_config["config"]["addr"]
+                and conf.get("addr") == device_config["addr"]
             ):
                 device_config["components"].append({comp: conf})
     for device_config in blutrv_devices.values():
@@ -3802,8 +3800,27 @@ if "components" in device_config:
                 and conf.get("addr") == device_config["config"]["addr"]
             ):
                 device_config["components"].append({comp: conf})
-
     logger.info(blutrv_devices)  # noqa: F821
+    config_data = {}
+
+    for thermostat, config in blutrv_devices.items():
+        model = "shellyblutrv"
+        mac = config["addr"]
+        device_name = config["name"]
+        device_id += f"-{model}-{mac.replace(":", "")}"
+        device_info = {
+            KEY_CONNECTIONS: [["bluetooth", mac.lower()]],
+            KEY_NAME: device_name,
+            KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+            KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
+            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+            "via_device": format_mac(device_id.rsplit("-")[-1]),
+        }
+        topic, payload = get_blu_climate(
+            thermostat.split(":")[-1], DESCRIPTION_BLU_TRV_THERMOSTAT
+        )
+        config_data[topic] = payload
+
     raise NotImplementedError("dynamic components are not supported")
 else:
     if (
@@ -3882,11 +3899,6 @@ else:
         KEY_MANUFACTURER: ATTR_MANUFACTURER,
         KEY_CONFIGURATION_URL: device_url,
     }
-    origin_info = {
-        KEY_NAME: "Shellies Discovery Gen2",
-        KEY_SW_VERSION: VERSION,
-        KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
-    }
 
     wakeup_period = SUPPORTED_MODELS[model].get(ATTR_WAKEUP_PERIOD, 0)
     if wakeup_period > 0:
@@ -3943,6 +3955,6 @@ else:
 
     config_data = configure_device()
 
-    if config_data:
-        for config_topic, config_payload in config_data.items():
-            mqtt_publish(config_topic, config_payload)
+if config_data:
+    for config_topic, config_payload in config_data.items():
+        mqtt_publish(config_topic, config_payload)
