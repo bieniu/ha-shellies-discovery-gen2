@@ -232,7 +232,7 @@ MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
-MODEL_BLU_TRV = "shellyblutrvshellyblutrv"
+MODEL_BLU_TRV = "shellyblutrv"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -399,8 +399,8 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
-TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:1,^target_C^:value|round(1)}}}}}}|tojson}}}}"
-TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:{source},^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:1,^target_C^:target}}}}}}|to_json}}}}"
+TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:value|round(1)}}}}}}|tojson}}}}"
+TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:{source},^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:target}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
@@ -1369,7 +1369,7 @@ def get_component_number(component: str, config) -> int:
 SUPPORTED_MODELS = {
     MODEL_BLU_TRV: {
         ATTR_NAME: "Shelly BLU TRV",
-        ATTR_MODEL_ID: "SB????",
+        ATTR_MODEL_ID: "SBTR-001AEU",
     },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -2886,13 +2886,14 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
-def get_blu_climate(thermostat_id, description):
+def get_blu_climate(thermostat_id: int, description) -> tuple:
     """Create configuration for Shelly BLU climate entity."""
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
 
     payload = {
+        KEY_NAME: f"Thermostat {thermostat_id}",
         KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
             id=thermostat_id + 3
         ),
@@ -3790,6 +3791,20 @@ else:
         )
     expire_after = None
 
+disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
+
+script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
+if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
+    raise ValueError(
+        f"Script prefix value {script_prefix} is not valid, check script configuration"
+    )
+
+source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
+
+qos = data.get(CONF_QOS, 0)  # noqa: F821
+if qos not in (0, 1, 2):
+    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
+
 if "components" in device_config:
     components = {
         comp["key"]: comp["config"]
@@ -3813,42 +3828,24 @@ if "components" in device_config:
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
-    for device_config in bthome_devices.values():
-        for comp, conf in components.items():
-            if (
-                not comp.startswith("bthomedevice")
-                and conf.get("addr") == device_config["addr"]
-            ):
-                device_config["components"].append({comp: conf})
-    for device_config in blutrv_devices.values():
-        for comp, conf in components.items():
-            if (
-                not comp.startswith("blutrv")
-                and conf.get("addr") == device_config["config"]["addr"]
-            ):
-                device_config["components"].append({comp: conf})
-    logger.info(blutrv_devices)  # noqa: F821
     config_data = {}
 
     for thermostat, config in blutrv_devices.items():
-        model = "shellyblutrv"
+        model = MODEL_BLU_TRV
         mac = config["addr"]
-        device_name = config["name"]
-        device_id += f"-{model}-{mac.replace(":", "")}"
+        device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
+        device_id += f"-{mac.replace(":", "")}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac.lower()]],
             KEY_NAME: device_name,
             KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
-            KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
+            KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
             KEY_MANUFACTURER: ATTR_MANUFACTURER,
-            "via_device": format_mac(device_id.rsplit("-")[-1]),
         }
         topic, payload = get_blu_climate(
-            thermostat.split(":")[-1], DESCRIPTION_BLU_TRV_THERMOSTAT
+            int(thermostat.split(":")[-1]), DESCRIPTION_BLU_TRV_THERMOSTAT
         )
         config_data[topic] = payload
-
-    raise NotImplementedError("dynamic components are not supported")
 else:
     if (
         model == MODEL_PRO_3EM
@@ -3862,16 +3859,6 @@ else:
             f"MQTT prefix value {default_topic} is not valid, check device configuration"
         )
     firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
-
-    script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
-    if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
-        raise ValueError(
-            f"Script prefix value {script_prefix} is not valid, check script configuration"
-        )
-
-    source_topic = (
-        f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
-    )
 
     if (
         model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
@@ -3908,12 +3895,6 @@ else:
 
     if not device_name:
         device_name = SUPPORTED_MODELS[model][ATTR_NAME]
-
-    qos = data.get(CONF_QOS, 0)  # noqa: F821
-    if qos not in (0, 1, 2):
-        raise ValueError(f"QoS value {qos} is not valid, check script configuration")
-
-    disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
     gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
     device_info = {
