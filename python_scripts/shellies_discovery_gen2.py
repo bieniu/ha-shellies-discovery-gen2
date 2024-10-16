@@ -318,6 +318,8 @@ TOPIC_LIGHT = "~status/light:{id}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
+TOPIC_STATUS_BLUTRV = "~status/blutrv:{id}"
+TOPIC_STATUS_BTHOMESENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
@@ -397,6 +399,8 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
+TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:1,^target_C^:value|round(1)}}}}}}|tojson}}}}"
+TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:{source},^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:1,^target_C^:target}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
@@ -404,9 +408,11 @@ TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
+TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
+TPL_VALUE = "{{value_json.value}}"
 TPL_VOLTAGE = "{{value_json.voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
@@ -2886,27 +2892,27 @@ def get_blu_climate(thermostat_id, description):
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
 
-    thermostat_name = "Thermostat"
-
-    thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
     payload = {
-        KEY_NAME: thermostat_name,
-        KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
-        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
-        KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
-        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+            id=thermostat_id + 3
+        ),
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+            id=thermostat_id + 2
+        ),
+        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_BLU_TARGET_TEMPERATURE.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: thermostat_topic,
-        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(action="ble"),
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(id=thermostat_id + 2),
+        KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
+        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_AVAILABILITY: availability,
@@ -3763,6 +3769,27 @@ origin_info = {
     KEY_SUPPORT_URL: "https://github.com/bieniu/ha-shellies-discovery-gen2",
 }
 
+wakeup_period = SUPPORTED_MODELS[model].get(ATTR_WAKEUP_PERIOD, 0)
+if wakeup_period > 0:
+    availability = None
+    expire_after = wakeup_period * 1.2
+else:
+    availability = [
+        {
+            KEY_TOPIC: TOPIC_ONLINE,
+            KEY_PAYLOAD_AVAILABLE: "true",
+            KEY_PAYLOAD_NOT_AVAILABLE: "false",
+        }
+    ]
+    if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
+        availability.append(
+            {
+                KEY_TOPIC: TOPIC_STATUS_RPC,
+                KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
+            }
+        )
+    expire_after = None
+
 if "components" in device_config:
     components = {
         comp["key"]: comp["config"]
@@ -3899,27 +3926,6 @@ else:
         KEY_MANUFACTURER: ATTR_MANUFACTURER,
         KEY_CONFIGURATION_URL: device_url,
     }
-
-    wakeup_period = SUPPORTED_MODELS[model].get(ATTR_WAKEUP_PERIOD, 0)
-    if wakeup_period > 0:
-        availability = None
-        expire_after = wakeup_period * 1.2
-    else:
-        availability = [
-            {
-                KEY_TOPIC: TOPIC_ONLINE,
-                KEY_PAYLOAD_AVAILABLE: "true",
-                KEY_PAYLOAD_NOT_AVAILABLE: "false",
-            }
-        ]
-        if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
-            availability.append(
-                {
-                    KEY_TOPIC: TOPIC_STATUS_RPC,
-                    KEY_VALUE_TEMPLATE: TPL_MQTT_CONNECTED,
-                }
-            )
-        expire_after = None
 
     inputs = get_component_number(ATTR_INPUT, device_config)
     input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
