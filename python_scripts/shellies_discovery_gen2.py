@@ -46,6 +46,7 @@ ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
 ATTR_WAKEUP_PERIOD = "wakeup_period"
 
+BUTTON_CALIBRATE = "calibrate"
 BUTTON_MUTE_ALARM = "mute_alarm"
 BUTTON_RESTART = "restart"
 BUTTON_UPDATE_FIRMWARE = "update_firmware"
@@ -471,6 +472,12 @@ DESCRIPTION_BUTTON_RESTART = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Restart",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Reboot^}}",
+}
+DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Calibrate",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}"
 }
 DESCRIPTION_SENSOR_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -1395,6 +1402,9 @@ SUPPORTED_MODELS = {
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
+        },
+        ATTR_BUTTONS: {
+            BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE
         },
     },
     MODEL_1_G3: {
@@ -3433,14 +3443,13 @@ def get_event(input_id, input_type):
     return topic, payload
 
 
-def get_button(button, description):
+def get_button(button, description, thermostat_id=None):
     """Create configuration for Shelly button entity."""
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{button}/config")
 
     payload = {
         KEY_NAME: description[KEY_NAME],
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_PRESS: description[KEY_PAYLOAD_PRESS].format(source=source_topic),
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{button}".lower(),
         KEY_QOS: qos,
@@ -3448,6 +3457,11 @@ def get_button(button, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if thermostat_id is not None:
+        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(source=source_topic, thermostat=thermostat_id)
+    else:
+        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(source=source_topic)
 
     if description.get(KEY_AVAILABILITY_TOPIC):
         payload[KEY_AVAILABILITY_TOPIC] = description[KEY_AVAILABILITY_TOPIC]
@@ -3881,6 +3895,12 @@ if "components" in device_config:
 
         for sensor, description in sensors.items():
             topic, payload = get_sensor(sensor, description, thermostat_id=thermostat_id)
+            config_data[topic] = payload
+
+        buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+
+        for button, description in buttons.items():
+            topic, payload = get_button(button, description, thermostat_id=thermostat_id)
             config_data[topic] = payload
 
 else:
