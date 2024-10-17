@@ -259,6 +259,7 @@ SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
+SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
 SENSOR_SSID = "ssid"
 SENSOR_TEMPERATURE = "temperature"
@@ -318,7 +319,7 @@ TOPIC_LIGHT = "~status/light:{id}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
-TOPIC_STATUS_BLUTRV = "~status/blutrv:{id}"
+TOPIC_STATUS_BLU_TRV = "~status/blutrv:{id}"
 TOPIC_STATUS_BTHOMESENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
@@ -337,7 +338,8 @@ TOPIC_VOLTMETER = "~status/voltmeter:{id}"
 TPL_ACTION_TEMPLATE = "{{%if value_json.output%}}{action}{{%else%}}idle{{%endif%}}"
 TPL_ANALOG_INPUT = "{{value_json.percent}}"
 TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
-TPL_BATTERY = "{{value_json.battery.percent}}"
+TPL_BATTERY = "{{value_json.battery}}"
+TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -420,6 +422,7 @@ TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
+TPL_BLU_SIGNAL_STRENGTH = "{{value_json.rssi}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -469,12 +472,21 @@ DESCRIPTION_BUTTON_RESTART = {
     KEY_NAME: "Restart",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Reboot^}}",
 }
-DESCRIPTION_BATTERY = {
+DESCRIPTION_SENSOR_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Battery",
     KEY_STATE_TOPIC: TOPIC_STATUS_DEVICE_POWER,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BATTERY_PERCENT,
+}
+DESCRIPTION_SENSOR_BLU_TRV_BATTERY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Battery",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
@@ -1182,6 +1194,16 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
 }
+DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Signal strength",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_UNIT: UNIT_DBM,
+    KEY_VALUE_TEMPLATE: TPL_BLU_SIGNAL_STRENGTH,
+}
 DESCRIPTION_SLEEPING_SENSOR_CLOUD = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CONNECTIVITY,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -1370,6 +1392,10 @@ SUPPORTED_MODELS = {
     MODEL_BLU_TRV: {
         ATTR_NAME: "Shelly BLU TRV",
         ATTR_MODEL_ID: "SBTR-001AEU",
+        ATTR_SENSORS: {
+            SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
+        },
     },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -1506,7 +1532,7 @@ SUPPORTED_MODELS = {
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
         },
         ATTR_SENSORS: {
-            SENSOR_BATTERY: DESCRIPTION_BATTERY,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BATTERY,
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY,
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
@@ -1870,7 +1896,7 @@ SUPPORTED_MODELS = {
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
         },
         ATTR_SENSORS: {
-            SENSOR_BATTERY: DESCRIPTION_BATTERY,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BATTERY,
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY,
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
@@ -2149,7 +2175,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_BUTTONS: {BUTTON_MUTE_ALARM: DESCRIPTION_BUTTON_MUTE_ALARM},
         ATTR_SENSORS: {
-            SENSOR_BATTERY: DESCRIPTION_BATTERY,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BATTERY,
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
@@ -3103,6 +3129,7 @@ def get_sensor(
     emeter_phase=None,
     sensor_id=None,
     input_id=None,
+    thermostat_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -3256,6 +3283,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=sensor_id)
     elif input_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=input_id)
+    elif thermostat_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -3842,10 +3871,18 @@ if "components" in device_config:
             KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
             KEY_MANUFACTURER: ATTR_MANUFACTURER,
         }
+        thermostat_id = thermostat.split(":")[-1]
         topic, payload = get_blu_climate(
-            int(thermostat.split(":")[-1]), DESCRIPTION_BLU_TRV_THERMOSTAT
+            int(thermostat_id), DESCRIPTION_BLU_TRV_THERMOSTAT
         )
         config_data[topic] = payload
+
+        sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+
+        for sensor, description in sensors.items():
+            topic, payload = get_sensor(sensor, description, thermostat_id=thermostat_id)
+            config_data[topic] = payload
+
 else:
     if (
         model == MODEL_PRO_3EM
