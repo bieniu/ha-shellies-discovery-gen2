@@ -477,7 +477,7 @@ DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Calibrate",
-    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}"
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}",
 }
 DESCRIPTION_SENSOR_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -1403,9 +1403,7 @@ SUPPORTED_MODELS = {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
         },
-        ATTR_BUTTONS: {
-            BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE
-        },
+        ATTR_BUTTONS: {BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE},
     },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -3459,9 +3457,13 @@ def get_button(button, description, thermostat_id=None):
     }
 
     if thermostat_id is not None:
-        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(source=source_topic, thermostat=thermostat_id)
+        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(
+            source=source_topic, thermostat=thermostat_id
+        )
     else:
-        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(source=source_topic)
+        payload[KEY_PAYLOAD_PRESS] = description[KEY_PAYLOAD_PRESS].format(
+            source=source_topic
+        )
 
     if description.get(KEY_AVAILABILITY_TOPIC):
         payload[KEY_AVAILABILITY_TOPIC] = description[KEY_AVAILABILITY_TOPIC]
@@ -3894,13 +3896,17 @@ if "components" in device_config:
         sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 
         for sensor, description in sensors.items():
-            topic, payload = get_sensor(sensor, description, thermostat_id=thermostat_id)
+            topic, payload = get_sensor(
+                sensor, description, thermostat_id=thermostat_id
+            )
             config_data[topic] = payload
 
         buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
 
         for button, description in buttons.items():
-            topic, payload = get_button(button, description, thermostat_id=thermostat_id)
+            topic, payload = get_button(
+                button, description, thermostat_id=thermostat_id
+            )
             config_data[topic] = payload
 
 else:
