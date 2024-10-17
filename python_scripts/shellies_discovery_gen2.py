@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.0.0"
+VERSION = "3.0.1"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -137,6 +137,7 @@ KEY_EVENT_TYPES = "evt_typ"
 KEY_EXPIRE_AFTER = "expire_after"
 KEY_HW_VERSION = "hw"
 KEY_ICON = "icon"
+KEY_IDENTIFIERS = "ids"
 KEY_JSON_ATTRIBUTES_TEMPLATE = "json_attr_tpl"
 KEY_JSON_ATTRIBUTES_TOPIC = "json_attr_t"
 KEY_LATEST_VERSION_TEMPLATE = "l_ver_tpl"
@@ -187,6 +188,7 @@ KEY_TYPE = "type"
 KEY_UNIQUE_ID = "uniq_id"
 KEY_UNIT = "unit_of_meas"
 KEY_VALUE_TEMPLATE = "val_tpl"
+KEY_VIA_DEVICE = "via_device"
 
 # Gen2 devices
 MODEL_PLUS_1 = "shellyplus1"
@@ -3877,15 +3879,18 @@ if "components" in device_config:
 
     for thermostat, config in blutrv_devices.items():
         model = MODEL_BLU_TRV
-        mac = config["addr"]
+        mac = config["addr"].lower()
+        via_device = format_mac(device_id.rsplit("-", 1)[-1])
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
         device_id += f"-{mac.replace(":", "")}"
         device_info = {
-            KEY_CONNECTIONS: [["bluetooth", mac.lower()]],
+            KEY_CONNECTIONS: [["bluetooth", mac]],
+            KEY_IDENTIFIERS: [mac],
             KEY_NAME: device_name,
             KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
             KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
             KEY_MANUFACTURER: ATTR_MANUFACTURER,
+            KEY_VIA_DEVICE: via_device,
         }
         thermostat_id = thermostat.split(":")[-1]
         topic, payload = get_blu_climate(
@@ -3953,6 +3958,8 @@ else:
     if mac is None:
         raise ValueError("mac value None is not valid, check script configuration")
 
+    mac = format_mac(mac).lower()
+
     device_name = device_config["sys"]["device"].get(ATTR_NAME)
     device_url = f"http://{device_id}.local/"
 
@@ -3961,7 +3968,8 @@ else:
 
     gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
     device_info = {
-        KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
+        KEY_CONNECTIONS: [[KEY_MAC, mac]],
+        KEY_IDENTIFIERS: [mac],
         KEY_NAME: device_name,
         KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
         KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
