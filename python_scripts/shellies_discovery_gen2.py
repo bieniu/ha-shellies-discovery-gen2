@@ -2929,7 +2929,7 @@ def get_blu_climate(thermostat_id: int, description) -> tuple:
     )
 
     payload = {
-        KEY_NAME: f"Thermostat {thermostat_id}",
+        KEY_NAME: "",
         KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
             id=thermostat_id + 3
         ),
