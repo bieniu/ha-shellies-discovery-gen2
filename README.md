@@ -155,19 +155,19 @@ python_script:
   mode: queued
   max: 999
   trigger:
-  - platform: mqtt
-    topic: shellies_discovery/rpc
+    - platform: mqtt
+      topic: shellies_discovery/rpc
   actions:
-  - action: python_script.shellies_discovery_gen2
-    data:
-      id: "{{ trigger.payload_json.src }}"
-      device_config: "{{ trigger.payload_json.result }}"
-  - condition: template
-    value_template: "{{ 'mqtt' in trigger.payload_json.result }}"
-  - service: mqtt.publish
-    data:
-      topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
-      payload: "status_update"
+    - action: python_script.shellies_discovery_gen2
+      data:
+        id: "{{ trigger.payload_json.src }}"
+        device_config: "{{ trigger.payload_json.result }}"
+    - condition: template
+      value_template: "{{ 'mqtt' in trigger.payload_json.result }}"
+    - service: mqtt.publish
+      data:
+        topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
+        payload: "status_update"
 ```
 
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
