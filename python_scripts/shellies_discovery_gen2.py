@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "2.34.1"
+VERSION = "3.0.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -225,11 +225,14 @@ MODEL_1PM_G3 = "shelly1pmg3"
 MODEL_1_MINI_G3 = "shelly1minig3"
 MODEL_1PM_MINI_G3 = "shelly1pmminig3"
 MODEL_2PM_G3 = "shelly2pmg3"
+MODEL_BLU_GATEWAY_G3 = "shellyblugwg3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
+# BLU devices
+MODEL_BLU_TRV = "shellyblutrv"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -315,6 +318,8 @@ TOPIC_LIGHT = "~status/light:{id}"
 TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
+TOPIC_STATUS_BLUTRV = "~status/blutrv:{id}"
+TOPIC_STATUS_BTHOMESENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
@@ -394,6 +399,8 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
+TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:value|round(1)}}}}}}|tojson}}}}"
+TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:{source},^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:target}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
@@ -401,9 +408,11 @@ TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
+TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
+TPL_VALUE = "{{value_json.value}}"
 TPL_VOLTAGE = "{{value_json.voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
@@ -1345,6 +1354,11 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MAX: 35,
     ATTR_TEMPERATURE_STEP: 0.5,
 }
+DESCRIPTION_BLU_TRV_THERMOSTAT = {
+    ATTR_TEMPERATURE_MIN: 5,
+    ATTR_TEMPERATURE_MAX: 30,
+    ATTR_TEMPERATURE_STEP: 0.1,
+}
 
 
 def get_component_number(component: str, config) -> int:
@@ -1353,6 +1367,10 @@ def get_component_number(component: str, config) -> int:
 
 
 SUPPORTED_MODELS = {
+    MODEL_BLU_TRV: {
+        ATTR_NAME: "Shelly BLU TRV",
+        ATTR_MODEL_ID: "SBTR-001AEU",
+    },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
         ATTR_MODEL_ID: "S3SW-001X16EU",
@@ -1459,6 +1477,23 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240331,
+    },
+    MODEL_BLU_GATEWAY_G3: {
+        ATTR_NAME: "Shelly BLU Gateway Gen3",
+        ATTR_MODEL_ID: "S3GW-1DBT001",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_MIN_FIRMWARE_DATE: 20241007,
     },
     MODEL_HT_G3: {
         ATTR_BATTERY_POWERED: True,
@@ -2851,6 +2886,47 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
+def get_blu_climate(thermostat_id: int, description) -> tuple:
+    """Create configuration for Shelly BLU climate entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
+    )
+
+    payload = {
+        KEY_NAME: f"Thermostat {thermostat_id}",
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+            id=thermostat_id + 3
+        ),
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+            id=thermostat_id + 2
+        ),
+        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
+        KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_BLU_TARGET_TEMPERATURE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
+        KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
+        KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
+        KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
+        KEY_MODES: ["off", "heat"],
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(id=thermostat_id + 2),
+        KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
+        KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
+            source=source_topic, thermostat=thermostat_id
+        ),
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    return topic, payload
+
+
 def get_switch(relay_id, relay_type, profile):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
@@ -3688,80 +3764,6 @@ if model not in SUPPORTED_MODELS:
 
 device_config = data["device_config"]  # noqa: F821
 
-if (
-    model == MODEL_PRO_3EM
-    and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
-):
-    model = MODEL_PRO_3EM_MONOPHASE
-
-default_topic = f"{device_config['mqtt']['topic_prefix']}/"
-if " " in default_topic:
-    raise ValueError(
-        f"MQTT prefix value {default_topic} is not valid, check device configuration"
-    )
-firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
-
-script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
-if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
-    raise ValueError(
-        f"Script prefix value {script_prefix} is not valid, check script configuration"
-    )
-
-source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
-
-if (
-    model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
-    and not current_script_installed()
-):
-    device_topic = encode_config_topic(f"{default_topic}rpc")
-    if script_prefix:
-        script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
-    else:
-        script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
-
-    script_id = get_script_id()
-    install_script(script_id, device_topic, script_topic)
-    remove_old_script_versions(device_topic, script_topic)
-
-min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
-try:
-    firmware_date = int(firmware_id.split("-", 1)[0])
-except ValueError as exc:
-    raise ValueError(
-        f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
-    ) from exc
-if firmware_date < min_firmware_date:
-    raise ValueError(
-        f"firmware dated {min_firmware_date} is required, update your device {device_id}"
-    )
-
-mac = device_config["sys"]["device"][ATTR_MAC]
-if mac is None:
-    raise ValueError("mac value None is not valid, check script configuration")
-
-device_name = device_config["sys"]["device"].get(ATTR_NAME)
-device_url = f"http://{device_id}.local/"
-
-if not device_name:
-    device_name = SUPPORTED_MODELS[model][ATTR_NAME]
-
-qos = data.get(CONF_QOS, 0)  # noqa: F821
-if qos not in (0, 1, 2):
-    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
-
-disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
-
-gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
-device_info = {
-    KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
-    KEY_NAME: device_name,
-    KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
-    KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
-    KEY_SW_VERSION: firmware_id,
-    KEY_HW_VERSION: f"gen{gen}",
-    KEY_MANUFACTURER: ATTR_MANUFACTURER,
-    KEY_CONFIGURATION_URL: device_url,
-}
 origin_info = {
     KEY_NAME: "Shellies Discovery Gen2",
     KEY_SW_VERSION: VERSION,
@@ -3789,39 +3791,156 @@ else:
         )
     expire_after = None
 
-inputs = get_component_number(ATTR_INPUT, device_config)
-input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
-input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
-input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
+disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
 
-emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
-emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
-emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
+script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
+if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
+    raise ValueError(
+        f"Script prefix value {script_prefix} is not valid, check script configuration"
+    )
 
-relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
-relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
-relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
+source_topic = f"{script_prefix}/{HOME_ASSISTANT}" if script_prefix else HOME_ASSISTANT
 
-thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
+qos = data.get(CONF_QOS, 0)  # noqa: F821
+if qos not in (0, 1, 2):
+    raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
-lights = get_component_number(ATTR_LIGHT, device_config)
-light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+if "components" in device_config:
+    components = {
+        comp["key"]: comp["config"]
+        for comp in device_config["components"]
+        if comp["key"].startswith(("blu", "bt", "mqtt"))
+    }
 
-cct_lights = get_component_number(ATTR_CCT, device_config)
-cct_sensors = SUPPORTED_MODELS[model].get(ATTR_CCT_SENSORS, {})
+    default_topic = f"{components['mqtt']['topic_prefix']}/"
+    if " " in default_topic:
+        raise ValueError(
+            f"MQTT prefix value {default_topic} is not valid, check device configuration"
+        )
 
-rgb_lights = get_component_number(ATTR_RGB, device_config)
-rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
+    bthome_devices = {
+        key: {"config": conf, "components": []}
+        for key, conf in components.items()
+        if key.startswith("bthomedevice")
+    }
+    blutrv_devices = {
+        key: {**conf, "components": []}
+        for key, conf in components.items()
+        if key.startswith("blutrv")
+    }
+    config_data = {}
 
-buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
-sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
-binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
-updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})
+    for thermostat, config in blutrv_devices.items():
+        model = MODEL_BLU_TRV
+        mac = config["addr"]
+        device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
+        device_id += f"-{mac.replace(":", "")}"
+        device_info = {
+            KEY_CONNECTIONS: [["bluetooth", mac.lower()]],
+            KEY_NAME: device_name,
+            KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+            KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
+            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+        }
+        topic, payload = get_blu_climate(
+            int(thermostat.split(":")[-1]), DESCRIPTION_BLU_TRV_THERMOSTAT
+        )
+        config_data[topic] = payload
+else:
+    if (
+        model == MODEL_PRO_3EM
+        and device_config["sys"]["device"].get(ATTR_PROFILE) == "monophase"
+    ):
+        model = MODEL_PRO_3EM_MONOPHASE
 
-covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
-cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+    default_topic = f"{device_config['mqtt']['topic_prefix']}/"
+    if " " in default_topic:
+        raise ValueError(
+            f"MQTT prefix value {default_topic} is not valid, check device configuration"
+        )
+    firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
-config_data = configure_device()
+    if (
+        model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+        and not current_script_installed()
+    ):
+        device_topic = encode_config_topic(f"{default_topic}rpc")
+        if script_prefix:
+            script_topic = f"{script_prefix}/{TOPIC_SHELLIES_DISCOVERY_SCRIPT}"
+        else:
+            script_topic = TOPIC_SHELLIES_DISCOVERY_SCRIPT
+
+        script_id = get_script_id()
+        install_script(script_id, device_topic, script_topic)
+        remove_old_script_versions(device_topic, script_topic)
+
+    min_firmware_date = SUPPORTED_MODELS[model][ATTR_MIN_FIRMWARE_DATE]
+    try:
+        firmware_date = int(firmware_id.split("-", 1)[0])
+    except ValueError as exc:
+        raise ValueError(
+            f"firmware version {min_firmware_date} is not supported, update your device {device_id}"
+        ) from exc
+    if firmware_date < min_firmware_date:
+        raise ValueError(
+            f"firmware dated {min_firmware_date} is required, update your device {device_id}"
+        )
+
+    mac = device_config["sys"]["device"][ATTR_MAC]
+    if mac is None:
+        raise ValueError("mac value None is not valid, check script configuration")
+
+    device_name = device_config["sys"]["device"].get(ATTR_NAME)
+    device_url = f"http://{device_id}.local/"
+
+    if not device_name:
+        device_name = SUPPORTED_MODELS[model][ATTR_NAME]
+
+    gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
+    device_info = {
+        KEY_CONNECTIONS: [[KEY_MAC, format_mac(mac)]],
+        KEY_NAME: device_name,
+        KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+        KEY_MODEL_ID: SUPPORTED_MODELS[model].get(ATTR_MODEL_ID),
+        KEY_SW_VERSION: firmware_id,
+        KEY_HW_VERSION: f"gen{gen}",
+        KEY_MANUFACTURER: ATTR_MANUFACTURER,
+        KEY_CONFIGURATION_URL: device_url,
+    }
+
+    inputs = get_component_number(ATTR_INPUT, device_config)
+    input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
+    input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
+    input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
+
+    emeters = SUPPORTED_MODELS[model].get(ATTR_EMETERS, 0)
+    emeter_phases = SUPPORTED_MODELS[model].get(ATTR_EMETER_PHASES, [])
+    emeter_sensors = SUPPORTED_MODELS[model].get(ATTR_EMETER_SENSORS, {})
+
+    relays = SUPPORTED_MODELS[model].get(ATTR_RELAYS, 0)
+    relay_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_SENSORS, {})
+    relay_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_RELAY_BINARY_SENSORS, {})
+
+    thermostats = SUPPORTED_MODELS[model].get(ATTR_THERMOSTATS, {})
+
+    lights = get_component_number(ATTR_LIGHT, device_config)
+    light_sensors = SUPPORTED_MODELS[model].get(ATTR_LIGHT_SENSORS, {})
+
+    cct_lights = get_component_number(ATTR_CCT, device_config)
+    cct_sensors = SUPPORTED_MODELS[model].get(ATTR_CCT_SENSORS, {})
+
+    rgb_lights = get_component_number(ATTR_RGB, device_config)
+    rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
+
+    buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+    sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+    binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+    updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})
+
+    covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
+    cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+
+    config_data = configure_device()
 
 if config_data:
     for config_topic, config_payload in config_data.items():
