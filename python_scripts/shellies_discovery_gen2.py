@@ -243,7 +243,7 @@ MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
 MODEL_BLU_TRV = "shellyblutrv"
 
-NUMBER_ETERNAL_TEMPERATURE_SENSOR = "eternal_temperature_sensor"
+NUMBER_REPORT_ETERNAL_TEMPERATURE = "report_eternal_temperature"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -352,7 +352,7 @@ TPL_ANALOG_INPUT = "{{value_json.percent}}"
 TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
 TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
-TPL_BLU_TRV_SET_EXTERNAL_TEMPERATURE_SENSOR = "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}"
+TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -492,12 +492,13 @@ DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE = {
     KEY_NAME: "Calibrate",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}",
 }
-DESCRIPTION_NUMBER_BLU_TRV_ETERNAL_TEMPERATURE_SENSOR = {
+DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
-    KEY_NAME: "External temperature sensor",
+    KEY_NAME: "Report external temperature",
     KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_EXTERNAL_TEMPERATURE_SENSOR,
+    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
+    KEY_UNIT: UNIT_CELSIUS,
     KEY_ICON: "mdi:thermometer-check",
     KEY_MIN: -50,
     KEY_MAX: 50,
@@ -1439,7 +1440,7 @@ SUPPORTED_MODELS = {
         },
         ATTR_BUTTONS: {BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE},
         ATTR_NUMBERS: {
-            NUMBER_ETERNAL_TEMPERATURE_SENSOR: DESCRIPTION_NUMBER_BLU_TRV_ETERNAL_TEMPERATURE_SENSOR
+            NUMBER_REPORT_ETERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE
         },
     },
     MODEL_1_G3: {
@@ -3552,7 +3553,7 @@ def get_button(button, description, thermostat_id=None):
 
 def get_number(number: str, description, thermostat_id=None) -> tuple:
     """Create configuration for Shelly number entity."""
-    topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{button}/config")
+    topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{number}/config")
 
     payload = {
         KEY_NAME: description[KEY_NAME],
@@ -4000,7 +4001,7 @@ if "components" in device_config:
             KEY_MANUFACTURER: ATTR_MANUFACTURER,
             KEY_VIA_DEVICE: via_device,
         }
-        thermostat_id: str = thermostat.split(":")[-1]
+        thermostat_id = thermostat.split(":")[-1]
         topic, payload = get_blu_climate(
             int(thermostat_id), DESCRIPTION_BLU_TRV_THERMOSTAT
         )
