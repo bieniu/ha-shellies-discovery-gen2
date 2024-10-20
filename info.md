@@ -22,8 +22,8 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 ## Supported devices
 
 - Shelly 1 Gen3
-- Shelly 1PM Gen3
 - Shelly 1 Mini Gen3
+- Shelly 1PM Gen3
 - Shelly 1PM Mini Gen3
 - Shelly 2PM Gen3
 - Shelly BLU Gateway Gen3
@@ -31,7 +31,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Dimmer 0/1-10V PM Gen3
 - Shelly H&T Gen3
 - Shelly I4 Gen3
-- Shelly PM Mini Gen3
+- Shelly Plug S Gen3
 - Shelly Plus 1
 - Shelly Plus 1 Mini
 - Shelly Plus 1PM
@@ -48,14 +48,15 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus RGBW PM (RGBW profile is not supported)
 - Shelly Plus Smoke
 - Shelly Plus Wall Dimmer
+- Shelly PM Mini Gen3
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2
 - Shelly Pro 2PM
 - Shelly Pro 3
 - Shelly Pro 3EM
-- Shelly Pro 3EM-400
 - Shelly Pro 3EM Switch Add-on
+- Shelly Pro 3EM-400
 - Shelly Pro 4PM
 - Shelly Pro Dimmer 2
 - Shelly Pro Dual Cover PM
