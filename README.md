@@ -130,7 +130,7 @@ python_script:
 # automations.yaml file
 - id: shellies_announce_gen2
   alias: "Shellies Announce Gen2"
-  trigger:
+  triggers:
     - platform: homeassistant
       event: start
   variables:
@@ -156,7 +156,7 @@ python_script:
   alias: "Shellies Discovery Gen2"
   mode: queued
   max: 999
-  trigger:
+  triggers:
     - platform: mqtt
       topic: shellies_discovery/rpc
   actions:
