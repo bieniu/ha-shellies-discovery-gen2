@@ -31,6 +31,7 @@ ATTR_MIN_FIRMWARE_DATE = "min_firmware_date"
 ATTR_MODEL = "model"
 ATTR_MODEL_ID = "model_id"
 ATTR_NAME = "name"
+ATTR_NUMBERS = "numbers"
 ATTR_PROFILE = "profile"
 ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
@@ -144,6 +145,9 @@ KEY_LATEST_VERSION_TEMPLATE = "l_ver_tpl"
 KEY_LATEST_VERSION_TOPIC = "l_ver_t"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
+KEY_MAX = "max"
+KEY_MIN = "min"
+KEY_MODE = "mode"
 KEY_MODEL = "mdl"
 KEY_MODEL_ID = "mdl_id"
 KEY_NAME = "name"
@@ -174,6 +178,7 @@ KEY_STATE_STOPPED = "stat_stopped"
 KEY_STATE_TEMPLATE = "stat_tpl"
 KEY_STATE_TOPIC = "stat_t"
 KEY_STATE_VALUE_TEMPLATE = "stat_val_tpl"
+KEY_STEP = "step"
 KEY_SUBTYPE = "stype"
 KEY_SUGGESTED_DISPLAY_PRECISION = "sug_dsp_prc"
 KEY_SUPPORT_URL = "url"
@@ -237,6 +242,8 @@ MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
 MODEL_BLU_TRV = "shellyblutrv"
+
+NUMBER_REPORT_ETERNAL_TEMPERATURE = "report_eternal_temperature"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -345,6 +352,7 @@ TPL_ANALOG_INPUT = "{{value_json.percent}}"
 TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
 TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
+TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -483,6 +491,18 @@ DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Calibrate",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}",
+}
+DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Report external temperature",
+    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_ICON: "mdi:thermometer-check",
+    KEY_MIN: -50,
+    KEY_MAX: 50,
+    KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -1419,6 +1439,9 @@ SUPPORTED_MODELS = {
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
         },
         ATTR_BUTTONS: {BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE},
+        ATTR_NUMBERS: {
+            NUMBER_REPORT_ETERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE
+        },
     },
     MODEL_1_G3: {
         ATTR_NAME: "Shelly 1 Gen3",
@@ -3528,6 +3551,46 @@ def get_button(button, description, thermostat_id=None):
     return topic, payload
 
 
+def get_number(number: str, description, thermostat_id=None) -> tuple:
+    """Create configuration for Shelly number entity."""
+    topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{number}/config")
+
+    payload = {
+        KEY_NAME: description[KEY_NAME],
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_MIN: description[KEY_MIN],
+        KEY_MAX: description[KEY_MAX],
+        KEY_MODE: description[KEY_MODE],
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        KEY_UNIQUE_ID: f"{device_id}-{number}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+    }
+
+    if thermostat_id is not None:
+        payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
+            source=source_topic, thermostat=thermostat_id
+        )
+    else:
+        payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
+            source=source_topic
+        )
+
+    if description.get(KEY_DEVICE_CLASS):
+        payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
+    if description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = description[KEY_ENTITY_CATEGORY]
+    if description.get(KEY_ICON):
+        payload[KEY_ICON] = description[KEY_ICON]
+    if description.get(KEY_STEP):
+        payload[KEY_STEP] = description[KEY_STEP]
+
+    return topic, payload
+
+
 def get_update(update, description):
     """Create configuration for Shelly update entity."""
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
@@ -3957,6 +4020,14 @@ if "components" in device_config:
         for button, description in buttons.items():
             topic, payload = get_button(
                 button, description, thermostat_id=thermostat_id
+            )
+            config_data[topic] = payload
+
+        numbers = SUPPORTED_MODELS[model].get(ATTR_NUMBERS, {})
+
+        for number, description in numbers.items():
+            topic, payload = get_number(
+                number, description, thermostat_id=thermostat_id
             )
             config_data[topic] = payload
 
