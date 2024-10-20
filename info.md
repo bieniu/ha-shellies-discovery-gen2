@@ -95,6 +95,7 @@ logger:
 - event
 - fan
 - light
+- number
 - sensor
 - switch
 - update
