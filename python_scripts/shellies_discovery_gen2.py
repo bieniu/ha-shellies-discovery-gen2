@@ -231,6 +231,7 @@ MODEL_2PM_G3 = "shelly2pmg3"
 MODEL_BLU_GATEWAY_G3 = "shellyblugwg3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
+MODEL_PLUG_S_G3 = "shellyplugsg3"
 MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
@@ -262,6 +263,7 @@ SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
+SENSOR_RETURNED_ENERGY = "returned_energy"
 SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
 SENSOR_SSID = "ssid"
@@ -373,6 +375,7 @@ TPL_EMETER_PHASE_VOLTAGE = "{{{{value_json.{phase}_voltage}}}}"
 TPL_EVENT = "{{%if value_json.params.events.0.id=={input_id}%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}"
 TPL_FREQUENCY = "{{value_json.freq}}"
 TPL_ENERGY = "{{value_json.aenergy.total}}"
+TPL_RETURNED_ENERGY = "{{value_json.ret_aenergy.total}}"
 TPL_ETH_IP = "{{value_json.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
 TPL_FIRMWARE_BETA = "{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}"
@@ -668,6 +671,16 @@ DESCRIPTION_SENSOR_ENERGY = {
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_RETURNED_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Returned energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_RETURNED_ENERGY,
 }
 DESCRIPTION_SENSOR_CCT_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
@@ -2002,6 +2015,39 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+    },
+    MODEL_PLUG_S_G3: {
+        ATTR_NAME: "Shelly Plug S Gen3",
+        ATTR_MODEL_ID: "S3PL-00112EU",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_RELAYS: 1,
+        ATTR_RELAY_BINARY_SENSORS: {
+            SENSOR_OVERPOWER: DESCRIPTION_SENSOR_OVERPOWER,
+            SENSOR_OVERTEMP: DESCRIPTION_SENSOR_OVERTEMP,
+            SENSOR_OVERVOLTAGE: DESCRIPTION_SENSOR_OVERVOLTAGE,
+        },
+        ATTR_RELAY_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
+            SENSOR_FREQUENCY: DESCRIPTION_SENSOR_FREQUENCY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
+            SENSOR_RETURNED_ENERGY: DESCRIPTION_SENSOR_RETURNED_ENERGY,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RELAY_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20240820,
     },
     MODEL_PLUS_PLUG_UK: {
         ATTR_NAME: "Shelly Plus Plug UK",
