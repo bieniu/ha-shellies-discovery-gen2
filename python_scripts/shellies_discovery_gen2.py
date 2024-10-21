@@ -502,6 +502,7 @@ DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
     KEY_ICON: "mdi:thermometer-check",
     KEY_MIN: -50,
     KEY_MAX: 50,
+    KEY_STEP: 0.1,
     KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
@@ -1230,7 +1231,7 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Signal strength",
+    KEY_NAME: "WiFi signal",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_UNIT: UNIT_DBM,
@@ -1329,7 +1330,7 @@ DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Signal strength",
+    KEY_NAME: "WiFi signal",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_WIFI,
     KEY_UNIT: UNIT_DBM,
@@ -3587,6 +3588,8 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
         payload[KEY_ICON] = description[KEY_ICON]
     if description.get(KEY_STEP):
         payload[KEY_STEP] = description[KEY_STEP]
+    if description.get(KEY_UNIT):
+        payload[KEY_UNIT] = description[KEY_UNIT]
 
     return topic, payload
 
