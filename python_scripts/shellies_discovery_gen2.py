@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.1.0"
+VERSION = "3.1.1"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -50,6 +50,8 @@ ATTR_WAKEUP_PERIOD = "wakeup_period"
 BUTTON_CALIBRATE = "calibrate"
 BUTTON_MUTE_ALARM = "mute_alarm"
 BUTTON_RESTART = "restart"
+BUTTON_START_BOOST = "start_boost"
+BUTTON_STOP_BOOST = "stop_boost"
 BUTTON_UPDATE_FIRMWARE = "update_firmware"
 
 CONF_DISCOVERY_PREFIX = "discovery_prefix"
@@ -491,6 +493,18 @@ DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Calibrate",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.Calibrate^,^params^:{{^id^:0}}}}}}",
+}
+DESCRIPTION_BUTTON_BLU_TRV_START_BOOST = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Start boost",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetBoost^,^params^:{{^id^:0}}}}}}",
+}
+DESCRIPTION_BUTTON_BLU_TRV_STOP_BOOST = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Stop boost",
+    KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.ClearBoost^,^params^:{{^id^:0}}}}}}",
 }
 DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1439,7 +1453,11 @@ SUPPORTED_MODELS = {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
         },
-        ATTR_BUTTONS: {BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE},
+        ATTR_BUTTONS: {
+            BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE,
+            BUTTON_START_BOOST: DESCRIPTION_BUTTON_BLU_TRV_START_BOOST,
+            BUTTON_STOP_BOOST: DESCRIPTION_BUTTON_BLU_TRV_STOP_BOOST,
+        },
         ATTR_NUMBERS: {
             NUMBER_REPORT_ETERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE
         },
