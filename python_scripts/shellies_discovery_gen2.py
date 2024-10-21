@@ -502,6 +502,7 @@ DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
     KEY_ICON: "mdi:thermometer-check",
     KEY_MIN: -50,
     KEY_MAX: 50,
+    KEY_STEP: 0.1,
     KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
@@ -3587,6 +3588,8 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
         payload[KEY_ICON] = description[KEY_ICON]
     if description.get(KEY_STEP):
         payload[KEY_STEP] = description[KEY_STEP]
+    if description.get(KEY_UNIT):
+        payload[KEY_UNIT] = description[KEY_UNIT]
 
     return topic, payload
 
