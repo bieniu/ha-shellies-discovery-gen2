@@ -244,7 +244,8 @@ MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
-MODEL_BLU_TRV = "shellyblutrv"
+MODEL_BLU_HT = "SBHT-003C"
+MODEL_BLU_TRV = "SBTR-001AEU"
 
 NUMBER_REPORT_EXTERNAL_TEMPERATURE = "report_external_temperature"
 
@@ -335,6 +336,7 @@ TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_BLU_TRV = "~status/blutrv:{id}"
+TOPIC_STATUS_BT_DEV = "~status/bthomedevice:{id}"
 TOPIC_STATUS_BTHOMESENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
@@ -464,6 +466,8 @@ VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
 
+BLU_IDX_MAP = {69: SENSOR_TEMPERATURE, 46: SENSOR_HUMIDITY}
+
 DEVICE_TRIGGER_MAP = {
     EVENT_DOUBLE_PUSH: TRIGGER_BUTTON_DOUBLE_PRESS,
     EVENT_LONG_PUSH: TRIGGER_BUTTON_LONG_PRESS,
@@ -535,6 +539,15 @@ DESCRIPTION_SENSOR_BLU_TRV_BATTERY = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Battery",
     KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BATTERY,
+}
+DESCRIPTION_SENSOR_BT_DEV_BATTERY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Battery",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BT_DEV,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
@@ -1252,6 +1265,16 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
 }
+DESCRIPTION_SENSOR_BT_DEV_SIGNAL_STRENGTH = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Signal strength",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BT_DEV,
+    KEY_UNIT: UNIT_DBM,
+    KEY_VALUE_TEMPLATE: TPL_BLU_SIGNAL_STRENGTH,
+}
 DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1462,6 +1485,16 @@ SUPPORTED_MODELS = {
         ATTR_NUMBERS: {
             "number_report_eternal_temperature": {},
             NUMBER_REPORT_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
+        },
+    },
+    MODEL_BLU_HT: {
+        ATTR_NAME: "Shelly BLU H&T",
+        ATTR_MODEL_ID: "SBHT-003C",
+        ATTR_SENSORS: {
+            # SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BLU_TEMPERATURE,
+            # SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BLU_HUMIDITY,
+            SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BT_DEV_SIGNAL_STRENGTH,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BT_DEV_BATTERY,
         },
     },
     MODEL_1_G3: {
@@ -3260,6 +3293,7 @@ def get_sensor(
     sensor_id=None,
     input_id=None,
     thermostat_id=None,
+    btdev_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -3415,6 +3449,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=input_id)
     elif thermostat_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
+    elif btdev_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=btdev_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -4036,16 +4072,53 @@ if "components" in device_config:
         )
 
     bthome_devices = {
-        key: {"config": conf, "components": []}
+        key: {**conf, "components": []}
         for key, conf in components.items()
         if key.startswith("bthomedevice")
     }
+    for dev in bthome_devices.values():
+        for comp, config in components.items():
+            if (
+                dev["addr"] == config.get("addr")
+                and config.get("obj_id") in BLU_IDX_MAP
+            ):
+                dev["components"].append({BLU_IDX_MAP[config["obj_id"]]: comp})
+
     blutrv_devices = {
         key: {**conf, "components": []}
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
     config_data = {}
+
+    for device, config in bthome_devices.items():
+        dev_id = device.split(":")[-1]
+        if f"blutrv:{dev_id}" in blutrv_devices:
+            continue
+
+        model = config["meta"]["ui"]["local_name"]
+        if model not in SUPPORTED_MODELS:
+            continue
+
+        mac = config["addr"].lower()
+        via_device = format_mac(device_id.rsplit("-", 1)[-1])
+        device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
+        device_id += f"-{mac.replace(":", "")}"
+        device_info = {
+            KEY_CONNECTIONS: [["bluetooth", mac]],
+            KEY_IDENTIFIERS: [mac],
+            KEY_NAME: device_name,
+            KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+            KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
+            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+            KEY_VIA_DEVICE: via_device,
+        }
+
+        sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+
+        for sensor, description in sensors.items():
+            topic, payload = get_sensor(sensor, description, btdev_id=dev_id)
+            config_data[topic] = payload
 
     for thermostat, config in blutrv_devices.items():
         model = MODEL_BLU_TRV
