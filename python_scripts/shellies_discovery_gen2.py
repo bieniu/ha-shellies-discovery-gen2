@@ -4024,6 +4024,11 @@ if "components" in device_config:
         if comp["key"].startswith(("blu", "bt", "mqtt"))
     }
 
+    if "mqtt" not in components:
+        raise ValueError(
+            "Missing MQTT component, probably 'Shelly.GetComponent' pagination problem"
+        )
+
     default_topic = f"{components['mqtt']['topic_prefix']}/"
     if " " in default_topic:
         raise ValueError(
