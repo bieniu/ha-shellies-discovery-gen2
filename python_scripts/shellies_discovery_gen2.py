@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.2.0"
+VERSION = "3.3.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -247,7 +247,8 @@ MODEL_X_MOD1 = "shellyxmod1"
 MODEL_BLU_HT = "SBHT-003C"
 MODEL_BLU_TRV = "SBTR-001AEU"
 
-NUMBER_REPORT_EXTERNAL_TEMPERATURE = "report_external_temperature"
+NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
+NUMBER_BOOST_TIME = "boost_time"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -358,6 +359,7 @@ TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
 TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
+TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -455,6 +457,7 @@ UNIT_CELSIUS = "°C"
 UNIT_DBM = "dBm"
 UNIT_HERTZ = "Hz"
 UNIT_LUX = "lx"
+UNIT_MINUTES = "min"
 UNIT_PERCENT = "%"
 UNIT_PULSE = "pulse"
 UNIT_VOLT = "V"
@@ -514,10 +517,10 @@ DESCRIPTION_BUTTON_BLU_TRV_STOP_BOOST = {
     KEY_NAME: "Stop boost",
     KEY_PAYLOAD_PRESS: "{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.ClearBoost^,^params^:{{^id^:0}}}}}}",
 }
-DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
+DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
-    KEY_NAME: "Report external temperature",
+    KEY_NAME: "External temperature",
     KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
     KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
     KEY_UNIT: UNIT_CELSIUS,
@@ -525,6 +528,19 @@ DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = {
     KEY_MIN: -50,
     KEY_MAX: 50,
     KEY_STEP: 0.1,
+    KEY_MODE: "box",
+}
+DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_NAME: "Boost time",
+    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_BOOST_TIME,
+    KEY_UNIT: UNIT_MINUTES,
+    KEY_ICON: "mdi:clock-outline",
+    KEY_MIN: 1,
+    KEY_MAX: 100,
+    KEY_STEP: 1,
     KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
@@ -1506,8 +1522,10 @@ SUPPORTED_MODELS = {
             BUTTON_STOP_BOOST: DESCRIPTION_BUTTON_BLU_TRV_STOP_BOOST,
         },
         ATTR_NUMBERS: {
-            "number_report_eternal_temperature": {},
-            NUMBER_REPORT_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
+            "report_eternal_temperature": {},
+            "report_external_temperature": {},
+            NUMBER_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE,
+            NUMBER_BOOST_TIME: DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME,
         },
     },
     MODEL_BLU_HT: {
