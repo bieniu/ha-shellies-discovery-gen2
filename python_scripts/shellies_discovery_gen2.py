@@ -4026,7 +4026,7 @@ if "components" in device_config:
 
     if "mqtt" not in components:
         raise ValueError(
-            "MQTT component is missing, probably Shelly.GetComponent pagination problem"
+            "Missing MQTT component, probably 'Shelly.GetComponent' pagination problem"
         )
 
     default_topic = f"{components['mqtt']['topic_prefix']}/"
