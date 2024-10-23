@@ -3098,7 +3098,9 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
-def get_blu_climate(thermostat_id: str, temperature_id: str, target_id: str, description) -> tuple:
+def get_blu_climate(
+    thermostat_id: str, temperature_id: str, target_id: str, description
+) -> tuple:
     """Create configuration for Shelly BLU climate entity."""
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
@@ -3106,7 +3108,9 @@ def get_blu_climate(thermostat_id: str, temperature_id: str, target_id: str, des
 
     payload = {
         KEY_NAME: "",
-        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=temperature_id),
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
+            id=temperature_id
+        ),
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
         KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
@@ -4117,7 +4121,10 @@ if "components" in device_config:
     }
     for dev in blutrv_devices.values():
         for comp, config in components.items():
-            if dev["addr"] == config.get("addr") and config.get("obj_id") == BTH_TEMPERATURE:
+            if (
+                dev["addr"] == config.get("addr")
+                and config.get("obj_id") == BTH_TEMPERATURE
+            ):
                 dev["components"].append(comp)
 
     config_data = {}
