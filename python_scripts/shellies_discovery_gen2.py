@@ -244,7 +244,8 @@ MODEL_PM_MINI_G3 = "shellypmminig3"
 MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
-MODEL_BLU_TRV = "shellyblutrv"
+MODEL_BLU_HT = "SBHT-003C"
+MODEL_BLU_TRV = "SBTR-001AEU"
 
 NUMBER_REPORT_EXTERNAL_TEMPERATURE = "report_external_temperature"
 
@@ -335,7 +336,8 @@ TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_BLU_TRV = "~status/blutrv:{id}"
-TOPIC_STATUS_BTHOMESENSOR = "~status/bthomesensor:{id}"
+TOPIC_STATUS_BTH_DEVICE = "~status/bthomedevice:{id}"
+TOPIC_STATUS_BTH_SENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
@@ -427,6 +429,7 @@ TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
+TPL_BTH_SENSOR = "{{value_json.value}}"
 TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
@@ -463,6 +466,8 @@ UNIT_WATTH = "Wh"
 VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
+
+BTH_IDX_MAP = {69: SENSOR_TEMPERATURE, 46: SENSOR_HUMIDITY}
 
 DEVICE_TRIGGER_MAP = {
     EVENT_DOUBLE_PUSH: TRIGGER_BUTTON_DOUBLE_PRESS,
@@ -535,6 +540,15 @@ DESCRIPTION_SENSOR_BLU_TRV_BATTERY = {
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Battery",
     KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BATTERY,
+}
+DESCRIPTION_SENSOR_BTH_DEV_BATTERY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Battery",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BTH_DEVICE,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
@@ -1252,6 +1266,16 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
 }
+DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Signal strength",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BTH_DEVICE,
+    KEY_UNIT: UNIT_DBM,
+    KEY_VALUE_TEMPLATE: TPL_BLU_SIGNAL_STRENGTH,
+}
 DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1307,6 +1331,16 @@ DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
 }
+DESCRIPTION_SENSOR_BTH_HUMIDITY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Humidity",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BTH_SENSOR,
+}
 DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1316,6 +1350,16 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
+}
+DESCRIPTION_SENSOR_BTH_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_BTH_SENSOR,
 }
 DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TIMESTAMP,
@@ -1462,6 +1506,16 @@ SUPPORTED_MODELS = {
         ATTR_NUMBERS: {
             "number_report_eternal_temperature": {},
             NUMBER_REPORT_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
+        },
+    },
+    MODEL_BLU_HT: {
+        ATTR_NAME: "Shelly BLU H&T",
+        ATTR_MODEL_ID: "SBHT-003C",
+        ATTR_SENSORS: {
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BTH_TEMPERATURE,
+            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BTH_HUMIDITY,
+            SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BTH_DEV_BATTERY,
         },
     },
     MODEL_1_G3: {
@@ -3050,11 +3104,11 @@ def get_blu_climate(thermostat_id: int, description) -> tuple:
 
     payload = {
         KEY_NAME: "",
-        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
             id=thermostat_id + 3
         ),
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
-        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
             id=thermostat_id + 2
         ),
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
@@ -3066,7 +3120,7 @@ def get_blu_climate(thermostat_id: int, description) -> tuple:
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTHOMESENSOR.format(id=thermostat_id + 2),
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=thermostat_id + 2),
         KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
@@ -3260,6 +3314,7 @@ def get_sensor(
     sensor_id=None,
     input_id=None,
     thermostat_id=None,
+    bt_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -3293,6 +3348,10 @@ def get_sensor(
     elif sensor_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{sensor_id}-{sensor}/config"
+        )
+    elif bt_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-{bt_id}-{sensor}/config"
         )
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
@@ -3358,6 +3417,9 @@ def get_sensor(
         sensor_name = device_config[f"{sensor}:{sensor_id}"][ATTR_NAME] or description[
             KEY_NAME
         ].format(sensor=sensor_id)
+    elif bt_id is not None:
+        unique_id = f"{device_id}-{bt_id}-{sensor}".lower()
+        sensor_name = description[KEY_NAME]
     elif input_id is not None:
         unique_id = f"{device_id}-{input_id}-{sensor}".lower()
         sensor_name = device_config[f"input:{input_id}"][ATTR_NAME] or description[
@@ -3415,6 +3477,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=input_id)
     elif thermostat_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
+    elif bt_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -4036,16 +4100,61 @@ if "components" in device_config:
         )
 
     bthome_devices = {
-        key: {"config": conf, "components": []}
+        key: {**conf, "components": []}
         for key, conf in components.items()
         if key.startswith("bthomedevice")
     }
+    for dev in bthome_devices.values():
+        for comp, config in components.items():
+            if (
+                dev["addr"] == config.get("addr")
+                and config.get("obj_id") in BTH_IDX_MAP
+            ):
+                dev["components"].append({BTH_IDX_MAP[config["obj_id"]]: comp})
+
     blutrv_devices = {
         key: {**conf, "components": []}
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
     config_data = {}
+
+    for device, config in bthome_devices.items():
+        btdevice_id = device.split(":")[-1]
+        if f"blutrv:{btdevice_id}" in blutrv_devices:
+            continue
+
+        model = config["meta"]["ui"]["local_name"]
+        if model not in SUPPORTED_MODELS:
+            continue
+
+        mac = config["addr"].lower()
+        via_device = format_mac(device_id.rsplit("-", 1)[-1])
+        device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
+        device_id += f"-{mac.replace(":", "")}"
+        device_info = {
+            KEY_CONNECTIONS: [["bluetooth", mac]],
+            KEY_IDENTIFIERS: [mac],
+            KEY_NAME: device_name,
+            KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
+            KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
+            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+            KEY_VIA_DEVICE: via_device,
+        }
+
+        sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
+
+        for sensor, description in sensors.items():
+            btsensor_id = None
+            for component in config["components"]:
+                if comp_id := component.get(sensor):
+                    btsensor_id = comp_id.split(":")[-1]
+                    break
+
+            topic, payload = get_sensor(
+                sensor, description, bt_id=btsensor_id or btdevice_id
+            )
+            config_data[topic] = payload
 
     for thermostat, config in blutrv_devices.items():
         model = MODEL_BLU_TRV
