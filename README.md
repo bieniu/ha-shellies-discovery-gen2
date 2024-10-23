@@ -39,13 +39,13 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly H&T Gen3
 - Shelly I4 Gen3
 - Shelly Plug S Gen3
+- Shelly Plus 0-10V Dimmer
 - Shelly Plus 1
 - Shelly Plus 1 Mini
 - Shelly Plus 1PM
 - Shelly Plus 1PM Mini
 - Shelly Plus 2PM
 - Shelly Plus Add-on
-- Shelly Plus Dimmer 0-10V
 - Shelly Plus H&T
 - Shelly Plus I4
 - Shelly Plus Plug IT
