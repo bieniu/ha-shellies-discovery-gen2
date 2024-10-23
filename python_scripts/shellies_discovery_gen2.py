@@ -246,7 +246,7 @@ MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
 MODEL_BLU_TRV = "shellyblutrv"
 
-NUMBER_REPORT_ETERNAL_TEMPERATURE = "report_eternal_temperature"
+NUMBER_REPORT_EXTERNAL_TEMPERATURE = "report_external_temperature"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -1460,7 +1460,8 @@ SUPPORTED_MODELS = {
             BUTTON_STOP_BOOST: DESCRIPTION_BUTTON_BLU_TRV_STOP_BOOST,
         },
         ATTR_NUMBERS: {
-            NUMBER_REPORT_ETERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE
+            "number_report_eternal_temperature": {},
+            NUMBER_REPORT_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
         },
     },
     MODEL_1_G3: {
@@ -3604,6 +3605,9 @@ def get_button(button, description, thermostat_id=None):
 def get_number(number: str, description, thermostat_id=None) -> tuple:
     """Create configuration for Shelly number entity."""
     topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{number}/config")
+
+    if not description:
+        return topic, ""
 
     payload = {
         KEY_NAME: description[KEY_NAME],
