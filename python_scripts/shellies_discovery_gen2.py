@@ -438,11 +438,10 @@ TPL_VALUE = "{{value_json.value}}"
 TPL_VOLTAGE = "{{value_json.voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
-TPL_WIFI_SIGNAL = "{{value_json.wifi.rssi}}"
-TPL_WIFI_SIGNAL_INDEPENDENT = "{{value_json.rssi}}"
+TPL_WIFI_RSSI = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
-TPL_BLU_SIGNAL_STRENGTH = "{{value_json.rssi}}"
+TPL_RSSI = "{{value_json.rssi}}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -467,7 +466,10 @@ VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
 
-BTH_IDX_MAP = {69: SENSOR_TEMPERATURE, 46: SENSOR_HUMIDITY}
+BTH_HUMIDITY = 46
+BTH_TEMPERATURE = 69
+
+BTH_IDX_MAP = {BTH_TEMPERATURE: SENSOR_TEMPERATURE, BTH_HUMIDITY: SENSOR_HUMIDITY}
 
 DEVICE_TRIGGER_MAP = {
     EVENT_DOUBLE_PUSH: TRIGGER_BUTTON_DOUBLE_PRESS,
@@ -1264,7 +1266,7 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_UNIT: UNIT_DBM,
-    KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL,
+    KEY_VALUE_TEMPLATE: TPL_WIFI_RSSI,
 }
 DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
@@ -1274,7 +1276,7 @@ DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH = {
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_BTH_DEVICE,
     KEY_UNIT: UNIT_DBM,
-    KEY_VALUE_TEMPLATE: TPL_BLU_SIGNAL_STRENGTH,
+    KEY_VALUE_TEMPLATE: TPL_RSSI,
 }
 DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
@@ -1284,7 +1286,7 @@ DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH = {
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
     KEY_UNIT: UNIT_DBM,
-    KEY_VALUE_TEMPLATE: TPL_BLU_SIGNAL_STRENGTH,
+    KEY_VALUE_TEMPLATE: TPL_RSSI,
 }
 DESCRIPTION_SLEEPING_SENSOR_CLOUD = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CONNECTIVITY,
@@ -1393,7 +1395,7 @@ DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL = {
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_WIFI,
     KEY_UNIT: UNIT_DBM,
-    KEY_VALUE_TEMPLATE: TPL_WIFI_SIGNAL_INDEPENDENT,
+    KEY_VALUE_TEMPLATE: TPL_RSSI,
 }
 DESCRIPTION_UPDATE_FIRMWARE = {
     KEY_DEVICE_CLASS: "firmware",
@@ -3096,7 +3098,7 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
-def get_blu_climate(thermostat_id: int, description) -> tuple:
+def get_blu_climate(thermostat_id: str, temperature_id: str, target_id: str, description) -> tuple:
     """Create configuration for Shelly BLU climate entity."""
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
@@ -3104,13 +3106,9 @@ def get_blu_climate(thermostat_id: int, description) -> tuple:
 
     payload = {
         KEY_NAME: "",
-        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
-            id=thermostat_id + 3
-        ),
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=temperature_id),
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
-        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
-            id=thermostat_id + 2
-        ),
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_BLU_TARGET_TEMPERATURE.format(
@@ -3120,7 +3118,7 @@ def get_blu_climate(thermostat_id: int, description) -> tuple:
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=thermostat_id + 2),
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
         KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
@@ -4117,6 +4115,11 @@ if "components" in device_config:
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
+    for dev in blutrv_devices.values():
+        for comp, config in components.items():
+            if dev["addr"] == config.get("addr") and config.get("obj_id") == BTH_TEMPERATURE:
+                dev["components"].append(comp)
+
     config_data = {}
 
     for device, config in bthome_devices.items():
@@ -4172,8 +4175,10 @@ if "components" in device_config:
             KEY_VIA_DEVICE: via_device,
         }
         thermostat_id = thermostat.split(":")[-1]
+        temperature_id = config["components"][1].split(":")[-1]
+        target_id = config["components"][0].split(":")[-1]
         topic, payload = get_blu_climate(
-            int(thermostat_id), DESCRIPTION_BLU_TRV_THERMOSTAT
+            thermostat_id, temperature_id, target_id, DESCRIPTION_BLU_TRV_THERMOSTAT
         )
         config_data[topic] = payload
 
