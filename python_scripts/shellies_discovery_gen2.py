@@ -4055,7 +4055,7 @@ if device_id is None:
 model = device_id.rsplit("-", 1)[0]
 if model not in SUPPORTED_MODELS:
     raise ValueError(
-        f"model {model} is not supported, please open an issue here https://github.com/bieniu/ha-shellies-discovery-gen2/issues"
+        f"model {model} is not supported, please open a feature request here https://github.com/bieniu/ha-shellies-discovery-gen2/issues"
     )
 
 device_config = data["device_config"]  # noqa: F821
@@ -4152,8 +4152,18 @@ if "components" in device_config:
         if f"blutrv:{btdevice_id}" in blutrv_devices:
             continue
 
-        model = config["meta"]["ui"]["local_name"]
+        if not (model := config["meta"]["ui"].get("local_name")):
+            logger.warning(  # noqa: F821
+                "device %s doesn't present MODEL ID, update device's firmware", device
+            )
+            continue
+
         if model not in SUPPORTED_MODELS:
+            logger.warning(  # noqa: F821
+                "device %s is not supported, please open a feature request here "
+                "https://github.com/bieniu/ha-shellies-discovery-gen2/issues",
+                device,
+            )
             continue
 
         mac = config["addr"].lower()
