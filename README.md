@@ -39,7 +39,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly BLU TRV (via Shelly BLU Gateway Gen3)
 - Shelly Dimmer 0/1-10V PM Gen3
 - Shelly H&T Gen3
-- Shelly I4 Gen3
+- Shelly i4 Gen3
 - Shelly Plug S Gen3
 - Shelly Plus 0-10V Dimmer
 - Shelly Plus 1
@@ -49,7 +49,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus 2PM
 - Shelly Plus Add-on
 - Shelly Plus H&T
-- Shelly Plus I4
+- Shelly Plus i4
 - Shelly Plus Plug IT
 - Shelly Plus Plug S
 - Shelly Plus Plug UK
