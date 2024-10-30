@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.3.0"
+VERSION = "3.4.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -69,6 +69,7 @@ DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_FREQUENCY = "frequency"
 DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_ILLUMINANCE = "illuminance"
+DEVICE_CLASS_MOTION = "motion"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
@@ -245,6 +246,7 @@ MODEL_DIMMER_10V_G3 = "shelly0110dimg3"
 MODEL_X_MOD1 = "shellyxmod1"
 # BLU devices
 MODEL_BLU_HT = "SBHT-003C"
+MODEL_BLU_MOTION = "SBMO-003Z"
 MODEL_BLU_TRV = "SBTR-001AEU"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
@@ -269,6 +271,7 @@ SENSOR_HUMIDITY = "humidity"
 SENSOR_ILLUMINANCE = "illuminance"
 SENSOR_INPUT = "input"
 SENSOR_LAST_RESTART = "last_restart"
+SENSOR_MOTION = "motion"
 SENSOR_N_CURRENT = "n_current"
 SENSOR_OVERPOWER = "overpower"
 SENSOR_OVERTEMP = "overtemp"
@@ -432,6 +435,7 @@ TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
 TPL_BTH_SENSOR = "{{value_json.value}}"
+TPL_BTH_BINARY_SENSOR = "{{^ON^ if value_json.value else ^OFF^}}"
 TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
@@ -470,9 +474,14 @@ VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
 
 BTH_HUMIDITY = 46
+BTH_MOTION = 33
 BTH_TEMPERATURE = 69
 
-BTH_IDX_MAP = {BTH_TEMPERATURE: SENSOR_TEMPERATURE, BTH_HUMIDITY: SENSOR_HUMIDITY}
+BTH_IDX_MAP = {
+    BTH_HUMIDITY: SENSOR_HUMIDITY,
+    BTH_MOTION: SENSOR_MOTION,
+    BTH_TEMPERATURE: SENSOR_TEMPERATURE,
+}
 
 DEVICE_TRIGGER_MAP = {
     EVENT_DOUBLE_PUSH: TRIGGER_BUTTON_DOUBLE_PRESS,
@@ -1359,6 +1368,13 @@ DESCRIPTION_SENSOR_BTH_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BTH_SENSOR,
 }
+DESCRIPTION_SENSOR_BTH_MOTION = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_MOTION,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Motion",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR,
+    KEY_VALUE_TEMPLATE: TPL_BTH_BINARY_SENSOR,
+}
 DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1536,6 +1552,17 @@ SUPPORTED_MODELS = {
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BTH_HUMIDITY,
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BTH_DEV_BATTERY,
+        },
+    },
+    MODEL_BLU_MOTION: {
+        ATTR_NAME: "Shelly BLU Motion",
+        ATTR_MODEL_ID: "SBMO-003Z",
+        ATTR_SENSORS: {
+            SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BTH_DEV_BATTERY,
+        },
+        ATTR_BINARY_SENSORS: {
+            SENSOR_MOTION: DESCRIPTION_SENSOR_BTH_MOTION,
         },
     },
     MODEL_1_G3: {
@@ -3521,12 +3548,22 @@ def get_sensor(
 
 
 def get_binary_sensor(
-    sensor, description, entity_id=None, is_input=False, input_type=None, profile=None
+    sensor,
+    description,
+    entity_id=None,
+    is_input=False,
+    input_type=None,
+    profile=None,
+    bt_id=None,
 ):
     """Create configuration for Shelly binary sensor entity."""
     if entity_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{entity_id}-{sensor}/config"
+        )
+    elif bt_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{bt_id}-{sensor}/config"
         )
     else:
         topic = encode_config_topic(
@@ -3548,6 +3585,9 @@ def get_binary_sensor(
         sensor_name = (
             f"{name} {description[KEY_NAME]}" if description.get(KEY_NAME) else name
         )
+    elif bt_id is not None:
+        unique_id = f"{device_id}-{bt_id}-{sensor}".lower()
+        sensor_name = description[KEY_NAME]
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
@@ -3574,6 +3614,8 @@ def get_binary_sensor(
 
     if entity_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=entity_id)
+    elif bt_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -4166,6 +4208,8 @@ if "components" in device_config:
             )
             continue
 
+        logger.debug("Found BTHome devices: %s", bthome_devices)  # noqa: F821
+
         mac = config["addr"].lower()
         via_device = format_mac(device_id.rsplit("-", 1)[-1])
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
@@ -4180,6 +4224,7 @@ if "components" in device_config:
             KEY_VIA_DEVICE: via_device,
         }
 
+        binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
         sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 
         for sensor, description in sensors.items():
@@ -4191,6 +4236,18 @@ if "components" in device_config:
 
             topic, payload = get_sensor(
                 sensor, description, bt_id=btsensor_id or btdevice_id
+            )
+            config_data[topic] = payload
+
+        for binary_sensor, description in binary_sensors.items():
+            btsensor_id = None
+            for component in config["components"]:
+                if comp_id := component.get(binary_sensor):
+                    btsensor_id = comp_id.split(":")[-1]
+                    break
+
+            topic, payload = get_binary_sensor(
+                binary_sensor, description, bt_id=btsensor_id or btdevice_id
             )
             config_data[topic] = payload
 
