@@ -1525,8 +1525,8 @@ def get_component_number(component: str, config):
     return len([key for key in config if key.startswith(f"{component}:")])
 
 
-def get_component_keys(component: str, config):
-    """Return the list of keys of component."""
+def get_component_ids(component: str, config):
+    """Return the list of IDs for component."""
     return [
         int(key.split(":")[-1]) for key in config if key.startswith(f"{component}:")
     ]
@@ -4399,7 +4399,7 @@ else:
         KEY_CONFIGURATION_URL: device_url,
     }
 
-    inputs = get_component_keys(ATTR_INPUT, device_config)
+    inputs = get_component_ids(ATTR_INPUT, device_config)
     input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
     input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
     input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
