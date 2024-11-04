@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.5.0"
+VERSION = "3.5.1"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -1520,9 +1520,16 @@ DESCRIPTION_BLU_TRV_THERMOSTAT = {
 }
 
 
-def get_component_number(component: str, config) -> int:
+def get_component_number(component: str, config):
     """Return the number of components."""
     return len([key for key in config if key.startswith(f"{component}:")])
+
+
+def get_component_keys(component: str, config):
+    """Return the list of keys of component."""
+    return [
+        int(key.split(":")[-1]) for key in config if key.startswith(f"{component}:")
+    ]
 
 
 SUPPORTED_MODELS = {
@@ -3944,7 +3951,7 @@ def configure_device():
                 topic, payload = get_switch(switch_id, ATTR_SWITCH, ATTR_SWITCH)
                 config[topic] = payload
 
-    for input_id in range(inputs):
+    for input_id in inputs:
         input_type = device_config[f"input:{input_id}"]["type"]
 
         topic, payload = get_event(input_id, input_type)
@@ -4392,7 +4399,7 @@ else:
         KEY_CONFIGURATION_URL: device_url,
     }
 
-    inputs = get_component_number(ATTR_INPUT, device_config)
+    inputs = get_component_keys(ATTR_INPUT, device_config)
     input_events = SUPPORTED_MODELS[model].get(ATTR_INPUT_EVENTS, [])
     input_binary_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_BINARY_SENSORS, {})
     input_sensors = SUPPORTED_MODELS[model].get(ATTR_INPUT_SENSORS, {})
