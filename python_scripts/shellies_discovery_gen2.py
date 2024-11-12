@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.5.1"
+VERSION = "3.5.2"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -4225,6 +4225,8 @@ if "components" in device_config:
 
     config_data = {}
 
+    via_device = format_mac(device_id.rsplit("-", 1)[-1])
+
     for device, config in bthome_devices.items():
         btdevice_id = device.split(":")[-1]
         if f"blutrv:{btdevice_id}" in blutrv_devices:
@@ -4247,7 +4249,6 @@ if "components" in device_config:
         logger.debug("Found BTHome devices: %s", bthome_devices)  # noqa: F821
 
         mac = config["addr"].lower()
-        via_device = format_mac(device_id.rsplit("-", 1)[-1])
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
         device_id += f"-{mac.replace(":", "")}"
         device_info = {
@@ -4290,7 +4291,6 @@ if "components" in device_config:
     for thermostat, config in blutrv_devices.items():
         model = MODEL_BLU_TRV
         mac = config["addr"].lower()
-        via_device = format_mac(device_id.rsplit("-", 1)[-1])
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
         device_id += f"-{mac.replace(":", "")}"
         device_info = {
