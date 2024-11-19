@@ -4149,13 +4149,15 @@ if wakeup_period > 0:
     availability = None
     expire_after = wakeup_period * 1.2
 else:
-    availability = [
-        {
-            KEY_TOPIC: TOPIC_ONLINE,
-            KEY_PAYLOAD_AVAILABLE: "true",
-            KEY_PAYLOAD_NOT_AVAILABLE: "false",
-        }
-    ]
+    availability = []
+    if model != MODEL_BLU_GATEWAY_G3:
+        availability.append(
+            {
+                KEY_TOPIC: TOPIC_ONLINE,
+                KEY_PAYLOAD_AVAILABLE: "true",
+                KEY_PAYLOAD_NOT_AVAILABLE: "false",
+            }
+        )
     if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
         availability.append(
             {
