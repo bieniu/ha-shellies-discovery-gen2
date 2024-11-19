@@ -192,6 +192,33 @@ python_script:
         payload: "status_update"
 ```
 
+To support `HVAC Action` for Shelly BLU TRV you need to use this automation:
+
+```yaml
+- id: get_shelly_blu_trv_status
+  alias: "Get Shelly BLU TRV Status"
+  triggers:
+    - trigger: time_pattern
+      minutes: /2
+  actions:
+    - action: mqtt.publish
+      data:
+        topic: shelly-blu-trv-mqtt-prefix/rpc
+        payload: |-
+          {
+              "id": 0,
+              "src": "shelly-blu-trv-mqtt-prefix/status/blutrv:200",
+              "method": "BluTRV.Call",
+              "params": {
+                  "id": 200,
+                  "method": "TRV.GetStatus",
+                  "params": {
+                      "id": 0
+                  }
+              }
+          } | tojson
+```
+
 [forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
 [forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=popout
 [buy-me-a-coffee-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Buy%20me%20a%20coffee&color=6f4e37&logo=buy%20me%20a%20coffee&logoColor=white
