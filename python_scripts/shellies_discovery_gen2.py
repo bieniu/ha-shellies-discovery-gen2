@@ -347,6 +347,7 @@ SCRIPT_OLD_NAMES = [
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
+TOPIC_BLU_TRV_HVAC_ACTION = "~status/blutrv:{thermostat}/rpc"
 TOPIC_COVER = "~status/cover:{id}"
 TOPIC_EMDATA = "~status/emdata:{id}"
 TOPIC_EMDATA1 = "~status/em1data:{id}"
@@ -382,6 +383,9 @@ TPL_ANALOG_INPUT = "{{value_json.percent}}"
 TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
 TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
+TPL_BLU_TRV_HVAC_ACTION = (
+    "{%if value_json.result.pos|int>0%}heating{%else%}idle{%endif%}"
+)
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
@@ -3538,6 +3542,8 @@ def get_blu_climate(
 
     payload = {
         KEY_NAME: "",
+        KEY_ACTION_TOPIC: TOPIC_BLU_TRV_HVAC_ACTION.format(thermostat=thermostat_id),
+        KEY_ACTION_TEMPLATE: TPL_BLU_TRV_HVAC_ACTION,
         KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
             id=temperature_id
         ),
