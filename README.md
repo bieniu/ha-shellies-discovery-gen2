@@ -202,8 +202,8 @@ python_script:
 To support `HVAC Action` for Shelly BLU TRV you need to use this automation:
 
 ```yaml
-- id: shelly_blu_trv_status
-  alias: "Get BLU TRV Status"
+- id: get_shelly_blu_trv_status
+  alias: "Get Shelly BLU TRV Status"
   triggers:
     - trigger: time_pattern
       minutes: /2
