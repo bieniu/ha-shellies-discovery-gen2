@@ -460,6 +460,7 @@ TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
 TPL_BTH_SENSOR = "{{value_json.value}}"
 TPL_BTH_BINARY_SENSOR = "{{^ON^ if value_json.value else ^OFF^}}"
+TPL_BLU_THERMOSTAT_ACTION = "{%if value_json.pos>0%}heating{%else%}idle{%endif%}"
 TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
@@ -3550,8 +3551,8 @@ def get_blu_climate(
 
     payload = {
         KEY_NAME: "",
-        KEY_ACTION_TOPIC: f"~status/blutrv:{thermostat_id}/trv",
-        KEY_ACTION_TEMPLATE: "{%if value_json.pos>0%}heating{%else%}idle{%endif%}",
+        KEY_ACTION_TOPIC: TOPIC_STATUS_BLU_TRV_TRV.format(id=thermostat_id),
+        KEY_ACTION_TEMPLATE: TPL_BLU_THERMOSTAT_ACTION,
         KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
             id=temperature_id
         ),
