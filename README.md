@@ -209,7 +209,12 @@ Shelly.call("MQTT.GetConfig", {}, function (config) {
 });
 
 function SendTrvStatus() {
+    let _enable = null;
+    Shelly.call("BluTrv.GetRemoteConfig", {"id": 200}, function (config) {
+      enable = config.config["trv:0"].enable
+    });
     Shelly.call("BluTrv.GetRemoteStatus", {"id": 200}, function (status) {
+        status.status["trv:0"].enable = enable;
         MQTT.publish(topic_prefix + "/status/blutrv:200/trv", JSON.stringify(status.status["trv:0"]));
     });
 };

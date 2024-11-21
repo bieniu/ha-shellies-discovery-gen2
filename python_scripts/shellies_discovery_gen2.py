@@ -450,7 +450,7 @@ TPL_RELAY_OVERVOLTAGE = (
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
 TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:value|round(1)}}}}}}|tojson}}}}"
-TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:target}}}}}}|to_json}}}}"
+TPL_SET_BLU_THERMOSTAT_MODE = "{{%set enable=true if value==^heat^ else false%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^enable^:enable}}}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
@@ -461,7 +461,7 @@ TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
 TPL_BTH_SENSOR = "{{value_json.value}}"
 TPL_BTH_BINARY_SENSOR = "{{^ON^ if value_json.value else ^OFF^}}"
 TPL_BLU_THERMOSTAT_ACTION = "{%if value_json.pos>0%}heating{%else%}idle{%endif%}"
-TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
+TPL_BLU_THERMOSTAT_MODE = "{{^heat^ if value_json.enable else ^off^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
@@ -3567,7 +3567,7 @@ def get_blu_climate(
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV_TRV.format(id=thermostat_id),
         KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
