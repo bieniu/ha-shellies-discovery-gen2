@@ -299,6 +299,7 @@ SENSOR_TOTAL_ACTIVE_POWER = "total_active_power"
 SENSOR_TOTAT_ACTIVE_RETURNED_ENERGY = "total_active_returned_energy"
 SENSOR_TOTAL_APPARENT_POWER = "total_apparent_power"
 SENSOR_TOTAL_CURRENT = "total_current"
+SENSOR_VALVE_POSITION = "valve_position"
 SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
@@ -347,7 +348,6 @@ SCRIPT_OLD_NAMES = [
 STATE_CLASS_MEASUREMENT = "measurement"
 STATE_CLASS_TOTAL_INCREASING = "total_increasing"
 
-TOPIC_BLU_TRV_HVAC_ACTION = "~status/blutrv:{thermostat}/rpc"
 TOPIC_COVER = "~status/cover:{id}"
 TOPIC_EMDATA = "~status/emdata:{id}"
 TOPIC_EMDATA1 = "~status/em1data:{id}"
@@ -362,6 +362,7 @@ TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_BLU_TRV = "~status/blutrv:{id}"
+TOPIC_STATUS_BLU_TRV_TRV = "~status/blutrv:{id}/trv"
 TOPIC_STATUS_BTH_DEVICE = "~status/bthomedevice:{id}"
 TOPIC_STATUS_BTH_SENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
@@ -383,11 +384,9 @@ TPL_ANALOG_INPUT = "{{value_json.percent}}"
 TPL_ANALOG_VALUE = "{{value_json.xpercent}}"
 TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
-TPL_BLU_TRV_HVAC_ACTION = (
-    "{%if value_json.result.pos|int>0%}heating{%else%}idle{%endif%}"
-)
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
+TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -585,6 +584,14 @@ DESCRIPTION_SENSOR_BATTERY = {
     KEY_STATE_TOPIC: TOPIC_STATUS_DEVICE_POWER,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY_PERCENT,
+}
+DESCRIPTION_BLU_TRV_VALVE_POSITION = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Valve position",
+    KEY_ICON: "mdi:pipe-valve",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV_TRV,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BLU_TRV_VALVE_POSITION,
 }
 DESCRIPTION_SENSOR_BLU_TRV_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -1563,6 +1570,7 @@ SUPPORTED_MODELS = {
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
+            SENSOR_VALVE_POSITION: DESCRIPTION_BLU_TRV_VALVE_POSITION,
         },
         ATTR_BUTTONS: {
             BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE,
@@ -3542,8 +3550,8 @@ def get_blu_climate(
 
     payload = {
         KEY_NAME: "",
-        KEY_ACTION_TOPIC: TOPIC_BLU_TRV_HVAC_ACTION.format(thermostat=thermostat_id),
-        KEY_ACTION_TEMPLATE: TPL_BLU_TRV_HVAC_ACTION,
+        KEY_ACTION_TOPIC: f"~status/blutrv:{thermostat_id}/trv",
+        KEY_ACTION_TEMPLATE: "{%if value_json.pos>0%}heating{%else%}idle{%endif%}",
         KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
             id=temperature_id
         ),

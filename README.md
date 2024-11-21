@@ -199,31 +199,24 @@ python_script:
         payload: "status_update"
 ```
 
-To support `HVAC Action` for Shelly BLU TRV you need to use this automation:
+To support `HVAC Action` for Shelly BLU TRV you need to isnstall this `Send Trv Status` script on BLU Gateway Gen3 (**Scripts** -> **Create script**):
 
-```yaml
-- id: get_shelly_blu_trv_status
-  alias: "Get Shelly BLU TRV Status"
-  triggers:
-    - trigger: time_pattern
-      minutes: /2
-  actions:
-    - action: mqtt.publish
-      data:
-        topic: shelly-blu-trv-mqtt-prefix/rpc
-        payload: |-
-          {
-              "id": 0,
-              "src": "shelly-blu-trv-mqtt-prefix/status/blutrv:200",
-              "method": "BluTRV.Call",
-              "params": {
-                  "id": 200,
-                  "method": "TRV.GetStatus",
-                  "params": {
-                      "id": 0
-                  }
-              }
-          } | tojson
+```js
+let topic_prefix = null;
+
+Shelly.call("MQTT.GetConfig", {}, function (config) {
+    topic_prefix = config.topic_prefix;
+});
+
+function SendTrvStatus() {
+    Shelly.call("BluTrv.GetRemoteStatus", {"id": 200}, function (status) {
+        MQTT.publish(topic_prefix + "/status/blutrv:200/trv", JSON.stringify(status.status["trv:0"]));
+    });
+};
+
+
+MQTT.setConnectHandler(SendTrvStatus);
+let UpdateTimer = Timer.set(30000, true, SendTrvStatus);
 ```
 
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
