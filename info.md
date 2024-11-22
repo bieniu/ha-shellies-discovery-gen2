@@ -195,26 +195,69 @@ python_script:
 To support `HVAC Action` for Shelly BLU TRV you need to isnstall this `Send Trv Status` script on BLU Gateway Gen3 (**Scripts** -> **Create script**):
 
 ```js
+let publish_remote_status_topic = "/remote-status/{component}";
 let topic_prefix = null;
 
-Shelly.call("MQTT.GetConfig", {}, function (config) {
+function GetMqttConfigHandler(config) {
     topic_prefix = config.topic_prefix;
-});
+}
 
-function SendTrvStatus() {
-    let _enable = null;
-    Shelly.call("BluTrv.GetRemoteConfig", {"id": 200}, function (config) {
-      enable = config.config["trv:0"].enable
-    });
-    Shelly.call("BluTrv.GetRemoteStatus", {"id": 200}, function (status) {
-        status.status["trv:0"].enable = enable;
-        MQTT.publish(topic_prefix + "/status/blutrv:200/trv", JSON.stringify(status.status["trv:0"]));
-    });
+function GetMqttConfig() {
+    try {
+        Shelly.call("MQTT.GetConfig", {}, GetMqttConfigHandler);
+    } catch (e) {
+        console.log("GetMqttConfig has failed: ", e1);
+    }
+}
+
+function BluTrvGetRemoteStatusHandler(status, err_no, err_msg, user_data) {
+    if (err_no !== 0) {
+        console.log("BluTrvGetRemoteStatusHandler error no: ", err_no, ", err_msg: '", err_msg, "', user_data: ", user_data);
+        return;
+    }
+
+    var topic = topic_prefix + publish_remote_status_topic.replace("{component}", user_data.component);
+    MQTT.publish(topic, JSON.stringify(status.status["trv:0"]));
+}
+
+function SendRemoteStatus(component, id) {
+    if (topic_prefix !== null) {
+        Shelly.call("BluTrv.GetRemoteStatus", {"id": id}, BluTrvGetRemoteStatusHandler, {component: component, id: id});
+    } else
+        console.log("SendRemoteStatus topic_prefix is null");
 };
 
+function EventHandler(event) {
+    try {
+        if (event && event.info) {
+            SendRemoteStatus(event.info.component, event.info.id)
+        } else
+            console.log("EventHandler (event && event.info) is false");
+    } catch (e1) {
+        console.log("Shelly handle event '", event, "' has failed. Error: ", e1);
+    }
+}
 
-MQTT.setConnectHandler(SendTrvStatus);
-let UpdateTimer = Timer.set(30000, true, SendTrvStatus);
+function AddEventHandler() {
+    try {
+        console.log("AddEventHandler...");
+        Shelly.addEventHandler(EventHandler);
+        console.log("AddEventHandler done.");
+    } catch (e1) {
+        console.log("AddEventHandler has failed: ", e1);
+    }
+}
+
+function InitScript() {
+    try {
+        GetMqttConfig();
+        AddEventHandler();
+    } catch (e) {
+        console.log("InitScript has failed: ", e1);
+    }
+}
+
+InitScript();
 ```
 
 [forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
