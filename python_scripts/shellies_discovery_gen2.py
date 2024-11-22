@@ -297,15 +297,14 @@ UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
 
 SCRIPT_CODE = """let topic_prefix = null;
-let installed_version = null;
 
 Shelly.call(^MQTT.GetConfig^, {}, function (config) {
     topic_prefix = config.topic_prefix;
 });
 
 function SendDeviceStatus() {
-    let _device_info = Shelly.getDeviceInfo();
-    installed_version = _device_info.ver;
+    var device_info = Shelly.getDeviceInfo();
+    var installed_version = device_info.ver;
     Shelly.call(^Shelly.GetStatus^, {}, function (status) {
         status.sys.installed_version = installed_version;
         MQTT.publish(topic_prefix + ^/status/rpc^, JSON.stringify(status));
@@ -316,12 +315,13 @@ function SendDeviceStatus() {
 MQTT.setConnectHandler(SendDeviceStatus);
 let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
 """
-SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20240216"
+SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20241122"
 SCRIPT_OLD_NAMES = [
     "Send Device Status",
     "send_device_status",
     "send_device_status.js",
     "shellies_discovery_gen2_script_20221116",
+    "shellies_discovery_gen2_script_20240216",
 ]
 
 STATE_CLASS_MEASUREMENT = "measurement"
