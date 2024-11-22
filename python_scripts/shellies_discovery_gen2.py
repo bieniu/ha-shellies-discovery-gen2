@@ -3543,7 +3543,10 @@ def get_climate(thermostat_id, description):
 
 
 def get_blu_climate(
-    thermostat_id: str, _temperature_id: str, target_id: str, description
+    thermostat_id: str,
+    temperature_id: str,  # noqa: ARG001
+    target_id: str,
+    description,
 ) -> tuple:
     """Create configuration for Shelly BLU climate entity."""
     topic = encode_config_topic(
