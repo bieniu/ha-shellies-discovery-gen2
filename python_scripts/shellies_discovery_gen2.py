@@ -369,6 +369,7 @@ TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
+TPL_CURRENT_PM1 = "{{value_json[^pm1:0^].current}}"
 TPL_CURRENT_TEMPERATURE = "{{value_json.current_C}}"
 TPL_EMETER_ACTIVE_POWER = "{{value_json.act_power}}"
 TPL_EMETER_PHASE_ACTIVE_POWER = "{{{{value_json.{phase}_act_power}}}}"
@@ -393,7 +394,9 @@ TPL_EMETER_TOTAL_CURRENT = "{{value_json.total_current}}"
 TPL_EMETER_PHASE_VOLTAGE = "{{{{value_json.{phase}_voltage}}}}"
 TPL_EVENT = "{{%if value_json.params.events.0.id=={input_id}%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}"
 TPL_FREQUENCY = "{{value_json.freq}}"
+TPL_FREQUENCY_PM1 = "{{value_json[^pm1:0^].freq}}"
 TPL_ENERGY = "{{value_json.aenergy.total}}"
+TPL_ENERGY_PM1 = "{{value_json[^pm1:0^].aenergy.total}}"
 TPL_RETURNED_ENERGY = "{{value_json.ret_aenergy.total}}"
 TPL_ETH_IP = "{{value_json.eth.ip}}"
 TPL_EXTERNAL_POWER = "{%if value_json.external.present%}ON{%else%}OFF{%endif%}"
@@ -415,6 +418,7 @@ TPL_INSTALLED_FIRMWARE = "{{value_json.sys.installed_version}}"
 TPL_INSTALLED_FIRMWARE_SYS = "{{value_json.ver}}"
 TPL_MQTT_CONNECTED = "{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}"
 TPL_POWER = "{{value_json.apower}}"
+TPL_POWER_PM1 = "{{value_json[^pm1:0^].apower}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100}}"
 TPL_RELAY_OVERPOWER = (
     "{%if ^overpower^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
@@ -443,6 +447,7 @@ TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
 TPL_VOLTAGE = "{{value_json.voltage}}"
+TPL_VOLTAGE_PM1 = "{{value_json[^pm1:0^].voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
 TPL_WIFI_RSSI = "{{value_json.wifi.rssi}}"
@@ -725,10 +730,10 @@ DESCRIPTION_SENSOR_CURRENT_PM = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Current",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_STATUS_PM1,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_AMPERE,
-    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT_PM1,
 }
 DESCRIPTION_SENSOR_CURRENT_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -795,10 +800,10 @@ DESCRIPTION_SENSOR_ENERGY_PM = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Energy",
     KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
-    KEY_STATE_TOPIC: TOPIC_STATUS_PM1,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
-    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY_PM1,
 }
 DESCRIPTION_SENSOR_ENERGY_COVER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
@@ -900,10 +905,10 @@ DESCRIPTION_SENSOR_POWER_PM = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_STATUS_PM1,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
-    KEY_VALUE_TEMPLATE: TPL_POWER,
+    KEY_VALUE_TEMPLATE: TPL_POWER_PM1,
 }
 DESCRIPTION_SENSOR_EMETER_ACTIVE_POWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
@@ -1201,10 +1206,10 @@ DESCRIPTION_SENSOR_VOLTAGE_PM = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_STATUS_PM1,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VOLT,
-    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE_PM1,
 }
 DESCRIPTION_SENSOR_FREQUENCY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_FREQUENCY,
@@ -1221,10 +1226,10 @@ DESCRIPTION_SENSOR_FREQUENCY_PM = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Frequency",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: TOPIC_STATUS_PM1,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_SUGGESTED_DISPLAY_PRECISION: 0,
     KEY_UNIT: UNIT_HERTZ,
-    KEY_VALUE_TEMPLATE: TPL_FREQUENCY,
+    KEY_VALUE_TEMPLATE: TPL_FREQUENCY_PM1,
 }
 DESCRIPTION_SENSOR_EMETER_FREQUENCY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_FREQUENCY,
