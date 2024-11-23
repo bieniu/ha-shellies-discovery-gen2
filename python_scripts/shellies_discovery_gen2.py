@@ -296,14 +296,14 @@ SENSOR_WIFI_SIGNAL = "wifi_signal"
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
 
-SCRIPT_CODE = """let topic_prefix = null;
+SCRIPT_CODE = """let topicPrefix = null;
 
 function sendDeviceStatus() {
   try {
-    let installed_version = Shelly.getDeviceInfo().ver;
+    let installedVersion = Shelly.getDeviceInfo().ver;
     Shelly.call(^Shelly.GetStatus^, {}, function (status) {
-      status.sys.installed_version = installed_version;
-      MQTT.publish(topic_prefix + ^/status/rpc^, JSON.stringify(status));
+      status.sys.installed_version = installedVersion;
+      MQTT.publish(topicPrefix + ^/status/rpc^, JSON.stringify(status));
     });
   } catch (e) {
     console.log(^sendDeviceStatus has failed: ^, e1);
@@ -314,11 +314,11 @@ function initScript() {
   console.log(^Starting shellies_discovery_gen2_script^);
   try {
     Shelly.call(^MQTT.GetConfig^, {}, function (config) {
-      topic_prefix = config.topic_prefix;
-      console.log(^Using topic prefix: ^, topic_prefix);
+      topicPrefix = config.topic_prefix;
+      console.log(^Using topic prefix: ^, topicPrefix);
     });
     MQTT.setConnectHandler(sendDeviceStatus);
-    let update_timer = Timer.set(30000, true, sendDeviceStatus);
+    let updateTimer = Timer.set(30000, true, sendDeviceStatus);
   } catch (e) {
     console.log(^initScript has failed: ^, e1);
   }
