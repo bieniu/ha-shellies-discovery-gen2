@@ -317,7 +317,6 @@ function initScript() {
       topicPrefix = config.topic_prefix;
       console.log(^Using topic prefix: ^, topicPrefix);
     });
-    MQTT.setConnectHandler(sendDeviceStatus);
     let updateTimer = Timer.set(30000, true, sendDeviceStatus);
   } catch (e) {
     console.log(^initScript has failed: ^, e1);
