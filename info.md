@@ -32,6 +32,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly BLU TRV (via Shelly BLU Gateway Gen3)
 - Shelly DALI Dimmer Gen3
 - Shelly Dimmer 0/1-10V PM Gen3
+- Shelly EM Gen3
 - Shelly H&T Gen3
 - Shelly i4 Gen3
 - Shelly Plug S Gen3
