@@ -195,69 +195,69 @@ python_script:
 To support `HVAC Action` for Shelly BLU TRV you need to isnstall this `Send Trv Status` script on BLU Gateway Gen3 (**Scripts** -> **Create script**):
 
 ```js
-let publish_remote_status_topic = "/remote-status/{component}";
-let topic_prefix = null;
+let publishRemoteStatusTopic = "/remote-status/{component}";
+let topicPrefix = null;
 
-function GetMqttConfigHandler(config) {
-    topic_prefix = config.topic_prefix;
+function getMqttConfigHandler(config) {
+    topicPrefix = config.topic_prefix;
 }
 
-function GetMqttConfig() {
+function getMqttConfig() {
     try {
-        Shelly.call("MQTT.GetConfig", {}, GetMqttConfigHandler);
+        Shelly.call("MQTT.GetConfig", {}, getMqttConfigHandler);
     } catch (e) {
-        console.log("GetMqttConfig has failed: ", e1);
+        console.log("getMqttConfig has failed: ", e1);
     }
 }
 
-function BluTrvGetRemoteStatusHandler(status, err_no, err_msg, user_data) {
+function bluTrvGetRemoteStatusHandler(status, err_no, err_msg, user_data) {
     if (err_no !== 0) {
-        console.log("BluTrvGetRemoteStatusHandler error no: ", err_no, ", err_msg: '", err_msg, "', user_data: ", user_data);
+        console.log("bluTrvGetRemoteStatusHandler error no: ", err_no, ", err_msg: '", err_msg, "', user_data: ", user_data);
         return;
     }
 
-    var topic = topic_prefix + publish_remote_status_topic.replace("{component}", user_data.component);
+    var topic = topicPrefix + publishRemoteStatusTopic.replace("{component}", user_data.component);
     MQTT.publish(topic, JSON.stringify(status.status["trv:0"]));
 }
 
-function SendRemoteStatus(component, id) {
-    if (topic_prefix !== null) {
-        Shelly.call("BluTrv.GetRemoteStatus", {"id": id}, BluTrvGetRemoteStatusHandler, {component: component, id: id});
+function sendRemoteStatus(component, id) {
+    if (topicPrefix !== null) {
+        Shelly.call("BluTrv.GetRemoteStatus", {"id": id}, bluTrvGetRemoteStatusHandler, {component: component, id: id});
     } else
-        console.log("SendRemoteStatus topic_prefix is null");
+        console.log("sendRemoteStatus topicPrefix is null");
 };
 
-function EventHandler(event) {
+function eventHandler(event) {
     try {
         if (event && event.info) {
-            SendRemoteStatus(event.info.component, event.info.id)
+            sendRemoteStatus(event.info.component, event.info.id)
         } else
-            console.log("EventHandler (event && event.info) is false");
+            console.log("eventHandler (event && event.info) is false");
     } catch (e1) {
-        console.log("Shelly handle event '", event, "' has failed. Error: ", e1);
+        console.log("Shelly handle event '", event, "' has failed: ", e1);
     }
 }
 
-function AddEventHandler() {
+function addEventHandler() {
     try {
-        console.log("AddEventHandler...");
-        Shelly.addEventHandler(EventHandler);
-        console.log("AddEventHandler done.");
+        console.log("addEventHandler...");
+        Shelly.addEventHandler(eventHandler);
+        console.log("addEventHandler done");
     } catch (e1) {
-        console.log("AddEventHandler has failed: ", e1);
+        console.log("addEventHandler has failed: ", e1);
     }
 }
 
-function InitScript() {
+function initScript() {
     try {
-        GetMqttConfig();
-        AddEventHandler();
+        getMqttConfig();
+        addEventHandler();
     } catch (e) {
-        console.log("InitScript has failed: ", e1);
+        console.log("initScript has failed: ", e1);
     }
 }
 
-InitScript();
+initScript();
 ```
 
 [forum]: https://community.home-assistant.io/t/shellies-discovery-gen2-script/384479
