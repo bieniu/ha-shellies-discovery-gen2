@@ -1927,7 +1927,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
-        ATTR_MIN_FIRMWARE_DATE: 20241007,
+        ATTR_MIN_FIRMWARE_DATE: 20241127,
     },
     MODEL_HT_G3: {
         ATTR_BATTERY_POWERED: True,
@@ -4512,15 +4512,13 @@ if wakeup_period > 0:
     availability = None
     expire_after = wakeup_period * 1.2
 else:
-    availability = []
-    if model != MODEL_BLU_GATEWAY_G3:
-        availability.append(
-            {
-                KEY_TOPIC: TOPIC_ONLINE,
-                KEY_PAYLOAD_AVAILABLE: "true",
-                KEY_PAYLOAD_NOT_AVAILABLE: "false",
-            }
-        )
+    availability = [
+        {
+            KEY_TOPIC: TOPIC_ONLINE,
+            KEY_PAYLOAD_AVAILABLE: "true",
+            KEY_PAYLOAD_NOT_AVAILABLE: "false",
+        }
+    ]
     if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
         availability.append(
             {
