@@ -268,6 +268,7 @@ SENSOR_ANALOG_INPUT = "analog_input"
 SENSOR_ANALOG_VALUE = "analog_value"
 SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
+SENSOR_CALIBRATION = "calibration"
 SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
 SENSOR_COUNTER_VALUE = "counter_value"
@@ -387,6 +388,7 @@ TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
+TPL_CALIBRATION = "{%if ^not_calibrated^ in value_json.errors%}ON{%else%}OFF{%endif%}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -1401,6 +1403,14 @@ DESCRIPTION_SENSOR_BTH_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BTH_SENSOR,
 }
+DESCRIPTION_SENSOR_CALIBRATION = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Calibration",
+    KEY_STATE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV,
+    KEY_VALUE_TEMPLATE: TPL_CALIBRATION,
+}
 DESCRIPTION_SENSOR_BTH_MOTION = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_MOTION,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1568,6 +1578,9 @@ SUPPORTED_MODELS = {
     MODEL_BLU_TRV: {
         ATTR_NAME: "Shelly BLU TRV",
         ATTR_MODEL_ID: "SBTR-001AEU",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CALIBRATION: DESCRIPTION_SENSOR_CALIBRATION,
+        },
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
@@ -3954,6 +3967,7 @@ def get_binary_sensor(
     input_type=None,
     profile=None,
     bt_id=None,
+    thermostat_id=None,
 ):
     """Create configuration for Shelly binary sensor entity."""
     if entity_id is not None:
@@ -3963,6 +3977,10 @@ def get_binary_sensor(
     elif bt_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{bt_id}-{sensor}/config"
+        )
+    elif thermostat_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{thermostat_id}-{sensor}/config"
         )
     else:
         topic = encode_config_topic(
@@ -3986,6 +4004,9 @@ def get_binary_sensor(
         )
     elif bt_id is not None:
         unique_id = f"{device_id}-{bt_id}-{sensor}".lower()
+        sensor_name = description[KEY_NAME]
+    elif thermostat_id is not None:
+        unique_id = f"{device_id}-{thermostat_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
     else:
         unique_id = f"{device_id}-{sensor}".lower()
@@ -4015,6 +4036,8 @@ def get_binary_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=entity_id)
     elif bt_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
+    elif thermostat_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -4673,6 +4696,14 @@ if "components" in device_config:
 
         for sensor, description in sensors.items():
             topic, payload = get_sensor(
+                sensor, description, thermostat_id=thermostat_id
+            )
+            config_data[topic] = payload
+
+        binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+
+        for sensor, description in binary_sensors.items():
+            topic, payload = get_binary_sensor(
                 sensor, description, thermostat_id=thermostat_id
             )
             config_data[topic] = payload
