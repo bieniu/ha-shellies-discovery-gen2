@@ -5,7 +5,7 @@
 [![Community Forum][forum-shield]][forum]
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 [![PayPal_Me][paypal-me-shield]][paypal-me]
-
+Nie udało się zainstalować „Visual Studio Code”
 
 This script adds MQTT discovery support for Shelly Gen2 and Gen3 devices in the [Home Assistant](https://home-assistant.io/).
 
@@ -139,7 +139,7 @@ python_script:
 - id: shellies_announce_gen2
   alias: "Shellies Announce Gen2"
   triggers:
-    - platform: homeassistant
+    - trigger: homeassistant
       event: start
   variables:
     get_config_payload: "{{ {'id': 1, 'src': 'shellies_discovery', 'method': 'Shelly.GetConfig'} | to_json }}"
@@ -155,7 +155,7 @@ python_script:
             data:
               topic: "{{ repeat.item }}/rpc"
               payload: "{{ get_config_payload }}"
-          - service: mqtt.publish
+          - action: mqtt.publish
             data:
               topic: "{{ repeat.item }}/rpc"
               payload: "{{ get_components_payload }}"
@@ -165,7 +165,7 @@ python_script:
   mode: queued
   max: 999
   triggers:
-    - platform: mqtt
+    - trigger: mqtt
       topic: shellies_discovery/rpc
   actions:
     - action: python_script.shellies_discovery_gen2
@@ -174,7 +174,7 @@ python_script:
         device_config: "{{ trigger.payload_json.result }}"
     - condition: template
       value_template: "{{ 'mqtt' in trigger.payload_json.result }}"
-    - service: mqtt.publish
+    - action: mqtt.publish
       data:
         topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
         payload: "status_update"
