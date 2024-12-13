@@ -3152,7 +3152,7 @@ def get_cover(cover_id, profile):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
-    if device_config[f"cover:{cover_id}"].get("slat", {}).get("enabled", False):
+    if device_config[f"cover:{cover_id}"].get("slat", {}).get("enable", False):
         payload[KEY_TILT_COMMAND_TEMPLATE] = (
             f"{{^id^:1,^src^:^{source_topic}^,^method^:^Cover.GoToPosition^,^params^:{{^id^:{cover_id},^slat_pos^:{{{{tilt_position}}}}}}}}"
         )
