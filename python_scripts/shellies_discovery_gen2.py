@@ -363,7 +363,6 @@ TOPIC_ONLINE = "~online"
 TOPIC_RPC = "~rpc"
 TOPIC_SHELLIES_DISCOVERY_SCRIPT = "shellies_discovery_script"
 TOPIC_STATUS_BLU_TRV = "~status/blutrv:{id}"
-TOPIC_REMOTE_STATUS_BLU_TRV = "~remote-status/blutrv:{id}"
 TOPIC_STATUS_BTH_DEVICE = "~status/bthomedevice:{id}"
 TOPIC_STATUS_BTH_SENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
@@ -388,7 +387,6 @@ TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_BLU_TRV_VALVE_POSITION = "{{value_json.position}}"
-TPL_CALIBRATION = "{%if ^not_calibrated^ in value_json.errors%}ON{%else%}OFF{%endif%}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -1403,14 +1401,6 @@ DESCRIPTION_SENSOR_BTH_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BTH_SENSOR,
 }
-DESCRIPTION_SENSOR_CALIBRATION = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Calibration",
-    KEY_STATE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV,
-    KEY_VALUE_TEMPLATE: TPL_CALIBRATION,
-}
 DESCRIPTION_SENSOR_BTH_MOTION = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_MOTION,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1578,9 +1568,6 @@ SUPPORTED_MODELS = {
     MODEL_BLU_TRV: {
         ATTR_NAME: "Shelly BLU TRV",
         ATTR_MODEL_ID: "SBTR-001AEU",
-        ATTR_BINARY_SENSORS: {
-            SENSOR_CALIBRATION: DESCRIPTION_SENSOR_CALIBRATION,
-        },
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
