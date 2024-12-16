@@ -387,7 +387,7 @@ TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
-TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
+TPL_BLU_TRV_VALVE_POSITION = "{{value_json.position}}"
 TPL_CALIBRATION = "{%if ^not_calibrated^ in value_json.errors%}ON{%else%}OFF{%endif%}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
@@ -592,7 +592,7 @@ DESCRIPTION_BLU_TRV_VALVE_POSITION = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_NAME: "Valve position",
     KEY_ICON: "mdi:pipe-valve",
-    KEY_STATE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV,
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BLU_TRV_VALVE_POSITION,
 }
