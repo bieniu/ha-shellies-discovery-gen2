@@ -462,7 +462,7 @@ TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
 TPL_BTH_SENSOR = "{{value_json.value}}"
 TPL_BTH_BINARY_SENSOR = "{{^ON^ if value_json.value else ^OFF^}}"
-TPL_BLU_THERMOSTAT_ACTION = "{%if value_json.pos>0%}heating{%else%}idle{%endif%}"
+TPL_BLU_THERMOSTAT_ACTION = "{%if value_json.position>0%}heating{%else%}idle{%endif%}"
 TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.target_C==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
@@ -3561,15 +3561,11 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
     )
     payload = {
         KEY_NAME: "",
-        KEY_ACTION_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_ACTION_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
         KEY_ACTION_TEMPLATE: TPL_BLU_THERMOSTAT_ACTION,
-        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV.format(
-            id=thermostat_id
-        ),
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
-        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV.format(
-            id=thermostat_id
-        ),
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_BLU_TARGET_TEMPERATURE.format(
@@ -3579,7 +3575,7 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: TOPIC_REMOTE_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
         KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
