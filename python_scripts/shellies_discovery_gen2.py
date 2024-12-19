@@ -502,6 +502,8 @@ BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
 
+BTH_DEV_MAP = {8: MODEL_BLU_TRV}
+
 BTH_IDX_MAP = {
     BTH_HUMIDITY: SENSOR_HUMIDITY,
     BTH_MOTION: SENSOR_MOTION,
@@ -4550,7 +4552,7 @@ if qos not in (0, 1, 2):
 
 if "components" in device_config:
     components = {
-        comp["key"]: comp["config"]
+        comp["key"]: {**comp["config"], **comp.get("attrs", {})}
         for comp in device_config["components"]
         if comp["key"].startswith(("blu", "bt", "mqtt"))
     }
@@ -4584,6 +4586,7 @@ if "components" in device_config:
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
+
     for dev in blutrv_devices.values():
         for comp, config in components.items():
             if (
@@ -4658,7 +4661,7 @@ if "components" in device_config:
             config_data[topic] = payload
 
     for thermostat, config in blutrv_devices.items():
-        model = MODEL_BLU_TRV
+        model = BTH_DEV_MAP.get(config.get("model_id"))
         mac = config["addr"].lower()
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
         device_id += f"-{mac.replace(":", "")}"
