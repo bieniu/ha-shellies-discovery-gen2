@@ -578,6 +578,7 @@ DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_ICON: "mdi:valve",
     KEY_MIN: 0,
+    KEY_MAX: 100,
 }
 DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME = {
     KEY_ENABLED_BY_DEFAULT: True,
@@ -4152,10 +4153,9 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
 
     payload = {
         KEY_NAME: description[KEY_NAME],
-        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TOPIC: description[KEY_COMMAND_TOPIC],
         KEY_MIN: description[KEY_MIN],
         KEY_MAX: description[KEY_MAX],
-        KEY_MODE: description[KEY_MODE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{number}".lower(),
         KEY_QOS: qos,
@@ -4173,7 +4173,12 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
         payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
             source=source_topic
         )
-
+    if description.get(KEY_MODE):
+        payload[KEY_MODE] = description[KEY_MODE]
+    if description.get(KEY_STATE_TOPIC):
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
+    if description.get(KEY_VALUE_TEMPLATE):
+        payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE]
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
