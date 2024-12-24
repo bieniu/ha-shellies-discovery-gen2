@@ -4168,14 +4168,19 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
         payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
             source=source_topic, thermostat=thermostat_id
         )
+        if description.get(KEY_STATE_TOPIC):
+            payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
+                id=thermostat_id
+            )
     else:
         payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
             source=source_topic
         )
+        if description.get(KEY_STATE_TOPIC):
+            payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
+
     if description.get(KEY_MODE):
         payload[KEY_MODE] = description[KEY_MODE]
-    if description.get(KEY_STATE_TOPIC):
-        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
     if description.get(KEY_VALUE_TEMPLATE):
         payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE]
     if description.get(KEY_DEVICE_CLASS):
