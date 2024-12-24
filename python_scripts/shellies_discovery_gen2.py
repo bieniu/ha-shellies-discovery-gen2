@@ -590,7 +590,6 @@ DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME = {
     KEY_ICON: "mdi:clock-outline",
     KEY_MIN: 1,
     KEY_MAX: 100,
-    KEY_STEP: 1,
     KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
