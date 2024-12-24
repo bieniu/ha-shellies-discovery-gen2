@@ -262,6 +262,7 @@ MODEL_BLU_TRV = "SBTR-001AEU"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
+NUMBER_VALVE_POSITION = "valve_position"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
@@ -386,6 +387,7 @@ TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
+TPL_BLU_TRV_SET_VALVE_POSITION = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetPosition^,^params^:{{^id^:0,^pos^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
@@ -557,7 +559,7 @@ DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "External temperature",
-    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
     KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_ICON: "mdi:thermometer-check",
@@ -566,11 +568,22 @@ DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE = {
     KEY_STEP: 0.1,
     KEY_MODE: "box",
 }
+DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Valve position",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_VALUE_TEMPLATE: TPL_BLU_TRV_VALVE_POSITION,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_VALVE_POSITION,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_ICON: "mdi:valve",
+    KEY_MIN: 0,
+}
 DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Boost time",
-    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
     KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_BOOST_TIME,
     KEY_UNIT: UNIT_MINUTES,
     KEY_ICON: "mdi:clock-outline",
@@ -1585,6 +1598,7 @@ SUPPORTED_MODELS = {
             "report_external_temperature": {},
             NUMBER_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE,
             NUMBER_BOOST_TIME: DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME,
+            NUMBER_VALVE_POSITION: DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION,
         },
     },
     MODEL_BLU_HT: {
