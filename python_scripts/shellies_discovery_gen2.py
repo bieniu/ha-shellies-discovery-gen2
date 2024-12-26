@@ -3578,6 +3578,7 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
         KEY_MODES: ["heat"],
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
         KEY_MODE_STATE_TEMPLATE: "heat",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
