@@ -62,6 +62,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro 3
 - Shelly Pro 3EM
 - Shelly Pro 3EM Switch Add-on
+- Shelly Pro 3EM-3CT63
 - Shelly Pro 3EM-400
 - Shelly Pro 4PM
 - Shelly Pro Dimmer 2
