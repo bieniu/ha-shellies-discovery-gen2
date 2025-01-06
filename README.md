@@ -7,7 +7,7 @@
 [![PayPal_Me][paypal-me-shield]][paypal-me]
 Nie udało się zainstalować „Visual Studio Code”
 
-This script adds MQTT discovery support for Shelly Gen2 and Gen3 devices in the [Home Assistant](https://home-assistant.io/).
+This script adds MQTT discovery support for Shelly Gen2, Gen3 and Gen4 devices in the [Home Assistant](https://home-assistant.io/).
 
 ![image](https://user-images.githubusercontent.com/478555/151659020-a6181434-ae19-42bb-9dbe-fed8002ee730.png)
 
@@ -28,21 +28,8 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 
 ## Supported devices
 
-- Shelly 1 Gen3
-- Shelly 1 Mini Gen3
-- Shelly 1PM Gen3
-- Shelly 1PM Mini Gen3
-- Shelly 2PM Gen3
-- Shelly BLU Gateway Gen3
-- Shelly BLU H&T (via Shelly Pro or Gen3 device)
-- Shelly BLU Motion (via Shelly Pro or Gen3 device)
-- Shelly BLU TRV (via Shelly BLU Gateway Gen3)
-- Shelly DALI Dimmer Gen3
-- Shelly Dimmer 0/1-10V PM Gen3
-- Shelly EM Gen3
-- Shelly H&T Gen3
-- Shelly i4 Gen3
-- Shelly Plug S Gen3
+### Gen2
+
 - Shelly Plus 0-10V Dimmer
 - Shelly Plus 1
 - Shelly Plus 1 Mini
@@ -61,7 +48,6 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Plus Smoke
 - Shelly Plus Uni
 - Shelly Plus Wall Dimmer
-- Shelly PM Mini Gen3
 - Shelly Pro 1
 - Shelly Pro 1PM
 - Shelly Pro 2
@@ -76,7 +62,33 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro Dual Cover PM
 - Shelly Pro EM
 - Shelly Wall Display (relay and thermostat mode)
+
+### Gen3
+
+- Shelly 1 Gen3
+- Shelly 1 Mini Gen3
+- Shelly 1PM Gen3
+- Shelly 1PM Mini Gen3
+- Shelly 2PM Gen3
+- Shelly BLU Gateway Gen3
+- Shelly DALI Dimmer Gen3
+- Shelly Dimmer 0/1-10V PM Gen3
+- Shelly EM Gen3
+- Shelly H&T Gen3
+- Shelly i4 Gen3
+- Shelly Plug S Gen3
+- Shelly PM Mini Gen3
 - Shelly X MOD1
+
+### Gen4
+
+- Shelly 1PM Gen4
+
+### BLU
+
+- Shelly BLU H&T (via Shelly Pro or Gen3 device)
+- Shelly BLU Motion (via Shelly Pro or Gen3 device)
+- Shelly BLU TRV (via Shelly BLU Gateway Gen3)
 
 ## Battery powered devices
 
