@@ -76,7 +76,9 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 ### Gen4
 
 - Shelly 1 Gen4
+- Shelly 1 Mini Gen3
 - Shelly 1PM Gen4
+- Shelly 1PM Mini Gen3
 - Shelly 2PM Gen4
 - Shelly i4 Gen4
 
