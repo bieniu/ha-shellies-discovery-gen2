@@ -262,12 +262,14 @@ MODEL_BLU_TRV = "SBTR-001AEU"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
+NUMBER_VALVE_POSITION = "valve_position"
 
 SENSOR_ACTIVE_POWER = "active_power"
 SENSOR_ANALOG_INPUT = "analog_input"
 SENSOR_ANALOG_VALUE = "analog_value"
 SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
+SENSOR_CALIBRATION = "calibration"
 SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
 SENSOR_COUNTER_VALUE = "counter_value"
@@ -299,6 +301,7 @@ SENSOR_TOTAL_ACTIVE_POWER = "total_active_power"
 SENSOR_TOTAT_ACTIVE_RETURNED_ENERGY = "total_active_returned_energy"
 SENSOR_TOTAL_APPARENT_POWER = "total_apparent_power"
 SENSOR_TOTAL_CURRENT = "total_current"
+SENSOR_VALVE_POSITION = "valve_position"
 SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
@@ -384,6 +387,8 @@ TPL_BATTERY = "{{value_json.battery}}"
 TPL_BATTERY_PERCENT = "{{value_json.battery.percent}}"
 TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetExternalTemperature^,^params^:{{^id^:0,^t_C^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
+TPL_BLU_TRV_SET_VALVE_POSITION = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetPosition^,^params^:{{^id^:0,^pos^:value}}}}}}|to_json}}}}"
+TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -457,7 +462,8 @@ TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
 TPL_TEMPERATURE_INDEPENDENT = "{{value_json.tC}}"
 TPL_BTH_SENSOR = "{{value_json.value}}"
 TPL_BTH_BINARY_SENSOR = "{{^ON^ if value_json.value else ^OFF^}}"
-TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.value==4 else ^heat^}}"
+TPL_BLU_THERMOSTAT_ACTION = "{%if value_json.pos>0%}heating{%else%}idle{%endif%}"
+TPL_BLU_THERMOSTAT_MODE = "{{^off^ if value_json.target_C==4 else ^heat^}}"
 TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}}"
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
@@ -497,6 +503,8 @@ VALUE_TRIGGER = "trigger"
 BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
+
+BTH_DEV_MAP = {8: MODEL_BLU_TRV}
 
 BTH_IDX_MAP = {
     BTH_HUMIDITY: SENSOR_HUMIDITY,
@@ -551,7 +559,7 @@ DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "External temperature",
-    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
     KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_ICON: "mdi:thermometer-check",
@@ -560,17 +568,28 @@ DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE = {
     KEY_STEP: 0.1,
     KEY_MODE: "box",
 }
+DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Valve position",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_VALUE_TEMPLATE: TPL_BLU_TRV_VALVE_POSITION,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_VALVE_POSITION,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_ICON: "mdi:valve",
+    KEY_MIN: 0,
+    KEY_MAX: 100,
+}
 DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_NAME: "Boost time",
-    KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
     KEY_COMMAND_TEMPLATE: TPL_BLU_TRV_SET_BOOST_TIME,
     KEY_UNIT: UNIT_MINUTES,
     KEY_ICON: "mdi:clock-outline",
     KEY_MIN: 1,
     KEY_MAX: 100,
-    KEY_STEP: 1,
     KEY_MODE: "box",
 }
 DESCRIPTION_SENSOR_BATTERY = {
@@ -581,6 +600,14 @@ DESCRIPTION_SENSOR_BATTERY = {
     KEY_STATE_TOPIC: TOPIC_STATUS_DEVICE_POWER,
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY_PERCENT,
+}
+DESCRIPTION_BLU_TRV_VALVE_POSITION = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Valve position",
+    KEY_ICON: "mdi:pipe-valve",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_BLU_TRV_VALVE_POSITION,
 }
 DESCRIPTION_SENSOR_BLU_TRV_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
@@ -1534,7 +1561,7 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_STEP: 0.5,
 }
 DESCRIPTION_BLU_TRV_THERMOSTAT = {
-    ATTR_TEMPERATURE_MIN: 5,
+    ATTR_TEMPERATURE_MIN: 4,
     ATTR_TEMPERATURE_MAX: 30,
     ATTR_TEMPERATURE_STEP: 0.1,
 }
@@ -1559,6 +1586,7 @@ SUPPORTED_MODELS = {
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
+            SENSOR_VALVE_POSITION: DESCRIPTION_BLU_TRV_VALVE_POSITION,
         },
         ATTR_BUTTONS: {
             BUTTON_CALIBRATE: DESCRIPTION_BUTTON_BLU_TRV_CALIBRATE,
@@ -1570,6 +1598,7 @@ SUPPORTED_MODELS = {
             "report_external_temperature": {},
             NUMBER_EXTERNAL_TEMPERATURE: DESCRIPTION_NUMBER_BLU_TRV_EXTERNAL_TEMPERATURE,
             NUMBER_BOOST_TIME: DESCRIPTION_NUMBER_BLU_TRV_BOOST_TIME,
+            NUMBER_VALVE_POSITION: DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION,
         },
     },
     MODEL_BLU_HT: {
@@ -1914,7 +1943,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
-        ATTR_MIN_FIRMWARE_DATE: 20241007,
+        ATTR_MIN_FIRMWARE_DATE: 20250109,
     },
     MODEL_HT_G3: {
         ATTR_BATTERY_POWERED: True,
@@ -3528,22 +3557,19 @@ def get_climate(thermostat_id, description):
     return topic, payload
 
 
-def get_blu_climate(
-    thermostat_id: str, temperature_id: str, target_id: str, description
-) -> tuple:
+def get_blu_climate(thermostat_id: str, description) -> tuple:
     """Create configuration for Shelly BLU climate entity."""
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
-
     payload = {
         KEY_NAME: "",
-        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(
-            id=temperature_id
-        ),
-        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
-        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
-        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
+        KEY_ACTION_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_ACTION_TEMPLATE: TPL_BLU_THERMOSTAT_ACTION,
+        KEY_CURRENT_TEMPERATURE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
+        KEY_TEMPERATURE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_BLU_TARGET_TEMPERATURE.format(
             source=source_topic, thermostat=thermostat_id
@@ -3551,13 +3577,9 @@ def get_blu_climate(
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
         KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
         KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
-        KEY_MODES: ["off", "heat"],
-        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR.format(id=target_id),
-        KEY_MODE_STATE_TEMPLATE: TPL_BLU_THERMOSTAT_MODE,
-        KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_BLU_THERMOSTAT_MODE.format(
-            source=source_topic, thermostat=thermostat_id
-        ),
+        KEY_MODES: ["heat"],
+        KEY_MODE_STATE_TOPIC: TOPIC_STATUS_BLU_TRV.format(id=thermostat_id),
+        KEY_MODE_STATE_TEMPLATE: "heat",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
         KEY_QOS: qos,
@@ -3940,6 +3962,7 @@ def get_binary_sensor(
     input_type=None,
     profile=None,
     bt_id=None,
+    thermostat_id=None,
 ):
     """Create configuration for Shelly binary sensor entity."""
     if entity_id is not None:
@@ -3949,6 +3972,10 @@ def get_binary_sensor(
     elif bt_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{bt_id}-{sensor}/config"
+        )
+    elif thermostat_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-{thermostat_id}-{sensor}/config"
         )
     else:
         topic = encode_config_topic(
@@ -3972,6 +3999,9 @@ def get_binary_sensor(
         )
     elif bt_id is not None:
         unique_id = f"{device_id}-{bt_id}-{sensor}".lower()
+        sensor_name = description[KEY_NAME]
+    elif thermostat_id is not None:
+        unique_id = f"{device_id}-{thermostat_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
     else:
         unique_id = f"{device_id}-{sensor}".lower()
@@ -4001,6 +4031,8 @@ def get_binary_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=entity_id)
     elif bt_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
+    elif thermostat_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -4122,10 +4154,9 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
 
     payload = {
         KEY_NAME: description[KEY_NAME],
-        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TOPIC: description[KEY_COMMAND_TOPIC],
         KEY_MIN: description[KEY_MIN],
         KEY_MAX: description[KEY_MAX],
-        KEY_MODE: description[KEY_MODE],
         KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_UNIQUE_ID: f"{device_id}-{number}".lower(),
         KEY_QOS: qos,
@@ -4139,11 +4170,21 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
         payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
             source=source_topic, thermostat=thermostat_id
         )
+        if description.get(KEY_STATE_TOPIC):
+            payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(
+                id=thermostat_id
+            )
     else:
         payload[KEY_COMMAND_TEMPLATE] = description[KEY_COMMAND_TEMPLATE].format(
             source=source_topic
         )
+        if description.get(KEY_STATE_TOPIC):
+            payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
+    if description.get(KEY_MODE):
+        payload[KEY_MODE] = description[KEY_MODE]
+    if description.get(KEY_VALUE_TEMPLATE):
+        payload[KEY_VALUE_TEMPLATE] = description[KEY_VALUE_TEMPLATE]
     if description.get(KEY_DEVICE_CLASS):
         payload[KEY_DEVICE_CLASS] = description[KEY_DEVICE_CLASS]
     if description.get(KEY_ENTITY_CATEGORY):
@@ -4498,15 +4539,13 @@ if wakeup_period > 0:
     availability = None
     expire_after = wakeup_period * 1.2
 else:
-    availability = []
-    if model != MODEL_BLU_GATEWAY_G3:
-        availability.append(
-            {
-                KEY_TOPIC: TOPIC_ONLINE,
-                KEY_PAYLOAD_AVAILABLE: "true",
-                KEY_PAYLOAD_NOT_AVAILABLE: "false",
-            }
-        )
+    availability = [
+        {
+            KEY_TOPIC: TOPIC_ONLINE,
+            KEY_PAYLOAD_AVAILABLE: "true",
+            KEY_PAYLOAD_NOT_AVAILABLE: "false",
+        }
+    ]
     if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
         availability.append(
             {
@@ -4532,7 +4571,7 @@ if qos not in (0, 1, 2):
 
 if "components" in device_config:
     components = {
-        comp["key"]: comp["config"]
+        comp["key"]: {**comp["config"], **comp.get("attrs", {})}
         for comp in device_config["components"]
         if comp["key"].startswith(("blu", "bt", "mqtt"))
     }
@@ -4566,6 +4605,7 @@ if "components" in device_config:
         for key, conf in components.items()
         if key.startswith("blutrv")
     }
+
     for dev in blutrv_devices.values():
         for comp, config in components.items():
             if (
@@ -4640,7 +4680,7 @@ if "components" in device_config:
             config_data[topic] = payload
 
     for thermostat, config in blutrv_devices.items():
-        model = MODEL_BLU_TRV
+        model = BTH_DEV_MAP.get(config.get("model_id"))
         mac = config["addr"].lower()
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
         device_id += f"-{mac.replace(":", "")}"
@@ -4654,17 +4694,21 @@ if "components" in device_config:
             KEY_VIA_DEVICE: via_device,
         }
         thermostat_id = thermostat.split(":")[-1]
-        temperature_id = config["components"][1].split(":")[-1]
-        target_id = config["components"][0].split(":")[-1]
-        topic, payload = get_blu_climate(
-            thermostat_id, temperature_id, target_id, DESCRIPTION_BLU_TRV_THERMOSTAT
-        )
+        topic, payload = get_blu_climate(thermostat_id, DESCRIPTION_BLU_TRV_THERMOSTAT)
         config_data[topic] = payload
 
         sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
 
         for sensor, description in sensors.items():
             topic, payload = get_sensor(
+                sensor, description, thermostat_id=thermostat_id
+            )
+            config_data[topic] = payload
+
+        binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
+
+        for sensor, description in binary_sensors.items():
+            topic, payload = get_binary_sensor(
                 sensor, description, thermostat_id=thermostat_id
             )
             config_data[topic] = payload
