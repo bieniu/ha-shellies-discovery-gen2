@@ -389,7 +389,9 @@ TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_VALVE_POSITION = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetPosition^,^params^:{{^id^:0,^pos^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
-TPL_BLU_TRV_CALIBRATION = "{{^not_calibrated^ in value_json.get(^errors^,[])}}"
+TPL_BLU_TRV_CALIBRATION = (
+    "{{^ON^ if ^not_calibrated^ in value_json.get(^errors^,[]) else ^OFF^}}"
+)
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
