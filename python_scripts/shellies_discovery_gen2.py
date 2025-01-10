@@ -389,6 +389,7 @@ TPL_BLU_TRV_REPORT_EXTERNAL_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method
 TPL_BLU_TRV_SET_BOOST_TIME = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetConfig^,^params^:{{^id^:0,^config^:{{^default_boost_duration^:value*60}}}}}}}}|to_json}}}}"
 TPL_BLU_TRV_SET_VALVE_POSITION = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^Trv.SetPosition^,^params^:{{^id^:0,^pos^:value}}}}}}|to_json}}}}"
 TPL_BLU_TRV_VALVE_POSITION = "{{value_json.pos}}"
+TPL_BLU_TRV_CALIBRATION = "{{^not_calibrated^ in value_json.get(^errors^,[])}}"
 TPL_COUNTER = "{{value_json.counts.total}}"
 TPL_COUNTER_VALUE = "{{value_json.counts.xtotal}}"
 TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
@@ -877,6 +878,14 @@ DESCRIPTION_SENSOR_LAST_RESTART = {
     KEY_NAME: "Last restart",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_UPTIME,
+}
+DESCRIPTION_SENSOR_BLU_TRV_CALIBRATION = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Calibration",
+    KEY_STATE_TOPIC: TOPIC_STATUS_BLU_TRV,
+    KEY_VALUE_TEMPLATE: TPL_BLU_TRV_CALIBRATION,
 }
 DESCRIPTION_SENSOR_OVERPOWER = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
@@ -1583,6 +1592,9 @@ SUPPORTED_MODELS = {
     MODEL_BLU_TRV: {
         ATTR_NAME: "Shelly BLU TRV",
         ATTR_MODEL_ID: "SBTR-001AEU",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CALIBRATION: DESCRIPTION_SENSOR_BLU_TRV_CALIBRATION
+        },
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BLU_TRV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BLU_TRV_BATTERY,
