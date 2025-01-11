@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2 devices."""
 
-VERSION = "3.9.0"
+VERSION = "3.9.1"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -1948,16 +1948,20 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "S3GW-1DBT001",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {
-            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
-            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
-        },
-        ATTR_SENSORS: {
-            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
-            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
-            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
-            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: {},
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
         ATTR_MIN_FIRMWARE_DATE: 20250109,
     },
     MODEL_HT_G3: {
@@ -3996,6 +4000,9 @@ def get_binary_sensor(
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
         )
+
+    if not description:
+        return topic, ""
 
     if profile == ATTR_COVER:
         return topic, ""
