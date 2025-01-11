@@ -4001,6 +4001,9 @@ def get_binary_sensor(
             f"{disc_prefix}/binary_sensor/{device_id}-{sensor}/config"
         )
 
+    if not description:
+        return topic, ""
+
     if profile == ATTR_COVER:
         return topic, ""
 
