@@ -1,4 +1,4 @@
-"""This script adds MQTT discovery support for Shellies Gen2 devices."""
+"""This script adds MQTT discovery support for Shellies Gen2+ devices."""
 
 VERSION = "3.9.2"
 
