@@ -4675,7 +4675,7 @@ if "components" in device_config:
 
         mac = config["addr"].lower()
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
-        device_id += f"-{mac.replace(":", "")}"
+        device_id += f"-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
             KEY_IDENTIFIERS: [mac],
@@ -4717,7 +4717,7 @@ if "components" in device_config:
         model = BTH_DEV_MAP.get(config.get("model_id"))
         mac = config["addr"].lower()
         device_name = config["name"] or SUPPORTED_MODELS[model][ATTR_NAME]
-        device_id += f"-{mac.replace(":", "")}"
+        device_id += f"-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
             KEY_IDENTIFIERS: [mac],
