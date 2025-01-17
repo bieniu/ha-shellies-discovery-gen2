@@ -4695,9 +4695,10 @@ if "components" in device_config:
         logger.debug("Found BTHome devices: %s", bthome_devices)  # noqa: F821
 
         mac = config["addr"].lower()
-        device_name = (config[ATTR_NAME] or SUPPORTED_MODELS[model][ATTR_NAME]).replace(
-            "'", "_"
-        )
+        device_name = (
+            config[ATTR_NAME]
+            or f"{SUPPORTED_MODELS[model][ATTR_NAME]} {mac.upper().replace(':', '')}"
+        ).replace("'", "_")
         device_id += f"-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
@@ -4739,9 +4740,10 @@ if "components" in device_config:
     for thermostat, config in blutrv_devices.items():
         model = BTH_DEV_MAP.get(config.get("model_id"))
         mac = config["addr"].lower()
-        device_name = (config[ATTR_NAME] or SUPPORTED_MODELS[model][ATTR_NAME]).replace(
-            "'", "_"
-        )
+        device_name = (
+            config[ATTR_NAME]
+            or f"{SUPPORTED_MODELS[model][ATTR_NAME]} {mac.upper().replace(':', '')}"
+        ).replace("'", "_")
         device_id += f"-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
@@ -4834,13 +4836,11 @@ else:
 
     mac = format_mac(mac).lower()
 
-    device_name = (device_config["sys"]["device"].get(ATTR_NAME) or device_id).replace(
-        "'", "_"
-    )
+    device_name = (
+        device_config["sys"]["device"].get(ATTR_NAME)
+        or f"{SUPPORTED_MODELS[model][ATTR_NAME]} {mac.upper().replace(':', '')}"
+    ).replace("'", "_")
     device_url = f"http://{device_id}.local/"
-
-    if not device_name:
-        device_name = SUPPORTED_MODELS[model][ATTR_NAME]
 
     gen = SUPPORTED_MODELS[model].get(ATTR_GEN, 2)
     device_info = {
