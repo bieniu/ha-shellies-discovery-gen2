@@ -4834,7 +4834,9 @@ else:
 
     mac = format_mac(mac).lower()
 
-    device_name = device_config["sys"]["device"].get(ATTR_NAME).replace("'", "_")
+    device_name = (device_config["sys"]["device"].get(ATTR_NAME) or device_id).replace(
+        "'", "_"
+    )
     device_url = f"http://{device_id}.local/"
 
     if not device_name:
