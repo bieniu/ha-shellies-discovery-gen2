@@ -5,7 +5,7 @@
 [![Community Forum][forum-shield]][forum]
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 [![PayPal_Me][paypal-me-shield]][paypal-me]
-Nie udało się zainstalować „Visual Studio Code”
+[![Revolut.Me][revolut-me-shield]][revolut-me]
 
 This script adds MQTT discovery support for Shelly Gen2, Gen3 and Gen4 devices in the [Home Assistant](https://home-assistant.io/).
 
@@ -208,3 +208,5 @@ python_script:
 [buy-me-a-coffee]: https://www.buymeacoffee.com/QnLdxeaqO
 [paypal-me-shield]: https://img.shields.io/static/v1.svg?label=%20&message=PayPal.Me&logo=paypal
 [paypal-me]: https://www.paypal.me/bieniu79
+[revolut-me-shield]: https://img.shields.io/static/v1.svg?label=%20&message=Revolut&logo=revolut
+[revolut-me]: https://revolut.me/maciejbieniek
