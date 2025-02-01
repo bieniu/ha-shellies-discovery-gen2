@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2+ devices."""
 
-VERSION = "3.9.4"
+VERSION = "3.10.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -69,6 +69,7 @@ DEVICE_CLASS_ENERGY = "energy"
 DEVICE_CLASS_FREQUENCY = "frequency"
 DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_ILLUMINANCE = "illuminance"
+DEVICE_CLASS_MOISTURE = "moisture"
 DEVICE_CLASS_MOTION = "motion"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
@@ -256,6 +257,7 @@ MODEL_1PM_G4 = "shelly1pmg4"
 MODEL_1PM_MINI_G4 = "shelly1pmminig4"
 MODEL_2PM_G4 = "shelly2pmg4"
 MODEL_I4_G4 = "shellyi4g4"
+MODEL_FLOOD_G4 = "shellyfloodg4"
 # BLU devices
 MODEL_BLU_HT = "SBHT-003C"
 MODEL_BLU_MOTION = "SBMO-003Z"
@@ -280,6 +282,7 @@ SENSOR_ENERGY = "energy"
 SENSOR_ETH_IP = "eth_ip"
 SENSOR_EXTERNAL_POWER = "external_power"
 SENSOR_FIRMWARE = "firmware"
+SENSOR_FLOOD = "flood"
 SENSOR_FREQUENCY = "frequency"
 SENSOR_HUMIDITY = "humidity"
 SENSOR_ILLUMINANCE = "illuminance"
@@ -376,6 +379,7 @@ TOPIC_STATUS_BTH_DEVICE = "~status/bthomedevice:{id}"
 TOPIC_STATUS_BTH_SENSOR = "~status/bthomesensor:{id}"
 TOPIC_STATUS_CLOUD = "~status/cloud"
 TOPIC_STATUS_DEVICE_POWER = "~status/devicepower:0"
+TOPIC_STATUS_FLOOD = "~status/flood:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
 TOPIC_STATUS_CCT = "~status/cct:{id}"
 TOPIC_STATUS_RGB = "~status/rgb:{id}"
@@ -466,7 +470,7 @@ TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV
 TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:target}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
-TPL_SMOKE = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
+TPL_ALARM = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
 TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
@@ -1404,7 +1408,14 @@ DESCRIPTION_SENSOR_SMOKE = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Smoke",
     KEY_STATE_TOPIC: TOPIC_STATUS_SMOKE,
-    KEY_VALUE_TEMPLATE: TPL_SMOKE,
+    KEY_VALUE_TEMPLATE: TPL_ALARM,
+}
+DESCRIPTION_SENSOR_FLOOD = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_MOISTURE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Flood",
+    KEY_STATE_TOPIC: TOPIC_STATUS_FLOOD,
+    KEY_VALUE_TEMPLATE: TPL_ALARM,
 }
 DESCRIPTION_SLEEPING_SENSOR_FIRMWARE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_UPDATE,
@@ -3486,6 +3497,25 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240520,
+    },
+    MODEL_FLOOD_G4: {
+        ATTR_BATTERY_POWERED: True,
+        ATTR_NAME: "Shelly Flood Gen4",
+        ATTR_MODEL_ID: "S4SN-0071A",
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+            SENSOR_FLOOD: DESCRIPTION_SENSOR_FLOOD,
+        },
+        ATTR_SENSORS: {
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_BATTERY,
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20250129,
+        ATTR_WAKEUP_PERIOD: 43200,
     },
 }
 
