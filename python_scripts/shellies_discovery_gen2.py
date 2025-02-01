@@ -273,6 +273,7 @@ SENSOR_ANALOG_INPUT = "analog_input"
 SENSOR_ANALOG_VALUE = "analog_value"
 SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
+SENSOR_CABLE_UNPLUGGED = "cable_unplugged"
 SENSOR_CALIBRATION = "calibration"
 SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
@@ -473,6 +474,9 @@ TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_ALARM = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
 TPL_MUTE = "{%if value_json.mute%}OFF{%else%}ON{%endif%}"
+TPL_CABLE_UNPLUGGED = (
+    "{%if ^cable_unplugged^ in value_json.get(^errors^)%}ON{%else%}OFF{%endif%}"
+)
 TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
@@ -1417,6 +1421,13 @@ DESCRIPTION_SENSOR_SMOKE_ALARM_SOUND = {
     KEY_NAME: "Alarm sound",
     KEY_STATE_TOPIC: TOPIC_STATUS_SMOKE,
     KEY_VALUE_TEMPLATE: TPL_MUTE,
+}
+DESCRIPTION_SENSOR_CABLE_UNPLUGGED = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PROBLEM,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Cable unplugged",
+    KEY_STATE_TOPIC: TOPIC_STATUS_FLOOD,
+    KEY_VALUE_TEMPLATE: TPL_CABLE_UNPLUGGED,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
 }
 DESCRIPTION_SENSOR_FLOOD_ALARM_SOUND = {
@@ -3521,6 +3532,7 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "S4SN-0071A",
         ATTR_BINARY_SENSORS: {
             SENSOR_ALARM_SOUND: DESCRIPTION_SENSOR_FLOOD_ALARM_SOUND,
+            SENSOR_CABLE_UNPLUGGED: DESCRIPTION_SENSOR_CABLE_UNPLUGGED,
             SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
             SENSOR_FLOOD: DESCRIPTION_SENSOR_FLOOD,
