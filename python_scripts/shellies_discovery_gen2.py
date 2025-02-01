@@ -268,6 +268,7 @@ NUMBER_BOOST_TIME = "boost_time"
 NUMBER_VALVE_POSITION = "valve_position"
 
 SENSOR_ACTIVE_POWER = "active_power"
+SENSOR_ALARM_SOUND = "alarm_sound"
 SENSOR_ANALOG_INPUT = "analog_input"
 SENSOR_ANALOG_VALUE = "analog_value"
 SENSOR_APPARENT_POWER = "apparent_power"
@@ -471,6 +472,7 @@ TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
 TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}{{%set enable=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^enable^:enable}}}}}}|tojson}}}}"
 TPL_ALARM = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
+TPL_MUTE = "{%if value_json.mute%}OFF{%else%}ON{%endif%}"
 TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
 TPL_TEMPERATURE_0 = "{{value_json[^temperature:0^].tC}}"
@@ -1409,6 +1411,13 @@ DESCRIPTION_SENSOR_SMOKE = {
     KEY_NAME: "Smoke",
     KEY_STATE_TOPIC: TOPIC_STATUS_SMOKE,
     KEY_VALUE_TEMPLATE: TPL_ALARM,
+}
+DESCRIPTION_SENSOR_FLOOD_ALARM_SOUND = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Alarm sound",
+    KEY_STATE_TOPIC: TOPIC_STATUS_FLOOD,
+    KEY_VALUE_TEMPLATE: TPL_MUTE,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
 }
 DESCRIPTION_SENSOR_FLOOD = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_MOISTURE,
@@ -3503,6 +3512,7 @@ SUPPORTED_MODELS = {
         ATTR_NAME: "Shelly Flood Gen4",
         ATTR_MODEL_ID: "S4SN-0071A",
         ATTR_BINARY_SENSORS: {
+            SENSOR_ALARM_SOUND: DESCRIPTION_SENSOR_FLOOD_ALARM_SOUND,
             SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
             SENSOR_FLOOD: DESCRIPTION_SENSOR_FLOOD,
@@ -4665,7 +4675,13 @@ else:
             KEY_PAYLOAD_NOT_AVAILABLE: "false",
         }
     ]
-    if model not in (MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY):
+    if model not in (
+        MODEL_FLOOD_G4,
+        MODEL_HT_G3,
+        MODEL_PLUS_HT,
+        MODEL_PLUS_SMOKE,
+        MODEL_WALL_DISPLAY,
+    ):
         availability.append(
             {
                 KEY_TOPIC: TOPIC_STATUS_RPC,
@@ -4869,7 +4885,14 @@ else:
     firmware_id = device_config["sys"]["device"][ATTR_FW_ID]
 
     if (
-        model not in (MODEL_HT_G3, MODEL_PLUS_HT, MODEL_PLUS_SMOKE, MODEL_WALL_DISPLAY)
+        model
+        not in (
+            MODEL_FLOOD_G4,
+            MODEL_HT_G3,
+            MODEL_PLUS_HT,
+            MODEL_PLUS_SMOKE,
+            MODEL_WALL_DISPLAY,
+        )
         and not current_script_installed()
     ):
         device_topic = encode_config_topic(f"{default_topic}rpc")
