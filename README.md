@@ -98,6 +98,10 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly BLU Motion (via Shelly Pro or Gen3 device)
 - Shelly BLU TRV (via Shelly BLU Gateway Gen3)
 
+### Powered by Shelly
+
+- Ogemray 25A Smart Switch
+
 ## Battery powered devices
 
 Battery powered devices like Plus H&T are put to sleep most of the time. For this reason, adding/updating entities configuration for a device should be done as follows:
