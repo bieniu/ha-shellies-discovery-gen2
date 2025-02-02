@@ -24,6 +24,7 @@ ATTR_INPUT = "input"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUT_SENSORS = "input_sensors"
+ATTR_KEY = "key"
 ATTR_LIGHT = "light"
 ATTR_LIGHT_SENSORS = "light_sensors"
 ATTR_MAC = "mac"
@@ -265,6 +266,7 @@ MODEL_BLU_MOTION = "SBMO-003Z"
 MODEL_BLU_TRV = "SBTR-001AEU"
 # Powered by Shelly devices
 MODEL_OGEMRAY_25A = "ogemray25a"
+MODEL_ST1820 = "st1820"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
@@ -1630,6 +1632,13 @@ DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
     ATTR_TEMPERATURE_MAX: 35,
     ATTR_TEMPERATURE_STEP: 0.5,
+}
+DESCRIPTION_THERMOSTAT_ST1820 = {
+    ATTR_KEY: "service",
+    ATTR_TEMPERATURE_STEP: 0.5,
+    KEY_MODE_STATE_TOPIC: "~status/boolean:202",
+    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
+    KEY_CURRENT_TEMPERATURE_TOPIC: "~status/number:201",
 }
 DESCRIPTION_BLU_TRV_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 4,
@@ -3550,6 +3559,26 @@ SUPPORTED_MODELS = {
         ATTR_MIN_FIRMWARE_DATE: 20250129,
         ATTR_WAKEUP_PERIOD: 43200,
     },
+    MODEL_ST1820: {
+        ATTR_NAME: "LinkedGo Smart Thermostat ST1820",
+        ATTR_MODEL_ID: "S3XT-0S",
+        ATTR_BRAND: "LinkedGo",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20241121,
+    },
     MODEL_OGEMRAY_25A: {
         ATTR_NAME: "Ogemray 25A Smart Switch",
         ATTR_MODEL_ID: "S3PB-O3AR000001",
@@ -3679,41 +3708,54 @@ def get_cover(cover_id, profile):
 
 def get_climate(thermostat_id, description):
     """Create configuration for Shelly climate entity."""
+    key = description.get(ATTR_KEY, "thermostat")
+
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
 
-    if f"thermostat:{thermostat_id}" not in device_config:
+    if f"{key}:{thermostat_id}" not in device_config:
         return topic, ""
 
-    thermostat_type = device_config.get(f"thermostat:{thermostat_id}", {}).get(
+    thermostat_type = device_config.get(f"{key}:{thermostat_id}", {}).get(
         "type", "heating"
     )
     thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
 
     thermostat_name = (
-        device_config.get(f"thermostat:{thermostat_id}", {}).get(ATTR_NAME)
+        device_config.get(f"{key}:{thermostat_id}", {}).get(ATTR_NAME)
         or f"Thermostat {thermostat_id}"
     ).replace("'", "_")
 
     thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
+    current_temp_topic = (
+        description.get(KEY_CURRENT_TEMPERATURE_TOPIC) or thermostat_topic
+    )
+    temp_state_topic = description.get(KEY_TEMPERATURE_STATE_TOPIC) or thermostat_topic
+    mode_state_topic = description.get(KEY_MODE_STATE_TOPIC) or thermostat_topic
+
+    min_temp = (
+        description.get(ATTR_TEMPERATURE_MIN) or device_config[key]["temp_range"][0]
+    )
+    max_temp = (
+        description.get(ATTR_TEMPERATURE_MAX) or device_config[key]["temp_range"][1]
+    )
+
     payload = {
         KEY_NAME: thermostat_name,
-        KEY_ACTION_TOPIC: thermostat_topic,
-        KEY_ACTION_TEMPLATE: TPL_ACTION_TEMPLATE.format(action=thermostat_type),
-        KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
+        KEY_CURRENT_TEMPERATURE_TOPIC: current_temp_topic,
         KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
-        KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
+        KEY_TEMPERATURE_STATE_TOPIC: temp_state_topic,
         KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
-        KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
-        KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
+        KEY_MIN_TEMP: min_temp,
+        KEY_MAX_TEMP: max_temp,
         KEY_MODES: ["off", thermostat_default_mode],
-        KEY_MODE_STATE_TOPIC: thermostat_topic,
+        KEY_MODE_STATE_TOPIC: mode_state_topic,
         KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
             action=thermostat_default_mode
         ),
@@ -3728,6 +3770,12 @@ def get_climate(thermostat_id, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if model != MODEL_ST1820:
+        payload[KEY_ACTION_TOPIC] = thermostat_topic
+        payload[KEY_ACTION_TEMPLATE] = TPL_ACTION_TEMPLATE.format(
+            action=thermostat_type
+        )
 
     if f"humidity:{thermostat_id}" in device_config:
         payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
