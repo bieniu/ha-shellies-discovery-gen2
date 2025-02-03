@@ -42,6 +42,7 @@ ATTR_RGB = "rgb"
 ATTR_RGB_SENSORS = "rgb_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
+ATTR_SWITCHES = "switches"
 ATTR_TEMPERATURE_MAX = "temperature_max"
 ATTR_TEMPERATURE_MIN = "temperature_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
@@ -317,6 +318,8 @@ SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
+SWITCH_CHILD_LOCK = "child_lock"
+
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
 
@@ -501,6 +504,11 @@ TPL_WIFI_RSSI = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
 TPL_RSSI = "{{value_json.rssi}}"
+TPL_SWITCH_PAYLOAD_OFF = "{{^id^:1,^src^:^{source}^,^method^:^Switch.Set^,^params^:{{^id^:{id},^on^:false}}}}"
+TPL_SWITCH_PAYLOAD_ON = (
+    "{{^id^:1,^src^:^{source}^,^method^:^Switch.Set^,^params^:{{^id^:{id},^on^:true}}}}"
+)
+TPL_SWITCH_OUTPUT = "{%if value_json.output%}on{%else%}off{%endif%}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -1627,6 +1635,15 @@ DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER = {
     KEY_STATE_TOPIC: TOPIC_VOLTMETER,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SWITCH_CHILD_LOCK = {
+    ATTR_ID: 201,
+    KEY_NAME: "Child lock",
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
 }
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
@@ -3579,6 +3596,9 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
         },
+        ATTR_SWITCHES: {
+            SWITCH_CHILD_LOCK: DESCRIPTION_SWITCH_CHILD_LOCK,
+        },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -3841,9 +3861,11 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
     return topic, payload
 
 
-def get_switch(relay_id, relay_type, profile):
+def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
+
+    key = description.get(ATTR_KEY) or ATTR_SWITCH
 
     if f"{device_id}/c/switch:{relay_id}".lower() in device_config.get(
         f"thermostat:{relay_id}", {}
@@ -3853,17 +3875,25 @@ def get_switch(relay_id, relay_type, profile):
     if relay_type != ATTR_SWITCH or profile == ATTR_COVER:
         return topic, ""
 
-    relay_name = (
-        device_config.get(f"switch:{relay_id}", {}).get(ATTR_NAME)
-        or f"Relay {relay_id}"
-    ).replace("'", "_")
+    if name := description.get(ATTR_NAME):
+        relay_name = name
+    else:
+        relay_name = (
+            device_config.get(f"{key}:{relay_id}", {}).get(ATTR_NAME)
+            or f"Relay {relay_id}"
+        ).replace("'", "_")
+    payload_off_tpl = description.get(KEY_PAYLOAD_OFF) or TPL_SWITCH_PAYLOAD_OFF
+    payload_on_tpl = description.get(KEY_PAYLOAD_ON) or TPL_SWITCH_PAYLOAD_ON
+    topic_switch = description.get(KEY_STATE_TOPIC) or TOPIC_SWITCH_RELAY
+    value_template = description.get(KEY_VALUE_TEMPLATE) or TPL_SWITCH_OUTPUT
+
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
-        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(id=relay_id),
-        KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_PAYLOAD_OFF: payload_off_tpl.format(source=source_topic, id=relay_id),
+        KEY_PAYLOAD_ON: payload_on_tpl.format(source=source_topic, id=relay_id),
+        KEY_STATE_TOPIC: topic_switch.format(id=relay_id),
+        KEY_VALUE_TEMPLATE: value_template,
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
         KEY_AVAILABILITY: availability,
@@ -3873,6 +3903,10 @@ def get_switch(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if entity_category := description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = entity_category
+
     return topic, payload
 
 
@@ -4606,6 +4640,11 @@ def configure_device():
                 topic, payload = get_switch(switch_id, ATTR_SWITCH, ATTR_SWITCH)
                 config[topic] = payload
 
+    for switch, description in switches.items():
+        switch_id = description[ATTR_ID]
+        topic, payload = get_switch(switch_id, ATTR_SWITCH, switch, description)
+        config[topic] = payload
+
     for input_id in inputs:
         input_type = device_config[f"input:{input_id}"]["type"]
 
@@ -5111,6 +5150,8 @@ else:
 
     covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
     cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+
+    switches = SUPPORTED_MODELS[model].get(ATTR_SWITCHES, {})
 
     config_data = configure_device()
 
