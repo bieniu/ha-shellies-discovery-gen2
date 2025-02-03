@@ -1636,9 +1636,16 @@ DESCRIPTION_THERMOSTAT = {
 DESCRIPTION_THERMOSTAT_ST1820 = {
     ATTR_KEY: "service",
     ATTR_TEMPERATURE_STEP: 0.5,
-    KEY_MODE_STATE_TOPIC: "~status/boolean:202",
-    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
+    KEY_CURRENT_HUMIDITY_TEMPLATE: TPL_VALUE,
+    KEY_CURRENT_HUMIDITY_TOPIC: "~status/number:200",
+    KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
     KEY_CURRENT_TEMPERATURE_TOPIC: "~status/number:201",
+    KEY_MODE_COMMAND_TEMPLATE: "{{%if value==^off^%}}{{%set output=false%}}{{%else%}}{{%set output=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:202,^value^:output}}}}|tojson}}}}",
+    KEY_MODE_STATE_TEMPLATE: "{{%if value_json.value%}}{action}{{%else%}}off{{%endif%}}",
+    KEY_MODE_STATE_TOPIC: "~status/boolean:202",
+    KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
+    KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
+    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
 }
 DESCRIPTION_BLU_TRV_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 4,
@@ -3735,20 +3742,33 @@ def get_climate(thermostat_id, description):
     mode_state_topic = description.get(KEY_MODE_STATE_TOPIC) or thermostat_topic
 
     min_temp = (
-        description.get(ATTR_TEMPERATURE_MIN) or device_config[key]["temp_range"][0]
+        description.get(ATTR_TEMPERATURE_MIN)
+        or device_config[f"{key}:{thermostat_id}"]["temp_range"][0]
     )
     max_temp = (
-        description.get(ATTR_TEMPERATURE_MAX) or device_config[key]["temp_range"][1]
+        description.get(ATTR_TEMPERATURE_MAX)
+        or device_config[f"{key}:{thermostat_id}"]["temp_range"][1]
+    )
+    mode_state_tpl = description.get(KEY_MODE_STATE_TEMPLATE) or TPL_THERMOSTAT_MODE
+    mode_command_tpl = (
+        description.get(KEY_MODE_COMMAND_TEMPLATE) or TPL_SET_THERMOSTAT_MODE
+    )
+    temp_command_tpl = (
+        description.get(KEY_TEMPERATURE_COMMAND_TEMPLATE) or TPL_SET_TARGET_TEMPERATURE
     )
 
     payload = {
         KEY_NAME: thermostat_name,
         KEY_CURRENT_TEMPERATURE_TOPIC: current_temp_topic,
-        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: description.get(
+            KEY_CURRENT_TEMPERATURE_TEMPLATE
+        )
+        or TPL_CURRENT_TEMPERATURE,
         KEY_TEMPERATURE_STATE_TOPIC: temp_state_topic,
-        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
+        KEY_TEMPERATURE_STATE_TEMPLATE: description.get(KEY_TEMPERATURE_STATE_TEMPLATE)
+        or TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: temp_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
@@ -3756,11 +3776,9 @@ def get_climate(thermostat_id, description):
         KEY_MAX_TEMP: max_temp,
         KEY_MODES: ["off", thermostat_default_mode],
         KEY_MODE_STATE_TOPIC: mode_state_topic,
-        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
-            action=thermostat_default_mode
-        ),
+        KEY_MODE_STATE_TEMPLATE: mode_state_tpl.format(action=thermostat_default_mode),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
+        KEY_MODE_COMMAND_TEMPLATE: mode_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_AVAILABILITY: availability,
@@ -3780,6 +3798,11 @@ def get_climate(thermostat_id, description):
     if f"humidity:{thermostat_id}" in device_config:
         payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
         payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = TPL_HUMIDITY
+    elif humidity_topic := description.get(KEY_CURRENT_HUMIDITY_TOPIC):
+        payload[KEY_CURRENT_HUMIDITY_TOPIC] = humidity_topic
+        payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = description[
+            KEY_CURRENT_HUMIDITY_TEMPLATE
+        ]
 
     return topic, payload
 
