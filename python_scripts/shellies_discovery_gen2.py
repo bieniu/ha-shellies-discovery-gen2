@@ -318,6 +318,7 @@ SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
+SWITCH_ANTI_FREEZE = "anti_freeze"
 SWITCH_CHILD_LOCK = "child_lock"
 
 UPDATE_FIRMWARE = "firmware"
@@ -1639,6 +1640,15 @@ DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER = {
 DESCRIPTION_SWITCH_CHILD_LOCK = {
     ATTR_ID: 201,
     KEY_NAME: "Child lock",
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+}
+DESCRIPTION_SWITCH_ANTI_FREEZE = {
+    ATTR_ID: 200,
+    KEY_NAME: "Anti-freeze",
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
@@ -3597,6 +3607,7 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_SWITCHES: {
+            SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE,
             SWITCH_CHILD_LOCK: DESCRIPTION_SWITCH_CHILD_LOCK,
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
