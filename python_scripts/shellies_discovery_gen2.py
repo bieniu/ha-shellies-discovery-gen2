@@ -3595,7 +3595,7 @@ SUPPORTED_MODELS = {
     },
     MODEL_ST1820: {
         ATTR_NAME: "LinkedGo Smart Thermostat ST1820",
-        ATTR_MODEL_ID: "S3XT-0S",
+        ATTR_MODEL_ID: "ST1820",
         ATTR_BRAND: "LinkedGo",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
@@ -3619,7 +3619,7 @@ SUPPORTED_MODELS = {
     },
     MODEL_OGEMRAY_25A: {
         ATTR_NAME: "Ogemray 25A Smart Switch",
-        ATTR_MODEL_ID: "S3PB-O3AR000001",
+        ATTR_MODEL_ID: "Ogemray25A",
         ATTR_BRAND: "Ogemray",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
