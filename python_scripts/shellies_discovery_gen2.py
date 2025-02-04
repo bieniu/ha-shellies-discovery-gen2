@@ -24,6 +24,7 @@ ATTR_INPUT = "input"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUT_SENSORS = "input_sensors"
+ATTR_KEY = "key"
 ATTR_LIGHT = "light"
 ATTR_LIGHT_SENSORS = "light_sensors"
 ATTR_MAC = "mac"
@@ -41,6 +42,7 @@ ATTR_RGB = "rgb"
 ATTR_RGB_SENSORS = "rgb_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
+ATTR_SWITCHES = "switches"
 ATTR_TEMPERATURE_MAX = "temperature_max"
 ATTR_TEMPERATURE_MIN = "temperature_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
@@ -265,6 +267,7 @@ MODEL_BLU_MOTION = "SBMO-003Z"
 MODEL_BLU_TRV = "SBTR-001AEU"
 # Powered by Shelly devices
 MODEL_OGEMRAY_25A = "ogemray25a"
+MODEL_ST1820 = "st1820"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
@@ -314,6 +317,9 @@ SENSOR_VALVE_POSITION = "valve_position"
 SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
+
+SWITCH_ANTI_FREEZE = "anti_freeze"
+SWITCH_CHILD_LOCK = "child_lock"
 
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
@@ -499,6 +505,11 @@ TPL_WIFI_RSSI = "{{value_json.wifi.rssi}}"
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
 TPL_RSSI = "{{value_json.rssi}}"
+TPL_SWITCH_PAYLOAD_OFF = "{{^id^:1,^src^:^{source}^,^method^:^Switch.Set^,^params^:{{^id^:{id},^on^:false}}}}"
+TPL_SWITCH_PAYLOAD_ON = (
+    "{{^id^:1,^src^:^{source}^,^method^:^Switch.Set^,^params^:{{^id^:{id},^on^:true}}}}"
+)
+TPL_SWITCH_OUTPUT = "{%if value_json.output%}on{%else%}off{%endif%}"
 
 TRIGGER_BUTTON_DOUBLE_PRESS = "button_double_press"
 TRIGGER_BUTTON_DOWN = "button_down"
@@ -1477,6 +1488,16 @@ DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
 }
+DESCRIPTION_SENSOR_HUMIDITY_ST1820 = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Humidity",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_PERCENT,
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+}
 DESCRIPTION_SENSOR_BTH_HUMIDITY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1503,6 +1524,16 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
+}
+DESCRIPTION_SENSOR_TEMPERATURE_ST1820 = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/number:201",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
 }
 DESCRIPTION_SENSOR_BTH_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
@@ -1626,10 +1657,42 @@ DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER = {
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
 }
+DESCRIPTION_SWITCH_CHILD_LOCK = {
+    ATTR_ID: 201,
+    KEY_NAME: "Child lock",
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+}
+DESCRIPTION_SWITCH_ANTI_FREEZE = {
+    ATTR_ID: 200,
+    KEY_NAME: "Anti-freeze",
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+}
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
     ATTR_TEMPERATURE_MAX: 35,
     ATTR_TEMPERATURE_STEP: 0.5,
+}
+DESCRIPTION_THERMOSTAT_ST1820 = {
+    ATTR_KEY: "service",
+    ATTR_TEMPERATURE_STEP: 0.5,
+    KEY_CURRENT_HUMIDITY_TEMPLATE: TPL_VALUE,
+    KEY_CURRENT_HUMIDITY_TOPIC: "~status/number:200",
+    KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
+    KEY_CURRENT_TEMPERATURE_TOPIC: "~status/number:201",
+    KEY_MODE_COMMAND_TEMPLATE: "{{%if value==^off^%}}{{%set output=false%}}{{%else%}}{{%set output=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:202,^value^:output}}}}|tojson}}}}",
+    KEY_MODE_STATE_TEMPLATE: "{{%if value_json.value%}}{action}{{%else%}}off{{%endif%}}",
+    KEY_MODE_STATE_TOPIC: "~status/boolean:202",
+    KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
+    KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
+    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
 }
 DESCRIPTION_BLU_TRV_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 4,
@@ -3550,9 +3613,35 @@ SUPPORTED_MODELS = {
         ATTR_MIN_FIRMWARE_DATE: 20250129,
         ATTR_WAKEUP_PERIOD: 43200,
     },
+    MODEL_ST1820: {
+        ATTR_NAME: "LinkedGo Smart Thermostat ST1820",
+        ATTR_MODEL_ID: "ST1820",
+        ATTR_BRAND: "LinkedGo",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_SENSORS: {
+            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_ST1820,
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_ST1820,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_SWITCHES: {
+            SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE,
+            SWITCH_CHILD_LOCK: DESCRIPTION_SWITCH_CHILD_LOCK,
+        },
+        ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20241121,
+    },
     MODEL_OGEMRAY_25A: {
         ATTR_NAME: "Ogemray 25A Smart Switch",
-        ATTR_MODEL_ID: "S3PB-O3AR000001",
+        ATTR_MODEL_ID: "Ogemray25A",
         ATTR_BRAND: "Ogemray",
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
@@ -3679,46 +3768,69 @@ def get_cover(cover_id, profile):
 
 def get_climate(thermostat_id, description):
     """Create configuration for Shelly climate entity."""
+    key = description.get(ATTR_KEY, "thermostat")
+
     topic = encode_config_topic(
         f"{disc_prefix}/climate/{device_id}-{thermostat_id}/config"
     )
 
-    if f"thermostat:{thermostat_id}" not in device_config:
+    if f"{key}:{thermostat_id}" not in device_config:
         return topic, ""
 
-    thermostat_type = device_config.get(f"thermostat:{thermostat_id}", {}).get(
+    thermostat_type = device_config.get(f"{key}:{thermostat_id}", {}).get(
         "type", "heating"
     )
     thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
 
     thermostat_name = (
-        device_config.get(f"thermostat:{thermostat_id}", {}).get(ATTR_NAME)
-        or f"Thermostat {thermostat_id}"
+        device_config.get(f"{key}:{thermostat_id}", {}).get(ATTR_NAME) or "Thermostat"
     ).replace("'", "_")
 
     thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
+    current_temp_topic = (
+        description.get(KEY_CURRENT_TEMPERATURE_TOPIC) or thermostat_topic
+    )
+    temp_state_topic = description.get(KEY_TEMPERATURE_STATE_TOPIC) or thermostat_topic
+    mode_state_topic = description.get(KEY_MODE_STATE_TOPIC) or thermostat_topic
+
+    min_temp = (
+        description.get(ATTR_TEMPERATURE_MIN)
+        or device_config[f"{key}:{thermostat_id}"]["temp_range"][0]
+    )
+    max_temp = (
+        description.get(ATTR_TEMPERATURE_MAX)
+        or device_config[f"{key}:{thermostat_id}"]["temp_range"][1]
+    )
+    mode_state_tpl = description.get(KEY_MODE_STATE_TEMPLATE) or TPL_THERMOSTAT_MODE
+    mode_command_tpl = (
+        description.get(KEY_MODE_COMMAND_TEMPLATE) or TPL_SET_THERMOSTAT_MODE
+    )
+    temp_command_tpl = (
+        description.get(KEY_TEMPERATURE_COMMAND_TEMPLATE) or TPL_SET_TARGET_TEMPERATURE
+    )
+
     payload = {
         KEY_NAME: thermostat_name,
-        KEY_ACTION_TOPIC: thermostat_topic,
-        KEY_ACTION_TEMPLATE: TPL_ACTION_TEMPLATE.format(action=thermostat_type),
-        KEY_CURRENT_TEMPERATURE_TOPIC: thermostat_topic,
-        KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_CURRENT_TEMPERATURE,
-        KEY_TEMPERATURE_STATE_TOPIC: thermostat_topic,
-        KEY_TEMPERATURE_STATE_TEMPLATE: TPL_TARGET_TEMPERATURE,
+        KEY_CURRENT_TEMPERATURE_TOPIC: current_temp_topic,
+        KEY_CURRENT_TEMPERATURE_TEMPLATE: description.get(
+            KEY_CURRENT_TEMPERATURE_TEMPLATE
+        )
+        or TPL_CURRENT_TEMPERATURE,
+        KEY_TEMPERATURE_STATE_TOPIC: temp_state_topic,
+        KEY_TEMPERATURE_STATE_TEMPLATE: description.get(KEY_TEMPERATURE_STATE_TEMPLATE)
+        or TPL_TARGET_TEMPERATURE,
         KEY_TEMPERATURE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_TEMPERATURE_COMMAND_TEMPLATE: TPL_SET_TARGET_TEMPERATURE.format(
+        KEY_TEMPERATURE_COMMAND_TEMPLATE: temp_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
-        KEY_MIN_TEMP: description[ATTR_TEMPERATURE_MIN],
-        KEY_MAX_TEMP: description[ATTR_TEMPERATURE_MAX],
+        KEY_MIN_TEMP: min_temp,
+        KEY_MAX_TEMP: max_temp,
         KEY_MODES: ["off", thermostat_default_mode],
-        KEY_MODE_STATE_TOPIC: thermostat_topic,
-        KEY_MODE_STATE_TEMPLATE: TPL_THERMOSTAT_MODE.format(
-            action=thermostat_default_mode
-        ),
+        KEY_MODE_STATE_TOPIC: mode_state_topic,
+        KEY_MODE_STATE_TEMPLATE: mode_state_tpl.format(action=thermostat_default_mode),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_MODE_COMMAND_TEMPLATE: TPL_SET_THERMOSTAT_MODE.format(
+        KEY_MODE_COMMAND_TEMPLATE: mode_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
         ),
         KEY_AVAILABILITY: availability,
@@ -3729,9 +3841,20 @@ def get_climate(thermostat_id, description):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
+    if model != MODEL_ST1820:
+        payload[KEY_ACTION_TOPIC] = thermostat_topic
+        payload[KEY_ACTION_TEMPLATE] = TPL_ACTION_TEMPLATE.format(
+            action=thermostat_type
+        )
+
     if f"humidity:{thermostat_id}" in device_config:
         payload[KEY_CURRENT_HUMIDITY_TOPIC] = TOPIC_HUMIDITY.format(id=thermostat_id)
         payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = TPL_HUMIDITY
+    elif humidity_topic := description.get(KEY_CURRENT_HUMIDITY_TOPIC):
+        payload[KEY_CURRENT_HUMIDITY_TOPIC] = humidity_topic
+        payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = description[
+            KEY_CURRENT_HUMIDITY_TEMPLATE
+        ]
 
     return topic, payload
 
@@ -3770,9 +3893,11 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
     return topic, payload
 
 
-def get_switch(relay_id, relay_type, profile):
+def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
+
+    key = description.get(ATTR_KEY) or ATTR_SWITCH
 
     if f"{device_id}/c/switch:{relay_id}".lower() in device_config.get(
         f"thermostat:{relay_id}", {}
@@ -3782,17 +3907,25 @@ def get_switch(relay_id, relay_type, profile):
     if relay_type != ATTR_SWITCH or profile == ATTR_COVER:
         return topic, ""
 
-    relay_name = (
-        device_config.get(f"switch:{relay_id}", {}).get(ATTR_NAME)
-        or f"Relay {relay_id}"
-    ).replace("'", "_")
+    if name := description.get(ATTR_NAME):
+        relay_name = name
+    else:
+        relay_name = (
+            device_config.get(f"{key}:{relay_id}", {}).get(ATTR_NAME)
+            or f"Relay {relay_id}"
+        ).replace("'", "_")
+    payload_off_tpl = description.get(KEY_PAYLOAD_OFF) or TPL_SWITCH_PAYLOAD_OFF
+    payload_on_tpl = description.get(KEY_PAYLOAD_ON) or TPL_SWITCH_PAYLOAD_ON
+    topic_switch = description.get(KEY_STATE_TOPIC) or TOPIC_SWITCH_RELAY
+    value_template = description.get(KEY_VALUE_TEMPLATE) or TPL_SWITCH_OUTPUT
+
     payload = {
         KEY_NAME: relay_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:false}}}}",
-        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Switch.Set^,^params^:{{^id^:{relay_id},^on^:true}}}}",
-        KEY_STATE_TOPIC: TOPIC_SWITCH_RELAY.format(id=relay_id),
-        KEY_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_PAYLOAD_OFF: payload_off_tpl.format(source=source_topic, id=relay_id),
+        KEY_PAYLOAD_ON: payload_on_tpl.format(source=source_topic, id=relay_id),
+        KEY_STATE_TOPIC: topic_switch.format(id=relay_id),
+        KEY_VALUE_TEMPLATE: value_template,
         KEY_STATE_OFF: VALUE_OFF,
         KEY_STATE_ON: VALUE_ON,
         KEY_AVAILABILITY: availability,
@@ -3802,6 +3935,10 @@ def get_switch(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if entity_category := description.get(KEY_ENTITY_CATEGORY):
+        payload[KEY_ENTITY_CATEGORY] = entity_category
+
     return topic, payload
 
 
@@ -4535,6 +4672,11 @@ def configure_device():
                 topic, payload = get_switch(switch_id, ATTR_SWITCH, ATTR_SWITCH)
                 config[topic] = payload
 
+    for switch, description in switches.items():
+        switch_id = description[ATTR_ID]
+        topic, payload = get_switch(switch_id, ATTR_SWITCH, switch, description)
+        config[topic] = payload
+
     for input_id in inputs:
         input_type = device_config[f"input:{input_id}"]["type"]
 
@@ -5040,6 +5182,8 @@ else:
 
     covers = SUPPORTED_MODELS[model].get(ATTR_COVERS, 0)
     cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
+
+    switches = SUPPORTED_MODELS[model].get(ATTR_SWITCHES, {})
 
     config_data = configure_device()
 
