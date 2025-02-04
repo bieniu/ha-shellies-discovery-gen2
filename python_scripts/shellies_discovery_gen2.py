@@ -3783,8 +3783,7 @@ def get_climate(thermostat_id, description):
     thermostat_default_mode = "cool" if thermostat_type == "cooling" else "heat"
 
     thermostat_name = (
-        device_config.get(f"{key}:{thermostat_id}", {}).get(ATTR_NAME)
-        or f"Thermostat {thermostat_id}"
+        device_config.get(f"{key}:{thermostat_id}", {}).get(ATTR_NAME) or "Thermostat"
     ).replace("'", "_")
 
     thermostat_topic = TOPIC_THERMOSTAT.format(id=thermostat_id)
