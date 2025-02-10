@@ -4011,7 +4011,7 @@ def get_light(light_id: int):
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
+        KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:false{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}}}",
         KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Light.Set^,^params^:{{^id^:{light_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}}}}}",
         KEY_STATE_TOPIC: TOPIC_LIGHT.format(id=light_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
