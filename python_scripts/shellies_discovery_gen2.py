@@ -1,6 +1,6 @@
 """This script adds MQTT discovery support for Shellies Gen2+ devices."""
 
-VERSION = "3.11.0"
+VERSION = "3.11.1"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
