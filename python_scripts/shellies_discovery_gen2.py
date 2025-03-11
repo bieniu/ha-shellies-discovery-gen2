@@ -268,6 +268,7 @@ MODEL_BLU_TRV = "SBTR-001AEU"
 # Powered by Shelly devices
 MODEL_OGEMRAY_25A = "ogemray25a"
 MODEL_ST1820 = "st1820"
+MODEL_ST802_B = "st-802"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
@@ -498,6 +499,9 @@ TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
+TPL_HVAC_MODE = (
+    "{{^fan_only^ if value_json.value == ^ventilation^ else value_json.value}}"
+)
 TPL_VOLTAGE = "{{value_json.voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
@@ -1488,7 +1492,7 @@ DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
 }
-DESCRIPTION_SENSOR_HUMIDITY_ST1820 = {
+DESCRIPTION_SENSOR_HUMIDITY_200 = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Humidity",
@@ -1525,7 +1529,7 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
 }
-DESCRIPTION_SENSOR_TEMPERATURE_ST1820 = {
+DESCRIPTION_SENSOR_TEMPERATURE_201 = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Temperature",
@@ -1690,6 +1694,23 @@ DESCRIPTION_THERMOSTAT_ST1820 = {
     KEY_MODE_COMMAND_TEMPLATE: "{{%if value==^off^%}}{{%set output=false%}}{{%else%}}{{%set output=true%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:202,^value^:output}}}}|tojson}}}}",
     KEY_MODE_STATE_TEMPLATE: "{{%if value_json.value%}}{action}{{%else%}}off{{%endif%}}",
     KEY_MODE_STATE_TOPIC: "~status/boolean:202",
+    KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
+    KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
+    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
+}
+DESCRIPTION_THERMOSTAT_ST802_B = {
+    ATTR_KEY: "service",
+    ATTR_TEMPERATURE_STEP: 0.5,
+    ATTR_TEMPERATURE_MIN: 5,
+    ATTR_TEMPERATURE_MAX: 35,
+    KEY_CURRENT_HUMIDITY_TEMPLATE: TPL_VALUE,
+    KEY_CURRENT_HUMIDITY_TOPIC: "~status/number:200",
+    KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
+    KEY_CURRENT_TEMPERATURE_TOPIC: "~status/number:201",
+    KEY_MODES: ["cool", "dry", "fan_only", "heat"],
+    KEY_MODE_COMMAND_TEMPLATE: "{{%if value==^fan_only^%}}{{%set value=^ventilation^%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Enum.Set^,^params^:{{^id^:201,^value^:value}}}}|tojson}}}}",
+    KEY_MODE_STATE_TEMPLATE: TPL_HVAC_MODE,
+    KEY_MODE_STATE_TOPIC: "~status/enum:201",
     KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
     KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
     KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
@@ -3625,10 +3646,10 @@ SUPPORTED_MODELS = {
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
-            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_ST1820,
+            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
-            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_ST1820,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_201,
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
@@ -3637,6 +3658,29 @@ SUPPORTED_MODELS = {
             SWITCH_CHILD_LOCK: DESCRIPTION_SWITCH_CHILD_LOCK,
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20241121,
+    },
+    MODEL_ST802_B: {
+        ATTR_NAME: "LinkedGo Smart Thermostat ST802-B",
+        ATTR_MODEL_ID: "ST802-B",
+        ATTR_BRAND: "LinkedGo",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_SENSORS: {
+            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_201,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_SWITCHES: {SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE},
+        ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST802_B},
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
@@ -3830,9 +3874,7 @@ def get_climate(thermostat_id, description):
         KEY_TEMP_STEP: description[ATTR_TEMPERATURE_STEP],
         KEY_MIN_TEMP: min_temp,
         KEY_MAX_TEMP: max_temp,
-        KEY_MODES: ["off", thermostat_default_mode],
         KEY_MODE_STATE_TOPIC: mode_state_topic,
-        KEY_MODE_STATE_TEMPLATE: mode_state_tpl.format(action=thermostat_default_mode),
         KEY_MODE_COMMAND_TOPIC: TOPIC_RPC,
         KEY_MODE_COMMAND_TEMPLATE: mode_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
@@ -3845,7 +3887,14 @@ def get_climate(thermostat_id, description):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
-    if model != MODEL_ST1820:
+    if model != MODEL_ST802_B:
+        payload[KEY_MODE_STATE_TEMPLATE] = mode_state_tpl.format(
+            action=thermostat_default_mode
+        )
+    else:
+        payload[KEY_MODE_STATE_TEMPLATE] = mode_state_tpl
+
+    if model not in (MODEL_ST1820, MODEL_ST802_B):
         payload[KEY_ACTION_TOPIC] = thermostat_topic
         payload[KEY_ACTION_TEMPLATE] = TPL_ACTION_TEMPLATE.format(
             action=thermostat_type
@@ -3859,6 +3908,11 @@ def get_climate(thermostat_id, description):
         payload[KEY_CURRENT_HUMIDITY_TEMPLATE] = description[
             KEY_CURRENT_HUMIDITY_TEMPLATE
         ]
+
+    if modes := description.get(KEY_MODES):
+        payload[KEY_MODES] = modes
+    else:
+        payload[KEY_MODES] = ["off", thermostat_default_mode]
 
     return topic, payload
 
