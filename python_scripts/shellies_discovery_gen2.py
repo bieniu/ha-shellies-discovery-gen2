@@ -45,6 +45,8 @@ ATTR_SWITCH = "switch"
 ATTR_SWITCHES = "switches"
 ATTR_TEMPERATURE_MAX = "temperature_max"
 ATTR_TEMPERATURE_MIN = "temperature_min"
+ATTR_HUMIDITY_MAX = "humidity_max"
+ATTR_HUMIDITY_MIN = "humidity_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
 ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
@@ -104,6 +106,15 @@ KEY_CURRENT_HUMIDITY_TOPIC = "curr_hum_t"
 KEY_CURRENT_HUMIDITY_TEMPLATE = "curr_hum_tpl"
 KEY_CURRENT_TEMPERATURE_TOPIC = "curr_temp_t"
 KEY_CURRENT_TEMPERATURE_TEMPLATE = "curr_temp_tpl"
+KEY_FAN_MODES = "fan_modes"
+KEY_FAN_MODE_STATE_TOPIC = "fan_mode_stat_t"
+KEY_FAN_MODE_STATE_TEMPLATE = "fan_mode_stat_tpl"
+KEY_FAN_MODE_COMMAND_TOPIC = "fan_mode_cmd_t"
+KEY_FAN_MODE_COMMAND_TEMPLATE = "fan_mode_cmd_tpl"
+KEY_TARGET_HUMIDITY_COMMAND_TOPIC = "hum_cmd_t"
+KEY_TARGET_HUMIDITY_COMMAND_TEMPLATE = "hum_cmd_tpl"
+KEY_TARGET_HUMIDITY_STATE_TEMPLATE = "hum_state_tpl"
+KEY_TARGET_HUMIDITY_STATE_TOPIC = "hum_stat_t"
 KEY_TEMPERATURE_STATE_TEMPLATE = "temp_stat_tpl"
 KEY_TEMPERATURE_STATE_TOPIC = "temp_stat_t"
 KEY_TEMPERATURE_COMMAND_TEMPLATE = "temp_cmd_tpl"
@@ -111,6 +122,8 @@ KEY_TEMPERATURE_COMMAND_TOPIC = "temp_cmd_t"
 KEY_TEMP_STEP = "temp_step"
 KEY_MIN_TEMP = "min_temp"
 KEY_MAX_TEMP = "max_temp"
+KEY_MIN_HUMIDITY = "min_hum"
+KEY_MAX_HUMIDITY = "max_hum"
 KEY_MODES = "modes"
 KEY_MODE_STATE_TOPIC = "mode_stat_t"
 KEY_ACTION_TOPIC = "act_t"
@@ -1703,6 +1716,8 @@ DESCRIPTION_THERMOSTAT_ST802_B = {
     ATTR_TEMPERATURE_STEP: 0.5,
     ATTR_TEMPERATURE_MIN: 5,
     ATTR_TEMPERATURE_MAX: 35,
+    ATTR_HUMIDITY_MAX: 75,
+    ATTR_HUMIDITY_MIN: 40,
     KEY_CURRENT_HUMIDITY_TEMPLATE: TPL_VALUE,
     KEY_CURRENT_HUMIDITY_TOPIC: "~status/number:200",
     KEY_CURRENT_TEMPERATURE_TEMPLATE: TPL_VALUE,
@@ -1711,9 +1726,16 @@ DESCRIPTION_THERMOSTAT_ST802_B = {
     KEY_MODE_COMMAND_TEMPLATE: "{{%if value==^fan_only^%}}{{%set value=^ventilation^%}}{{%endif%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^Enum.Set^,^params^:{{^id^:201,^value^:value}}}}|tojson}}}}",
     KEY_MODE_STATE_TEMPLATE: TPL_HVAC_MODE,
     KEY_MODE_STATE_TOPIC: "~status/enum:201",
-    KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
+    KEY_TEMPERATURE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:203,^value^:value}}}}|tojson}}}}",
     KEY_TEMPERATURE_STATE_TEMPLATE: TPL_VALUE,
-    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:202",
+    KEY_TEMPERATURE_STATE_TOPIC: "~status/number:203",
+    KEY_FAN_MODES: ["auto", "low", "medium", "high"],
+    KEY_FAN_MODE_STATE_TOPIC: "~status/enum:200",
+    KEY_FAN_MODE_STATE_TEMPLATE: TPL_VALUE,
+    KEY_FAN_MODE_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Enum.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
+    KEY_TARGET_HUMIDITY_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:202,^value^:value}}}}|tojson}}}}",
+    KEY_TARGET_HUMIDITY_STATE_TEMPLATE: TPL_VALUE,
+    KEY_TARGET_HUMIDITY_STATE_TOPIC: "~status/number:202",
 }
 DESCRIPTION_BLU_TRV_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 4,
@@ -3886,6 +3908,27 @@ def get_climate(thermostat_id, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if fan_modes := description.get(KEY_FAN_MODES):
+        payload[KEY_FAN_MODES] = fan_modes
+        payload[KEY_FAN_MODE_STATE_TOPIC] = description[KEY_FAN_MODE_STATE_TOPIC]
+        payload[KEY_FAN_MODE_STATE_TEMPLATE] = description[KEY_FAN_MODE_STATE_TEMPLATE]
+        payload[KEY_FAN_MODE_COMMAND_TOPIC] = TOPIC_RPC
+        payload[KEY_FAN_MODE_COMMAND_TEMPLATE] = description[
+            KEY_FAN_MODE_COMMAND_TEMPLATE
+        ].format(source=source_topic)
+
+    if target_humidity_state_topic := description.get(KEY_TARGET_HUMIDITY_STATE_TOPIC):
+        payload[KEY_TARGET_HUMIDITY_STATE_TOPIC] = target_humidity_state_topic
+        payload[KEY_TARGET_HUMIDITY_STATE_TEMPLATE] = description[
+            KEY_TARGET_HUMIDITY_STATE_TEMPLATE
+        ]
+        payload[KEY_TARGET_HUMIDITY_COMMAND_TEMPLATE] = description[
+            KEY_TARGET_HUMIDITY_COMMAND_TEMPLATE
+        ].format(source=source_topic)
+        payload[KEY_TARGET_HUMIDITY_COMMAND_TOPIC] = TOPIC_RPC
+        payload[KEY_MAX_HUMIDITY] = description[ATTR_HUMIDITY_MAX]
+        payload[KEY_MIN_HUMIDITY] = description[ATTR_HUMIDITY_MIN]
 
     if model != MODEL_ST802_B:
         payload[KEY_MODE_STATE_TEMPLATE] = mode_state_tpl.format(
