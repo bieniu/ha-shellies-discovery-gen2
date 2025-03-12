@@ -333,6 +333,7 @@ SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
 SWITCH_ANTI_FREEZE = "anti_freeze"
+SWITCH_THERMOSTAT = "thermostat"
 SWITCH_CHILD_LOCK = "child_lock"
 
 UPDATE_FIRMWARE = "firmware"
@@ -479,6 +480,7 @@ TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_INSTALLED_FIRMWARE = "{{value_json.sys.installed_version}}"
 TPL_INSTALLED_FIRMWARE_SYS = "{{value_json.ver}}"
 TPL_MQTT_CONNECTED = "{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}"
+TPL_VALUE_ONLINE = "{%if value_json.value%}online{%else%}offline{%endif%}"
 TPL_POWER = "{{value_json.apower}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100}}"
 TPL_RELAY_OVERPOWER = (
@@ -1687,6 +1689,15 @@ DESCRIPTION_SWITCH_ANTI_FREEZE = {
     ATTR_ID: 200,
     KEY_NAME: "Anti-freeze",
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+}
+DESCRIPTION_SWITCH_THERMOSTAT = {
+    ATTR_ID: 201,
+    KEY_NAME: "Thermostat",
+    KEY_ICON: "mdi:thermostat",
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
@@ -3701,7 +3712,10 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
-        ATTR_SWITCHES: {SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE},
+        ATTR_SWITCHES: {
+            SWITCH_THERMOSTAT: DESCRIPTION_SWITCH_THERMOSTAT,
+            SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE,
+        },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST802_B},
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
@@ -3901,13 +3915,22 @@ def get_climate(thermostat_id, description):
         KEY_MODE_COMMAND_TEMPLATE: mode_command_tpl.format(
             source=source_topic, thermostat=thermostat_id
         ),
-        KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-{thermostat_id}".lower(),
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if model == MODEL_ST802_B:
+        payload[KEY_AVAILABILITY] = [
+            {
+                KEY_TOPIC: "~status/boolean:201",
+                KEY_VALUE_TEMPLATE: TPL_VALUE_ONLINE,
+            }
+        ]
+    else:
+        payload[KEY_AVAILABILITY] = availability
 
     if fan_modes := description.get(KEY_FAN_MODES):
         payload[KEY_FAN_MODES] = fan_modes
@@ -4039,6 +4062,9 @@ def get_switch(relay_id, relay_type, profile, description={}):
 
     if entity_category := description.get(KEY_ENTITY_CATEGORY):
         payload[KEY_ENTITY_CATEGORY] = entity_category
+
+    if icon := description.get(KEY_ICON):
+        payload[KEY_ICON] = icon
 
     return topic, payload
 
