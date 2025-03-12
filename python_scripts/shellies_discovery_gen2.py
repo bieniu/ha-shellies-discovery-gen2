@@ -1688,6 +1688,7 @@ DESCRIPTION_SWITCH_CHILD_LOCK = {
 DESCRIPTION_SWITCH_ANTI_FREEZE = {
     ATTR_ID: 200,
     KEY_NAME: "Anti-freeze",
+    KEY_ICON: "mdi:snowflake-off",
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
