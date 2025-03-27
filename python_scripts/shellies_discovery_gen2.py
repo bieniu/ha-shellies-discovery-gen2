@@ -1,6 +1,6 @@
 """Adds MQTT discovery support for Shellies Gen2+ devices."""
 
-VERSION = "3.13.0"
+VERSION = "0.0.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
