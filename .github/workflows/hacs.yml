@@ -1,4 +1,4 @@
-name: Validate with HACS
+name: HACS Action
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     - cron: "0 0 * * *"
 
 jobs:
-  validate:
+  hacs:
     runs-on: "ubuntu-latest"
     steps:
       - name: Check out repository
@@ -17,8 +17,7 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: HACS validation
-        uses: "hacs/integration/action@master"
+      - name: HACS Action
+        uses: hacs/action@22.5.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CATEGORY: "python_script"
+          category: "python_script"
