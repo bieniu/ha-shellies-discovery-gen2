@@ -50,6 +50,7 @@ ATTR_HUMIDITY_MIN = "humidity_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
 ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
+ATTR_VALVES = "valves"
 ATTR_WAKEUP_PERIOD = "wakeup_period"
 
 BUTTON_CALIBRATE = "calibrate"
@@ -96,6 +97,7 @@ EVENT_DOUBLE_PUSH = "double_push"
 EVENT_LONG_PUSH = "long_push"
 EVENT_SINGLE_PUSH = "single_push"
 EVENT_TRIPLE_PUSH = "triple_push"
+
 
 HOME_ASSISTANT = "home-assistant"
 
@@ -184,6 +186,7 @@ KEY_PAYLOAD_PRESS = "pl_prs"
 KEY_PAYLOAD_STOP = "pl_stop"
 KEY_POSITION_TEMPLATE = "pos_tpl"
 KEY_POSITION_TOPIC = "pos_t"
+KEY_REPORTS_POSITION = "pos"
 KEY_QOS = "qos"
 KEY_RELEASE_URL = "rel_u"
 KEY_SCHEMA = "schema"
@@ -340,6 +343,8 @@ SWITCH_CHILD_LOCK = "child_lock"
 
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
+
+VALVE_WATER = "water"
 
 SCRIPT_CODE = """let topicPrefix = null;
 let updateTimer = null;
@@ -1632,6 +1637,17 @@ DESCRIPTION_UPDATE_FIRMWARE_BETA = {
     KEY_PAYLOAD_INSTALL: "{{^id^:1,^src^:^{source}^,^method^:^Shelly.Update^,^params^:{{^stage^:^beta^}}}}",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
+}
+DESCRIPTION_VALVE_FRANKEVER = {
+    ATTR_KEY: "service",
+    KEY_DEVICE_CLASS: "water",
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: None,
+    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+    KEY_COMMAND_TEMPLATE: TOPIC_RPC,
+    KEY_COMMAND_TOPIC: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
+    KEY_REPORTS_POSITION: True,
 }
 DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS = {
     KEY_DEVICE_CLASS: "firmware",
@@ -3770,6 +3786,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
         },
+        ATTR_VALVES: {0: DESCRIPTION_VALVE_FRANKEVER},
         ATTR_MIN_FIRMWARE_DATE: 20241202,
     },
     MODEL_OGEMRAY_25A: {
@@ -3895,6 +3912,35 @@ def get_cover(cover_id, profile):
             "{%if is_number(value_json.get(^slat_pos^))%}{{value_json.slat_pos}}{%endif%}"
         )
         payload[KEY_TILT_STATUS_TOPIC] = TOPIC_COVER.format(id=cover_id)
+
+    return topic, payload
+
+
+def get_valve(valve_id, description):
+    """Create configuration for Shelly valve entity."""
+    key = description.get(ATTR_KEY, "valve")
+
+    topic = encode_config_topic(f"{disc_prefix}/valve/{device_id}-{valve_id}/config")
+
+    if f"{key}:{valve_id}" not in device_config:
+        return topic, ""
+
+    valve_name = description.get(ATTR_NAME)
+
+    payload = {
+        KEY_NAME: valve_name,
+        KEY_UNIQUE_ID: f"{device_id}-{valve_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+        KEY_COMMAND_TOPIC: description[KEY_COMMAND_TOPIC],
+        KEY_COMMAND_TEMPLATE: description[KEY_COMMAND_TEMPLATE],
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC],
+        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
+        KEY_REPORTS_POSITION: description[KEY_REPORTS_POSITION],
+    }
 
     return topic, payload
 
@@ -4812,6 +4858,10 @@ def configure_device():
         topic, payload = get_climate(thermostat_id, description)
         config[topic] = payload
 
+    for valve_id, description in valves.items():
+        topic, payload = get_valve(valve_id, description)
+        config[topic] = payload
+
     for relay_id in range(relays):
         consumption_types = [
             item.lower()
@@ -5360,6 +5410,8 @@ else:
     cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
 
     switches = SUPPORTED_MODELS[model].get(ATTR_SWITCHES, {})
+
+    valves = SUPPORTED_MODELS[model].get(ATTR_VALVES, {})
 
     config_data = configure_device()
 
