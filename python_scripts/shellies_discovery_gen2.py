@@ -712,7 +712,7 @@ DESCRIPTION_SENSOR_POWER_SUPPLY = {
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_NAME: "Power supply",
-    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_STATE_TOPIC: "~status/boolean:200",
     KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SENSOR_CURRENT = {
@@ -1652,11 +1652,10 @@ DESCRIPTION_VALVE_FRANKEVER = {
     ATTR_KEY: "service",
     KEY_DEVICE_CLASS: DEVICE_CLASS_WATER,
     KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: None,
     KEY_STATE_TOPIC: "~status/number:200",
     KEY_VALUE_TEMPLATE: TPL_VALUE,
-    KEY_COMMAND_TEMPLATE: TOPIC_RPC,
-    KEY_COMMAND_TOPIC: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
     KEY_REPORTS_POSITION: True,
 }
 DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS = {
@@ -3800,7 +3799,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
         },
         ATTR_VALVES: {0: DESCRIPTION_VALVE_FRANKEVER},
-        ATTR_MIN_FIRMWARE_DATE: 20241202,
+        ATTR_MIN_FIRMWARE_DATE: 20241121,
     },
     MODEL_OGEMRAY_25A: {
         ATTR_NAME: "Ogemray 25A Smart Switch",
@@ -3938,7 +3937,7 @@ def get_valve(valve_id, description):
     if f"{key}:{valve_id}" not in device_config:
         return topic, ""
 
-    valve_name = description.get(ATTR_NAME)
+    valve_name = "Valve"
 
     payload = {
         KEY_NAME: valve_name,
@@ -3948,11 +3947,14 @@ def get_valve(valve_id, description):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
         KEY_AVAILABILITY: availability,
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
         KEY_COMMAND_TOPIC: description[KEY_COMMAND_TOPIC],
-        KEY_COMMAND_TEMPLATE: description[KEY_COMMAND_TEMPLATE],
+        KEY_COMMAND_TEMPLATE: description[KEY_COMMAND_TEMPLATE].format(
+            source=source_topic
+        ),
         KEY_STATE_TOPIC: description[KEY_STATE_TOPIC],
         KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
-        KEY_REPORTS_POSITION: description[KEY_REPORTS_POSITION],
+        KEY_REPORTS_POSITION: str(description[KEY_REPORTS_POSITION]).lower(),
     }
 
     return topic, payload
