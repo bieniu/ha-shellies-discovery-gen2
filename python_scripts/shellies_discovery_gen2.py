@@ -77,6 +77,7 @@ DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_ILLUMINANCE = "illuminance"
 DEVICE_CLASS_MOISTURE = "moisture"
 DEVICE_CLASS_MOTION = "motion"
+DEVICE_CLASS_PLUG = "plug"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
@@ -87,6 +88,7 @@ DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_TIMESTAMP = "timestamp"
 DEVICE_CLASS_UPDATE = "update"
 DEVICE_CLASS_VOLTAGE = "voltage"
+DEVICE_CLASS_WATER = "water"
 
 ENTITY_CATEGORY_CONFIG = "config"
 ENTITY_CATEGORY_DIAGNOSTIC = "diagnostic"
@@ -322,6 +324,7 @@ SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
+SENSOR_POWER_SUPPLY = "power_supply"
 SENSOR_RETURNED_ENERGY = "returned_energy"
 SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
@@ -343,8 +346,6 @@ SWITCH_CHILD_LOCK = "child_lock"
 
 UPDATE_FIRMWARE = "firmware"
 UPDATE_FIRMWARE_BETA = "firmware_beta"
-
-VALVE_WATER = "water"
 
 SCRIPT_CODE = """let topicPrefix = null;
 let updateTimer = null;
@@ -521,6 +522,7 @@ TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
+TPL_VALUE_BOOLEAN = "{%if value_json.value%}on{%else%}off{%endif%}"
 TPL_HVAC_MODE = (
     "{{^fan_only^ if value_json.value == ^ventilation^ else value_json.value}}"
 )
@@ -704,6 +706,14 @@ DESCRIPTION_SENSOR_CLOUD = {
     KEY_NAME: "Cloud",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_CLOUD,
+}
+DESCRIPTION_SENSOR_POWER_SUPPLY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PLUG,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Power supply",
+    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -1640,7 +1650,7 @@ DESCRIPTION_UPDATE_FIRMWARE_BETA = {
 }
 DESCRIPTION_VALVE_FRANKEVER = {
     ATTR_KEY: "service",
-    KEY_DEVICE_CLASS: "water",
+    KEY_DEVICE_CLASS: DEVICE_CLASS_WATER,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: None,
     KEY_STATE_TOPIC: "~status/number:200",
@@ -1701,7 +1711,7 @@ DESCRIPTION_SWITCH_CHILD_LOCK = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SWITCH_ANTI_FREEZE = {
     ATTR_ID: 200,
@@ -1711,7 +1721,7 @@ DESCRIPTION_SWITCH_ANTI_FREEZE = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SWITCH_THERMOSTAT = {
     ATTR_ID: 201,
@@ -1720,7 +1730,7 @@ DESCRIPTION_SWITCH_THERMOSTAT = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
@@ -3780,7 +3790,10 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "WaterValve",
         ATTR_BRAND: "FrankEver",
         ATTR_GEN: 3,
-        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_POWER_SUPPLY: DESCRIPTION_SENSOR_POWER_SUPPLY,
+        },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
