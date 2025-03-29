@@ -3738,7 +3738,10 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "ST1820",
         ATTR_BRAND: "LinkedGo",
         ATTR_GEN: 3,
-        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
@@ -3754,8 +3757,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
         ATTR_UPDATES: {
-            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
-            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
+            UPDATE_FIRMWARE: {},
+            UPDATE_FIRMWARE_BETA: {},
         },
         ATTR_MIN_FIRMWARE_DATE: 20241121,
     },
@@ -3764,7 +3767,10 @@ SUPPORTED_MODELS = {
         ATTR_MODEL_ID: "ST802-B",
         ATTR_BRAND: "LinkedGo",
         ATTR_GEN: 3,
-        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD},
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
@@ -3780,8 +3786,8 @@ SUPPORTED_MODELS = {
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST802_B},
         ATTR_UPDATES: {
-            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
-            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
+            UPDATE_FIRMWARE: {},
+            UPDATE_FIRMWARE_BETA: {},
         },
         ATTR_MIN_FIRMWARE_DATE: 20241121,
     },
@@ -4774,6 +4780,9 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
 def get_update(update, description):
     """Create configuration for Shelly update entity."""
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
+
+    if not description:
+        return topic, ""
 
     payload = {
         KEY_NAME: description[KEY_NAME],
