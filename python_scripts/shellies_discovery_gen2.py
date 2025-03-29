@@ -522,7 +522,7 @@ TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
-TPL_VALUE_BOOLEAN = "{%if value_json.value%}on{%else%}off{%endif%}"
+TPL_VALUE_BOOLEAN = "{%if value_json.value%}ON{%else%}OFF{%endif%}"
 TPL_HVAC_MODE = (
     "{{^fan_only^ if value_json.value == ^ventilation^ else value_json.value}}"
 )
@@ -3792,6 +3792,7 @@ SUPPORTED_MODELS = {
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
             SENSOR_POWER_SUPPLY: DESCRIPTION_SENSOR_POWER_SUPPLY,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
@@ -3799,10 +3800,6 @@ SUPPORTED_MODELS = {
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
-        },
-        ATTR_UPDATES: {
-            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE_SYS,
-            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS,
         },
         ATTR_VALVES: {0: DESCRIPTION_VALVE_FRANKEVER},
         ATTR_MIN_FIRMWARE_DATE: 20241121,
