@@ -523,6 +523,7 @@ TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
 TPL_VALUE_BOOLEAN = "{%if value_json.value%}ON{%else%}OFF{%endif%}"
+TPL_VALUE_SWITCH = "{%if value_json.value%}on{%else%}off{%endif%}"
 TPL_HVAC_MODE = (
     "{{^fan_only^ if value_json.value == ^ventilation^ else value_json.value}}"
 )
@@ -1710,7 +1711,7 @@ DESCRIPTION_SWITCH_CHILD_LOCK = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_SWITCH_ANTI_FREEZE = {
     ATTR_ID: 200,
@@ -1720,7 +1721,7 @@ DESCRIPTION_SWITCH_ANTI_FREEZE = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_SWITCH_THERMOSTAT = {
     ATTR_ID: 201,
@@ -1729,7 +1730,7 @@ DESCRIPTION_SWITCH_THERMOSTAT = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
