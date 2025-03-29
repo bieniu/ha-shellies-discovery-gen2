@@ -50,6 +50,7 @@ ATTR_HUMIDITY_MIN = "humidity_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
 ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
+ATTR_VALVES = "valves"
 ATTR_WAKEUP_PERIOD = "wakeup_period"
 
 BUTTON_CALIBRATE = "calibrate"
@@ -76,6 +77,7 @@ DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_ILLUMINANCE = "illuminance"
 DEVICE_CLASS_MOISTURE = "moisture"
 DEVICE_CLASS_MOTION = "motion"
+DEVICE_CLASS_PLUG = "plug"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
@@ -86,6 +88,7 @@ DEVICE_CLASS_TEMPERATURE = "temperature"
 DEVICE_CLASS_TIMESTAMP = "timestamp"
 DEVICE_CLASS_UPDATE = "update"
 DEVICE_CLASS_VOLTAGE = "voltage"
+DEVICE_CLASS_WATER = "water"
 
 ENTITY_CATEGORY_CONFIG = "config"
 ENTITY_CATEGORY_DIAGNOSTIC = "diagnostic"
@@ -96,6 +99,7 @@ EVENT_DOUBLE_PUSH = "double_push"
 EVENT_LONG_PUSH = "long_push"
 EVENT_SINGLE_PUSH = "single_push"
 EVENT_TRIPLE_PUSH = "triple_push"
+
 
 HOME_ASSISTANT = "home-assistant"
 
@@ -184,6 +188,7 @@ KEY_PAYLOAD_PRESS = "pl_prs"
 KEY_PAYLOAD_STOP = "pl_stop"
 KEY_POSITION_TEMPLATE = "pos_tpl"
 KEY_POSITION_TOPIC = "pos_t"
+KEY_REPORTS_POSITION = "pos"
 KEY_QOS = "qos"
 KEY_RELEASE_URL = "rel_u"
 KEY_SCHEMA = "schema"
@@ -283,6 +288,7 @@ MODEL_BLU_TRV = "SBTR-001AEU"
 MODEL_OGEMRAY_25A = "ogemray25a"
 MODEL_ST1820 = "st1820"
 MODEL_ST802_B = "st-802"
+MODEL_WATER_VALVE = "watervalve"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
 NUMBER_BOOST_TIME = "boost_time"
@@ -318,6 +324,7 @@ SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
+SENSOR_POWER_SUPPLY = "power_supply"
 SENSOR_RETURNED_ENERGY = "returned_energy"
 SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
@@ -515,6 +522,8 @@ TPL_THERMOSTAT_MODE = "{{%if value_json.enable%}}{action}{{%else%}}off{{%endif%}
 TPL_UPTIME = "{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}"
 TPL_UPTIME_INDEPENDENT = "{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}"
 TPL_VALUE = "{{value_json.value}}"
+TPL_VALUE_BOOLEAN = "{%if value_json.value%}ON{%else%}OFF{%endif%}"
+TPL_VALUE_SWITCH = "{%if value_json.value%}on{%else%}off{%endif%}"
 TPL_HVAC_MODE = (
     "{{^fan_only^ if value_json.value == ^ventilation^ else value_json.value}}"
 )
@@ -698,6 +707,14 @@ DESCRIPTION_SENSOR_CLOUD = {
     KEY_NAME: "Cloud",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_CLOUD,
+}
+DESCRIPTION_SENSOR_POWER_SUPPLY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_PLUG,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Power supply",
+    KEY_STATE_TOPIC: "~status/boolean:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -1632,6 +1649,16 @@ DESCRIPTION_UPDATE_FIRMWARE_BETA = {
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_INSTALLED_FIRMWARE,
 }
+DESCRIPTION_VALVE_FRANKEVER = {
+    ATTR_KEY: "service",
+    KEY_DEVICE_CLASS: DEVICE_CLASS_WATER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
+    KEY_REPORTS_POSITION: True,
+}
 DESCRIPTION_UPDATE_FIRMWARE_BETA_SYS = {
     KEY_DEVICE_CLASS: "firmware",
     KEY_ENABLED_BY_DEFAULT: False,
@@ -1684,7 +1711,7 @@ DESCRIPTION_SWITCH_CHILD_LOCK = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_SWITCH_ANTI_FREEZE = {
     ATTR_ID: 200,
@@ -1694,7 +1721,7 @@ DESCRIPTION_SWITCH_ANTI_FREEZE = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_SWITCH_THERMOSTAT = {
     ATTR_ID: 201,
@@ -1703,7 +1730,7 @@ DESCRIPTION_SWITCH_THERMOSTAT = {
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: "{%if value_json.value%}on{%else%}off{%endif%}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
 }
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
@@ -3758,6 +3785,26 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20241121,
     },
+    MODEL_WATER_VALVE: {
+        ATTR_NAME: "FrankEver Smart Water Valve",
+        ATTR_MODEL_ID: "WaterValve",
+        ATTR_BRAND: "FrankEver",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
+            SENSOR_POWER_SUPPLY: DESCRIPTION_SENSOR_POWER_SUPPLY,
+            SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
+        },
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_VALVES: {0: DESCRIPTION_VALVE_FRANKEVER},
+        ATTR_MIN_FIRMWARE_DATE: 20241121,
+    },
     MODEL_OGEMRAY_25A: {
         ATTR_NAME: "Ogemray 25A Smart Switch",
         ATTR_MODEL_ID: "Ogemray25A",
@@ -3881,6 +3928,38 @@ def get_cover(cover_id, profile):
             "{%if is_number(value_json.get(^slat_pos^))%}{{value_json.slat_pos}}{%endif%}"
         )
         payload[KEY_TILT_STATUS_TOPIC] = TOPIC_COVER.format(id=cover_id)
+
+    return topic, payload
+
+
+def get_valve(valve_id, description):
+    """Create configuration for Shelly valve entity."""
+    key = description.get(ATTR_KEY, "valve")
+
+    topic = encode_config_topic(f"{disc_prefix}/valve/{device_id}-{valve_id}/config")
+
+    if f"{key}:{valve_id}" not in device_config:
+        return topic, ""
+
+    valve_name = "Valve"
+
+    payload = {
+        KEY_NAME: valve_name,
+        KEY_UNIQUE_ID: f"{device_id}-{valve_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+        KEY_ENABLED_BY_DEFAULT: str(description[KEY_ENABLED_BY_DEFAULT]).lower(),
+        KEY_COMMAND_TOPIC: description[KEY_COMMAND_TOPIC],
+        KEY_COMMAND_TEMPLATE: description[KEY_COMMAND_TEMPLATE].format(
+            source=source_topic
+        ),
+        KEY_STATE_TOPIC: description[KEY_STATE_TOPIC],
+        KEY_VALUE_TEMPLATE: description[KEY_VALUE_TEMPLATE],
+        KEY_REPORTS_POSITION: str(description[KEY_REPORTS_POSITION]).lower(),
+    }
 
     return topic, payload
 
@@ -4798,6 +4877,10 @@ def configure_device():
         topic, payload = get_climate(thermostat_id, description)
         config[topic] = payload
 
+    for valve_id, description in valves.items():
+        topic, payload = get_valve(valve_id, description)
+        config[topic] = payload
+
     for relay_id in range(relays):
         consumption_types = [
             item.lower()
@@ -5346,6 +5429,8 @@ else:
     cover_sensors = SUPPORTED_MODELS[model].get(ATTR_COVER_SENSORS, {})
 
     switches = SUPPORTED_MODELS[model].get(ATTR_SWITCHES, {})
+
+    valves = SUPPORTED_MODELS[model].get(ATTR_VALVES, {})
 
     config_data = configure_device()
 
