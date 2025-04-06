@@ -30,6 +30,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 
 ### Gen2
 
+- Shelly BLU Gateway
 - Shelly Plus 0-10V Dimmer
 - Shelly Plus 1
 - Shelly Plus 1 Mini
