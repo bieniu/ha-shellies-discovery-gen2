@@ -572,7 +572,11 @@ BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
 
-BTH_DEV_MAP = {8: MODEL_BLU_TRV}
+BTH_DEV_MAP = {
+    3: MODEL_BLU_HT,
+    5: MODEL_BLU_MOTION,
+    8: MODEL_BLU_TRV,
+}
 
 BTH_IDX_MAP = {
     BTH_HUMIDITY: SENSOR_HUMIDITY,
@@ -5342,11 +5346,13 @@ if "components" in device_config:
         if f"blutrv:{btdevice_id}" in blutrv_devices:
             continue
 
-        if not (model := config["meta"]["ui"].get("local_name")):
+        if not (model_id := config.get("model_id")):
             logger.warning(  # noqa: F821
                 "device %s doesn't present MODEL ID, update device's firmware", device
             )
             continue
+
+        model = BTH_DEV_MAP.get(model_id)
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
