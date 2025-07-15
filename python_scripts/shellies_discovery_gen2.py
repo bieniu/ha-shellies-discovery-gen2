@@ -4796,6 +4796,58 @@ def get_binary_sensor(
     return topic, payload
 
 
+def get_bthome_event(bt_id, device_id_prefix):
+    """Create configuration for BTHome device event entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/event/{device_id_prefix}-bthome-{bt_id}/config"
+    )
+
+    # For BTHome devices, we'll use a generic button name since they don't have
+    # individual input names like regular Shelly devices
+    button_name = f"BTHome Button {bt_id}"
+
+    payload = {
+        KEY_NAME: button_name,
+        KEY_STATE_TOPIC: TOPIC_EVENTS_RPC,
+        KEY_EVENT_TYPES: [
+            EVENT_SINGLE_PUSH,
+            EVENT_DOUBLE_PUSH,
+            EVENT_LONG_PUSH,
+            EVENT_TRIPLE_PUSH,
+        ],
+        KEY_VALUE_TEMPLATE: f"{{%if value_json.params.events.0.component==^bthomedevice:{bt_id}^ and value_json.params.events.0.event is defined%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}",
+        KEY_UNIQUE_ID: f"{device_id_prefix}-bthome-{bt_id}".lower(),
+        KEY_QOS: qos,
+        KEY_AVAILABILITY: availability,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_DEVICE_CLASS: DEVICE_CLASS_BUTTON,
+    }
+
+    return topic, payload
+
+
+def get_bthome_input(bt_id, device_id_prefix, event):
+    """Create configuration for BTHome device input event automation."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/device_automation/{device_id_prefix}-bthome-{bt_id}/{event}/config"
+    )
+
+    payload = {
+        KEY_AUTOMATION_TYPE: VALUE_TRIGGER,
+        KEY_TOPIC: f"{default_topic}events/rpc",
+        KEY_PAYLOAD: f"bthomedevice:{bt_id}_{event}",
+        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.component}}_{{value_json.params.events.0.event}}",
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_TYPE: DEVICE_TRIGGER_MAP[event],
+        KEY_SUBTYPE: f"bthome_button_{bt_id}",
+    }
+
+    return topic, payload
+
+
 def get_input(input_id, input_type, event):
     """Create configuration for Shelly input event."""
     topic = encode_config_topic(
@@ -5443,6 +5495,24 @@ if "components" in device_config:
 
             topic, payload = get_binary_sensor(
                 binary_sensor, description, bt_id=btsensor_id or btdevice_id
+            )
+            config_data[topic] = payload
+
+        bthome_device_id_prefix = f"{device_id.split('-')[0]}-{mac.replace(':', '')}"
+
+        # Create event entity for button presses
+        topic, payload = get_bthome_event(btdevice_id, bthome_device_id_prefix)
+        config_data[topic] = payload
+
+        # Create device automation triggers for each supported event type
+        for event in [
+            EVENT_SINGLE_PUSH,
+            EVENT_DOUBLE_PUSH,
+            EVENT_LONG_PUSH,
+            EVENT_TRIPLE_PUSH,
+        ]:
+            topic, payload = get_bthome_input(
+                btdevice_id, bthome_device_id_prefix, event
             )
             config_data[topic] = payload
 
