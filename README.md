@@ -103,6 +103,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly BLU H&T (via Shelly Pro or Gen3 device)
 - Shelly BLU Motion (via Shelly Pro or Gen3 device)
 - Shelly BLU TRV (via Shelly BLU Gateway Gen3)
+- Shelly BLU Button1 (via Shelly BLU Gateway Gen3)
 
 ### Powered by Shelly
 
