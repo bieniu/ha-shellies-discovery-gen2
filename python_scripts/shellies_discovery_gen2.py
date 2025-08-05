@@ -4812,12 +4812,8 @@ def get_bthome_event(bt_id, device_id_prefix):
         f"{disc_prefix}/event/{device_id_prefix}-bthome-{bt_id}/config"
     )
 
-    # For BTHome devices, we'll use a generic button name since they don't have
-    # individual input names like regular Shelly devices
-    button_name = f"BTHome Button {bt_id}"
-
     payload = {
-        KEY_NAME: button_name,
+        KEY_NAME: f"Button {bt_id}",
         KEY_STATE_TOPIC: TOPIC_EVENTS_RPC,
         KEY_EVENT_TYPES: [
             EVENT_SINGLE_PUSH,
@@ -4852,7 +4848,7 @@ def get_bthome_input(bt_id, device_id_prefix, event):
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_TYPE: DEVICE_TRIGGER_MAP[event],
-        KEY_SUBTYPE: f"bthome_button_{bt_id}",
+        KEY_SUBTYPE: f"button_{bt_id}",
     }
 
     return topic, payload
