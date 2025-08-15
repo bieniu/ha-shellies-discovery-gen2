@@ -4809,7 +4809,7 @@ def get_binary_sensor(
 def get_bthome_event(bt_id, device_id_prefix):
     """Create configuration for BTHome device event entity."""
     topic = encode_config_topic(
-        f"{disc_prefix}/event/{device_id_prefix}-bthome-{bt_id}/config"
+        f"{disc_prefix}/event/{device_id_prefix}-{bt_id}/config"
     )
 
     payload = {
