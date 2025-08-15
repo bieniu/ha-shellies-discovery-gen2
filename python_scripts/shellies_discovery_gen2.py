@@ -4837,7 +4837,7 @@ def get_bthome_event(bt_id, device_id_prefix):
 def get_bthome_input(bt_id, device_id_prefix, event):
     """Create configuration for BTHome device input event automation."""
     topic = encode_config_topic(
-        f"{disc_prefix}/device_automation/{device_id_prefix}-bthome-{bt_id}/{event}/config"
+        f"{disc_prefix}/device_automation/{device_id_prefix}-{bt_id}/{event}/config"
     )
 
     payload = {
