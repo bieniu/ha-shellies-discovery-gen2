@@ -4822,7 +4822,7 @@ def get_bthome_event(bt_id, device_id_prefix):
             EVENT_TRIPLE_PUSH,
         ],
         KEY_VALUE_TEMPLATE: f"{{%if value_json.params.events.0.component==^bthomedevice:{bt_id}^ and value_json.params.events.0.event is defined%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}",
-        KEY_UNIQUE_ID: f"{device_id_prefix}-bthome-{bt_id}".lower(),
+        KEY_UNIQUE_ID: f"{device_id_prefix}-{bt_id}".lower(),
         KEY_QOS: qos,
         KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
