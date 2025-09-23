@@ -1849,7 +1849,7 @@ SUPPORTED_MODELS = {
     },
     MODEL_DEF_BTHOME_HT: {
         ATTR_NAME: "BTHOME H&T",
-        ATTR_MODEL_ID: "BTHOME-DEF",
+        ATTR_MODEL_ID: MODEL_DEF_BTHOME_HT,
         ATTR_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BTH_TEMPERATURE,
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BTH_HUMIDITY,
@@ -5418,7 +5418,7 @@ if "components" in device_config:
         if not (model := dev["meta"]["ui"].get("local_name")):
            model = BTH_DEV_MAP.get(dev.get("model_id"))
         if not model:
-           logger.warning("defaulting to generic BTHOME device") 
+           logger.warning("defaulting to generic BTHOME device")
            SEL_IDX_MAP = BTH_IDX_MAP_DEF_BTHOME
         for comp, config in components.items():
             if (
@@ -5457,8 +5457,8 @@ if "components" in device_config:
             logger.warning(  # noqa: F821
                 "device %s doesn't present MODEL ID, update device's firmware", device
             )
-            model = 'BTHOME-DEF'
-            #continue
+            model = MODEL_DEF_BTHOME_HT
+            #this was a continue instruction
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
