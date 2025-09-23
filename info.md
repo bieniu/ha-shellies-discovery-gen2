@@ -92,6 +92,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly i4 Gen4
 - Shelly Flood Gen4
 - Shelly Power Strip Gen4
+- Shelly Presence Gen4
 
 ### BLU
 
