@@ -72,11 +72,13 @@ DEVICE_CLASS_BUTTON = "button"
 DEVICE_CLASS_CONNECTIVITY = "connectivity"
 DEVICE_CLASS_CURRENT = "current"
 DEVICE_CLASS_ENERGY = "energy"
+DEVICE_CLASS_ENUM = "enum"
 DEVICE_CLASS_FREQUENCY = "frequency"
 DEVICE_CLASS_HUMIDITY = "humidity"
 DEVICE_CLASS_ILLUMINANCE = "illuminance"
 DEVICE_CLASS_MOISTURE = "moisture"
 DEVICE_CLASS_MOTION = "motion"
+DEVICE_CLASS_OCCUPANCY = "occupancy"
 DEVICE_CLASS_PLUG = "plug"
 DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
@@ -175,6 +177,7 @@ KEY_MODE = "mode"
 KEY_MODEL = "mdl"
 KEY_MODEL_ID = "mdl_id"
 KEY_NAME = "name"
+KEY_OPTIONS = "ops"
 KEY_ORIGIN = "o"
 KEY_PAYLOAD = "pl"
 KEY_PAYLOAD_AVAILABLE = "pl_avail"
@@ -287,6 +290,7 @@ MODEL_2PM_G4 = "shelly2pmg4"
 MODEL_I4_G4 = "shellyi4g4"
 MODEL_FLOOD_G4 = "shellyfloodg4"
 MODEL_POWER_STRIP_G4 = "shellypstripg4"
+MODEL_PRESENCE_G4 = "shellypresence"
 # BLU devices
 MODEL_BLU_HT = "SBHT-003C"
 MODEL_BLU_MOTION = "SBMO-003Z"
@@ -313,6 +317,7 @@ SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
 SENSOR_COUNTER_VALUE = "counter_value"
 SENSOR_CURRENT = "current"
+SENSOR_DETECTED = "detected"
 SENSOR_DEVICE_TEMPERATURE = "device_temperature"
 SENSOR_ENERGY = "energy"
 SENSOR_ETH_IP = "eth_ip"
@@ -322,6 +327,7 @@ SENSOR_FLOOD = "flood"
 SENSOR_FREQUENCY = "frequency"
 SENSOR_HUMIDITY = "humidity"
 SENSOR_ILLUMINANCE = "illuminance"
+SENSOR_ILLUMINANCE_LEVEL = "illuminance_level"
 SENSOR_INPUT = "input"
 SENSOR_LAST_RESTART = "last_restart"
 SENSOR_MOTION = "motion"
@@ -332,6 +338,7 @@ SENSOR_OVERVOLTAGE = "overvoltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
 SENSOR_POWER_SUPPLY = "power_supply"
+SENSOR_PRESENCE = "presence"
 SENSOR_RETURNED_ENERGY = "returned_energy"
 SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
@@ -424,6 +431,7 @@ TOPIC_STATUS_FLOOD = "~status/flood:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
 TOPIC_STATUS_CCT = "~status/cct:{id}"
 TOPIC_STATUS_RGB = "~status/rgb:{id}"
+TOPIC_STATUS_PRESENCE = "~status/presence"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
@@ -451,6 +459,7 @@ TPL_CLOUD = "{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}"
 TPL_CLOUD_INDEPENDENT = "{%if value_json.connected%}ON{%else%}OFF{%endif%}"
 TPL_CURRENT = "{{value_json.current}}"
 TPL_CURRENT_TEMPERATURE = "{{value_json.current_C}}"
+TPL_DETECTED_OBJECTS = "{{value_json.num_objects}}"
 TPL_EMETER_ACTIVE_POWER = "{{value_json.act_power}}"
 TPL_EMETER_PHASE_ACTIVE_POWER = "{{{{value_json.{phase}_act_power}}}}"
 TPL_EMETER_APPARENT_POWER = "{{value_json.aprt_power}}"
@@ -491,6 +500,7 @@ TPL_FIRMWARE_STABLE_ATTRS_INDEPENDENT = (
 )
 TPL_HUMIDITY = "{{value_json.rh}}"
 TPL_ILLUMINANCE = "{{value_json.lux}}"
+TPL_ILLUMINANCE_LEVEL = "{{value_json.illumination}}"
 TPL_INPUT = "{%if value_json.state%}ON{%else%}OFF{%endif%}"
 TPL_INSTALLED_FIRMWARE = "{{value_json.sys.installed_version}}"
 TPL_INSTALLED_FIRMWARE_SYS = "{{value_json.ver}}"
@@ -498,6 +508,7 @@ TPL_MQTT_CONNECTED = "{%if value_json.mqtt.connected%}online{%else%}offline{%end
 TPL_VALUE_ONLINE = "{%if value_json.value%}online{%else%}offline{%endif%}"
 TPL_POWER = "{{value_json.apower}}"
 TPL_POWER_FACTOR = "{{value_json.pf*100}}"
+TPL_PRESENCE = "{%if value_json.num_objects > 0%}ON{%else%}OFF{%endif%}"
 TPL_RELAY_OVERPOWER = (
     "{%if ^overpower^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
@@ -718,6 +729,13 @@ DESCRIPTION_SENSOR_CLOUD = {
     KEY_NAME: "Cloud",
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_VALUE_TEMPLATE: TPL_CLOUD,
+}
+DESCRIPTION_SENSOR_PRESENCE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_OCCUPANCY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Occupancy",
+    KEY_STATE_TOPIC: TOPIC_STATUS_PRESENCE,
+    KEY_VALUE_TEMPLATE: TPL_PRESENCE,
 }
 DESCRIPTION_SENSOR_POWER_SUPPLY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_PLUG,
@@ -1526,6 +1544,24 @@ DESCRIPTION_SENSOR_ILLUMINANCE = {
     KEY_UNIT: UNIT_LUX,
     KEY_VALUE_TEMPLATE: TPL_ILLUMINANCE,
 }
+DESCRIPTION_SENSOR_DETECTED = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Detected",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_PRESENCE,
+    KEY_VALUE_TEMPLATE: TPL_DETECTED_OBJECTS,
+    KEY_ICON: "mdi:account-group",
+    KEY_UNIT: "objects",
+}
+DESCRIPTION_SENSOR_ILLUMINANCE_LEVEL = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENUM,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Illuminance level",
+    KEY_STATE_TOPIC: TOPIC_ILLUMINANCE.format(id=0),
+    KEY_VALUE_TEMPLATE: TPL_ILLUMINANCE_LEVEL,
+    KEY_OPTIONS: ["dark", "twilight", "bright"],
+    KEY_ICON: "mdi:brightness-5",
+}
 DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1562,6 +1598,16 @@ DESCRIPTION_SENSOR_BTH_MOTION = {
     KEY_NAME: "Motion",
     KEY_STATE_TOPIC: TOPIC_STATUS_BTH_SENSOR,
     KEY_VALUE_TEMPLATE: TPL_BTH_BINARY_SENSOR,
+}
+DESCRIPTION_SENSOR_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_TEMPERATURE.format(id=0),
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
 }
 DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
@@ -3228,6 +3274,28 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20250804,
     },
+    MODEL_PRESENCE_G4: {
+        ATTR_NAME: "Shelly Presence Gen4",
+        ATTR_MODEL_ID: "S4SN-0U61X",
+        ATTR_GEN: 4,
+        ATTR_BINARY_SENSORS: {
+            SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD,
+            SENSOR_PRESENCE: DESCRIPTION_SENSOR_PRESENCE,
+        },
+        ATTR_SENSORS: {
+            SENSOR_DETECTED: DESCRIPTION_SENSOR_DETECTED,
+            SENSOR_ILLUMINANCE_LEVEL: DESCRIPTION_SENSOR_ILLUMINANCE_LEVEL,
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20250915,
+    },
     MODEL_PRO_1: {
         ATTR_NAME: "Shelly Pro 1",
         ATTR_MODEL_ID: "SPSW-001XE16EU",
@@ -4737,6 +4805,8 @@ def get_sensor(
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
+    if options := description.get(KEY_OPTIONS):
+        payload[KEY_OPTIONS] = options
     if description.get(KEY_UNIT):
         payload[KEY_UNIT] = description[KEY_UNIT]
     if description.get(KEY_ICON):
