@@ -267,6 +267,7 @@ MODEL_2PM_G3 = "shelly2pmg3"
 MODEL_3EM_63_G3 = "shelly3em63g3"
 MODEL_AZ_PLUG = "shellyazplug"
 MODEL_BLU_GATEWAY_G3 = "shellyblugwg3"
+MODEL_DUO_BULB_G3 = "shellyduobulbg3"
 MODEL_EM_G3 = "shellyemg3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
@@ -3847,6 +3848,27 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20240816,
     },
+    MODEL_DUO_BULB_G3: {
+        ATTR_NAME: "Shelly Duo Bulb Gen3",
+        ATTR_MODEL_ID: "S3BL-D010009AEU",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_CCT_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_CCT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_CCT_POWER,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20250909,
+    },
     MODEL_WALL_DISPLAY: {
         ATTR_NAME: "Shelly Wall Display",
         ATTR_MODEL_ID: "SAWD-xA1XX10EU1",
@@ -4475,6 +4497,13 @@ def get_cct_light(cct_id: int):
     light_name = (
         device_config[f"cct:{cct_id}"][ATTR_NAME] or f"CCT light {cct_id}"
     ).replace("'", "_")
+
+    min_ct = 2700
+    max_ct = 6500
+    if "ct_range" in device_config[f"cct:{cct_id}"]:
+        min_ct = device_config[f"cct:{cct_id}"]["ct_range"][0]
+        max_ct = device_config[f"cct:{cct_id}"]["ct_range"][1]
+
     payload = {
         KEY_SCHEMA: "template",
         KEY_NAME: light_name,
@@ -4485,8 +4514,8 @@ def get_cct_light(cct_id: int):
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
         KEY_COLOR_TEMP_TEMPLATE: "{{(1000000/value_json.ct)|round}}",
-        KEY_MAX_MIREDS: round(1000000 / device_config[f"cct:{cct_id}"]["ct_range"][0]),
-        KEY_MIN_MIREDS: round(1000000 / device_config[f"cct:{cct_id}"]["ct_range"][1]),
+        KEY_MAX_MIREDS: round(1000000 / min_ct),
+        KEY_MIN_MIREDS: round(1000000 / max_ct),
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-cct-{cct_id}".lower(),
         KEY_QOS: qos,
