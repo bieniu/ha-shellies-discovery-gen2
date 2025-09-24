@@ -1,6 +1,6 @@
 """Adds MQTT discovery support for Shellies Gen2+ devices."""
 
-VERSION = "0.0.0"
+VERSION = "3.19.0"
 
 ATTR_BATTERY_POWERED = "battery_powered"
 ATTR_BINARY_SENSORS = "binary_sensors"
@@ -5517,7 +5517,7 @@ if "components" in device_config:
         if not (model := dev["meta"]["ui"].get("local_name")):
            model = BTH_DEV_MAP.get(dev.get("model_id"))
         if not model:
-           logger.warning("defaulting to generic BTHOME device")
+           logger.warning("defaulting to generic BTHOME device") # noqa: F821
            SEL_IDX_MAP = BTH_IDX_MAP_DEF_BTHOME
         for comp, config in components.items():
             if (
