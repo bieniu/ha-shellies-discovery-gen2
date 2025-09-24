@@ -5515,10 +5515,10 @@ if "components" in device_config:
     for dev in bthome_devices.values():
         SEL_IDX_MAP = BTH_IDX_MAP
         if not (model := dev["meta"]["ui"].get("local_name")):
-           model = BTH_DEV_MAP.get(dev.get("model_id"))
+            model = BTH_DEV_MAP.get(dev.get("model_id"))
         if not model:
-           logger.warning("defaulting to generic BTHOME device") # noqa: F821
-           SEL_IDX_MAP = BTH_IDX_MAP_DEF_BTHOME
+            logger.warning("defaulting to generic BTHOME device")  # noqa: F821
+            SEL_IDX_MAP = BTH_IDX_MAP_DEF_BTHOME
         for comp, config in components.items():
             if (
                 dev["addr"] == config.get("addr")
@@ -5557,7 +5557,7 @@ if "components" in device_config:
                 "device %s doesn't present MODEL ID, update device's firmware", device
             )
             model = MODEL_DEF_BTHOME_HT
-            #this was a continue instruction
+            # this was a continue instruction
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
