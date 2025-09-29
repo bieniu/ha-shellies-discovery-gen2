@@ -721,7 +721,7 @@ DESCRIPTION_SENSOR_BTH_DEV_BATTERY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
-DESCRIPTION_SENSOR_GENERIC_BTH_DEV_BATTERY  = {
+DESCRIPTION_SENSOR_GENERIC_BTH_DEV_BATTERY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
@@ -5543,14 +5543,17 @@ if "components" in device_config:
         if f"blutrv:{btdevice_id}" in blutrv_devices:
             continue
 
-        if not (model := config["meta"]["ui"].get("local_name", MODEL_GENERIC_BTHOME_DEVICE)):
+        if not (
+            model := config["meta"]["ui"].get("local_name", MODEL_GENERIC_BTHOME_DEVICE)
+        ):
             model = BTH_DEV_MAP.get(config.get("model_id"))
 
         if model == MODEL_GENERIC_BTHOME_DEVICE:
             logger.warning(  # noqa: F821
-                "device %s doesn't present MODEL ID, for shelly devices update device's firmware. ", device
+                "device %s doesn't present MODEL ID, for shelly devices update device's firmware. ",
+                device,
             )
-            logger.info("defaulting with generic device for %s", device) # noqa: F821
+            logger.info("defaulting with generic device for %s", device)  # noqa: F821
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
