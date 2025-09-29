@@ -295,7 +295,7 @@ MODEL_PRESENCE_G4 = "shellypresence"
 MODEL_BLU_HT = "SBHT-003C"
 MODEL_BLU_MOTION = "SBMO-003Z"
 MODEL_BLU_TRV = "SBTR-001AEU"
-MODEL_DEF_BTHOME_HT = "BTHOME-DEF"
+MODEL_GENERIC_BTHOME_DEVICE = "Generic BTHome Device"
 # Powered by Shelly devices
 MODEL_OGEMRAY_25A = "ogemray25a"
 MODEL_ST1820 = "st1820"
@@ -586,6 +586,9 @@ VALUE_TRIGGER = "trigger"
 BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
+GENERIC_BTH_TEMPERATURE = 3
+GENERIC_BTH_BATTERY = 1
+GENERIC_BTH_TEMPERATURE = 2
 
 BTH_DEV_MAP = {
     3: MODEL_BLU_HT,
@@ -597,9 +600,6 @@ BTH_IDX_MAP = {
     BTH_HUMIDITY: SENSOR_HUMIDITY,
     BTH_MOTION: SENSOR_MOTION,
     BTH_TEMPERATURE: SENSOR_TEMPERATURE,
-}
-
-BTH_IDX_MAP_DEF_BTHOME = {
     3: SENSOR_HUMIDITY,
     1: SENSOR_BATTERY,
     2: SENSOR_TEMPERATURE,
@@ -721,7 +721,7 @@ DESCRIPTION_SENSOR_BTH_DEV_BATTERY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_BATTERY,
 }
-DESCRIPTION_SENSOR_DEF_BTH_DEV_BATTERY = {
+DESCRIPTION_SENSOR_GENERIC_BTH_DEV_BATTERY  = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_BATTERY,
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
@@ -1894,14 +1894,14 @@ SUPPORTED_MODELS = {
             NUMBER_VALVE_POSITION: DESCRIPTION_NUMBER_BLU_TRV_VALVE_POSITION,
         },
     },
-    MODEL_DEF_BTHOME_HT: {
+    MODEL_GENERIC_BTHOME_DEVICE: {
         ATTR_NAME: "BTHOME H&T",
-        ATTR_MODEL_ID: MODEL_DEF_BTHOME_HT,
+        ATTR_MODEL_ID: MODEL_GENERIC_BTHOME_DEVICE,
         ATTR_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BTH_TEMPERATURE,
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BTH_HUMIDITY,
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH,
-            SENSOR_BATTERY: DESCRIPTION_SENSOR_DEF_BTH_DEV_BATTERY,
+            SENSOR_BATTERY: DESCRIPTION_SENSOR_GENERIC_BTH_DEV_BATTERY,
         },
     },
     MODEL_BLU_HT: {
@@ -5513,18 +5513,12 @@ if "components" in device_config:
         if key.startswith("bthomedevice")
     }
     for dev in bthome_devices.values():
-        SEL_IDX_MAP = BTH_IDX_MAP
-        if not (model := dev["meta"]["ui"].get("local_name")):
-            model = BTH_DEV_MAP.get(dev.get("model_id"))
-        if not model:
-            logger.warning("defaulting to generic BTHOME device")  # noqa: F821
-            SEL_IDX_MAP = BTH_IDX_MAP_DEF_BTHOME
         for comp, config in components.items():
             if (
                 dev["addr"] == config.get("addr")
-                and config.get("obj_id") in SEL_IDX_MAP
+                and config.get("obj_id") in BTH_IDX_MAP
             ):
-                dev["components"].append({SEL_IDX_MAP[config["obj_id"]]: comp})
+                dev["components"].append({BTH_IDX_MAP[config["obj_id"]]: comp})
 
     blutrv_devices = {
         key: {**conf, "components": []}
@@ -5549,15 +5543,14 @@ if "components" in device_config:
         if f"blutrv:{btdevice_id}" in blutrv_devices:
             continue
 
-        if not (model := config["meta"]["ui"].get("local_name")):
+        if not (model := config["meta"]["ui"].get("local_name", MODEL_GENERIC_BTHOME_DEVICE)):
             model = BTH_DEV_MAP.get(config.get("model_id"))
 
-        if not model:
+        if model == MODEL_GENERIC_BTHOME_DEVICE:
             logger.warning(  # noqa: F821
-                "device %s doesn't present MODEL ID, update device's firmware", device
+                "device %s doesn't present MODEL ID, for shelly devices update device's firmware. ", device
             )
-            model = MODEL_DEF_BTHOME_HT
-            # this was a continue instruction
+            logger.info("defaulting with generic device for %s", device) # noqa: F821
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
