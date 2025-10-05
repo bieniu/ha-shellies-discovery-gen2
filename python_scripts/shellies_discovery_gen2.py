@@ -586,7 +586,7 @@ VALUE_TRIGGER = "trigger"
 BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
-GENERIC_BTH_TEMPERATURE = 3
+GENERIC_BTH_HUMIDITY = 3
 GENERIC_BTH_BATTERY = 1
 GENERIC_BTH_TEMPERATURE = 2
 
@@ -600,9 +600,9 @@ BTH_IDX_MAP = {
     BTH_HUMIDITY: SENSOR_HUMIDITY,
     BTH_MOTION: SENSOR_MOTION,
     BTH_TEMPERATURE: SENSOR_TEMPERATURE,
-    3: SENSOR_HUMIDITY,
-    1: SENSOR_BATTERY,
-    2: SENSOR_TEMPERATURE,
+    GENERIC_BTH_HUMIDITY: SENSOR_HUMIDITY,
+    GENERIC_BTH_BATTERY: SENSOR_BATTERY,
+    GENERIC_BTH_TEMPERATURE: SENSOR_TEMPERATURE,
 }
 
 DEVICE_TRIGGER_MAP = {
@@ -1895,7 +1895,7 @@ SUPPORTED_MODELS = {
         },
     },
     MODEL_GENERIC_BTHOME_DEVICE: {
-        ATTR_NAME: "BTHOME H&T",
+        ATTR_NAME: "BTHOME Generic Device",
         ATTR_MODEL_ID: MODEL_GENERIC_BTHOME_DEVICE,
         ATTR_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BTH_TEMPERATURE,
@@ -5543,17 +5543,8 @@ if "components" in device_config:
         if f"blutrv:{btdevice_id}" in blutrv_devices:
             continue
 
-        if not (
-            model := config["meta"]["ui"].get("local_name", MODEL_GENERIC_BTHOME_DEVICE)
-        ):
-            model = BTH_DEV_MAP.get(config.get("model_id"))
-
-        if model == MODEL_GENERIC_BTHOME_DEVICE:
-            logger.warning(  # noqa: F821
-                "device %s doesn't present MODEL ID, for shelly devices update device's firmware. ",
-                device,
-            )
-            logger.info("Generic BTHome device %s", device)  # noqa: F821
+        if not (model := config["meta"]["ui"].get("local_name")):
+            model = BTH_DEV_MAP.get(config.get("model_id", MODEL_GENERIC_BTHOME_DEVICE))
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
