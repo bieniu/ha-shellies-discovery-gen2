@@ -5553,7 +5553,7 @@ if "components" in device_config:
                 "device %s doesn't present MODEL ID, for shelly devices update device's firmware. ",
                 device,
             )
-            logger.info("defaulting with generic device for %s", device)  # noqa: F821
+            logger.info("Generic BTHome device %s", device)  # noqa: F821
 
         if model not in SUPPORTED_MODELS:
             logger.warning(  # noqa: F821
