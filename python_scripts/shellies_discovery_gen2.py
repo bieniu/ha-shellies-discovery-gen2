@@ -1897,7 +1897,6 @@ SUPPORTED_MODELS = {
     },
     MODEL_GENERIC_BTHOME_DEVICE: {
         ATTR_NAME: MODEL_GENERIC_BTHOME_DEVICE,
-        ATTR_MODEL_ID: MODEL_GENERIC_BTHOME_DEVICE,
         ATTR_SENSORS: {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_BTH_TEMPERATURE,
             SENSOR_HUMIDITY: DESCRIPTION_SENSOR_BTH_HUMIDITY,
@@ -5568,10 +5567,11 @@ if "components" in device_config:
             KEY_IDENTIFIERS: [mac],
             KEY_NAME: device_name,
             KEY_MODEL: SUPPORTED_MODELS[model][ATTR_NAME],
-            KEY_MODEL_ID: SUPPORTED_MODELS[model][ATTR_MODEL_ID],
             KEY_MANUFACTURER: ATTR_MANUFACTURER,
             KEY_VIA_DEVICE: via_device,
         }
+        if model_id := SUPPORTED_MODELS[model].get(ATTR_MODEL_ID):
+            device_info[KEY_MODEL_ID] = model_id
 
         binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
         sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
