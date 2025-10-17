@@ -5466,6 +5466,9 @@ if "components" in device_config:
             config[ATTR_NAME]
             or f"{SUPPORTED_MODELS[model][ATTR_NAME]} {mac.upper().replace(':', '')}"
         ).replace("'", "_")
+
+        # Store original device_id before modification for use in bthome_device_id_prefix
+        original_device_id = device_id
         device_id += f"-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
@@ -5504,7 +5507,7 @@ if "components" in device_config:
             )
             config_data[topic] = payload
 
-        bthome_device_id_prefix = f"{device_id.split('-')[0]}-{mac.replace(':', '')}"
+        bthome_device_id_prefix = f"{original_device_id}-{mac.replace(':', '')}"
 
         # Create event entity for button presses
         topic, payload = get_bthome_event(btdevice_id, bthome_device_id_prefix)
