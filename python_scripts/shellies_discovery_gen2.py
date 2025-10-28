@@ -21,6 +21,7 @@ ATTR_FW_ID = "fw_id"
 ATTR_GEN = "gen"
 ATTR_ID = "id"
 ATTR_INPUT = "input"
+ATTR_INPUTS = "inputs"
 ATTR_INPUT_BINARY_SENSORS = "inputs_binary_sensors"
 ATTR_INPUT_EVENTS = "input_events"
 ATTR_INPUT_SENSORS = "input_sensors"
@@ -1899,11 +1900,12 @@ SUPPORTED_MODELS = {
     },
     MODEL_BLU_BUTTON1: {
         ATTR_NAME: "Shelly BLU Button1",
-        ATTR_MODEL_ID: "SBBT-002C",
+        ATTR_MODEL_ID: MODEL_BLU_BUTTON1,
         ATTR_SENSORS: {
             SENSOR_SIGNAL_STRENGTH: DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH,
             SENSOR_BATTERY: DESCRIPTION_SENSOR_BTH_DEV_BATTERY,
         },
+        ATTR_INPUTS: 1,
     },
     MODEL_GENERIC_BTHOME_DEVICE: {
         ATTR_NAME: MODEL_GENERIC_BTHOME_DEVICE,
@@ -4965,14 +4967,14 @@ def get_binary_sensor(
     return topic, payload
 
 
-def get_bthome_event(bt_id, device_id_prefix):
+def get_bthome_event(input_id, bt_id, device_id_prefix):
     """Create configuration for BTHome device event entity."""
     topic = encode_config_topic(
-        f"{disc_prefix}/event/{device_id_prefix}-{bt_id}/config"
+        f"{disc_prefix}/event/{device_id_prefix}-{bt_id}-{input_id}/config"
     )
 
     payload = {
-        KEY_NAME: f"Button {bt_id}",
+        KEY_NAME: f"Button {input_id}",
         KEY_STATE_TOPIC: TOPIC_EVENTS_RPC,
         KEY_EVENT_TYPES: [
             EVENT_SINGLE_PUSH,
@@ -4980,8 +4982,8 @@ def get_bthome_event(bt_id, device_id_prefix):
             EVENT_LONG_PUSH,
             EVENT_TRIPLE_PUSH,
         ],
-        KEY_VALUE_TEMPLATE: f"{{%if value_json.params.events.0.component==^bthomedevice:{bt_id}^ and value_json.params.events.0.event is defined%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}",
-        KEY_UNIQUE_ID: f"{device_id_prefix}-{bt_id}".lower(),
+        KEY_VALUE_TEMPLATE: f"{{%if value_json.params.events.0.component==^bthomedevice:{bt_id}^ and value_json.params.events.0.idx is defined and value_json.params.events.0.idx=={input_id} and value_json.params.events.0.event is defined%}}{{{{{{^event_type^:value_json.params.events.0.event}}|to_json}}}}{{%endif%}}",
+        KEY_UNIQUE_ID: f"{device_id_prefix}-{bt_id}-{input_id}".lower(),
         KEY_QOS: qos,
         KEY_AVAILABILITY: availability,
         KEY_DEVICE: device_info,
@@ -4993,21 +4995,21 @@ def get_bthome_event(bt_id, device_id_prefix):
     return topic, payload
 
 
-def get_bthome_input(bt_id, device_id_prefix, event):
+def get_bthome_input(input_id, bt_id, device_id_prefix, event):
     """Create configuration for BTHome device input event automation."""
     topic = encode_config_topic(
-        f"{disc_prefix}/device_automation/{device_id_prefix}-{bt_id}/{event}/config"
+        f"{disc_prefix}/device_automation/{device_id_prefix}-{bt_id}-{input_id}/{event}/config"
     )
 
     payload = {
         KEY_AUTOMATION_TYPE: VALUE_TRIGGER,
         KEY_TOPIC: f"{default_topic}events/rpc",
-        KEY_PAYLOAD: f"bthomedevice:{bt_id}_{event}",
-        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.component}}_{{value_json.params.events.0.event}}",
+        KEY_PAYLOAD: f"bthomedevice:{bt_id}_{input_id}_{event}",
+        KEY_VALUE_TEMPLATE: "{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}",
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_TYPE: DEVICE_TRIGGER_MAP[event],
-        KEY_SUBTYPE: f"button_{bt_id}",
+        KEY_SUBTYPE: f"button_{input_id + 1}",
     }
 
     return topic, payload
@@ -5662,22 +5664,26 @@ if "components" in device_config:
             config_data[topic] = payload
 
         bthome_device_id_prefix = f"{original_device_id}-{mac.replace(':', '')}"
+        bth_inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 
         # Create event entity for button presses
-        topic, payload = get_bthome_event(btdevice_id, bthome_device_id_prefix)
-        config_data[topic] = payload
-
-        # Create device automation triggers for each supported event type
-        for event in [
-            EVENT_SINGLE_PUSH,
-            EVENT_DOUBLE_PUSH,
-            EVENT_LONG_PUSH,
-            EVENT_TRIPLE_PUSH,
-        ]:
-            topic, payload = get_bthome_input(
-                btdevice_id, bthome_device_id_prefix, event
+        for input_id in range(bth_inputs):
+            topic, payload = get_bthome_event(
+                input_id, btdevice_id, bthome_device_id_prefix
             )
             config_data[topic] = payload
+
+        # Create device automation triggers for each supported event type
+            for event in [
+                EVENT_SINGLE_PUSH,
+                EVENT_DOUBLE_PUSH,
+                EVENT_LONG_PUSH,
+                EVENT_TRIPLE_PUSH,
+            ]:
+                topic, payload = get_bthome_input(
+                    input_id, btdevice_id, bthome_device_id_prefix, event
+                )
+                config_data[topic] = payload
 
     for thermostat, config in blutrv_devices.items():
         model = BTH_DEV_MAP.get(config.get("model_id"))
