@@ -101,6 +101,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly BLU Motion (via Shelly Pro or Gen3+ device)
 - Shelly BLU RC Button 4 (via Shelly Pro or Gen3+ device)
 - Shelly BLU TRV (via Shelly BLU Gateway Gen3)
+- Shelly BLU Wall Switch 4 (via Shelly Pro or Gen3+ device)
 
 ### Powered by Shelly
 
