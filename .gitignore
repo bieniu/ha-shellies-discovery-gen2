@@ -139,3 +139,4 @@ blueprints
 *.log.*
 *.yaml
 custom_components
+.ha_run.lock
