@@ -5609,6 +5609,8 @@ if "components" in device_config:
 
     via_device = format_mac(device_id.rsplit("-", 1)[-1])
 
+    original_device_id = device_id
+
     for device, config in bthome_devices.items():
         btdevice_id = device.split(":")[-1]
         if f"blutrv:{btdevice_id}" in blutrv_devices:
@@ -5633,9 +5635,7 @@ if "components" in device_config:
             or f"{SUPPORTED_MODELS[model][ATTR_NAME]} {mac.upper().replace(':', '')}"
         ).replace("'", "_")
 
-        # Store original device_id before modification for use in bthome_device_id_prefix
-        original_device_id = device_id
-        device_id += f"-{mac.replace(':', '')}"
+        device_id = f"{original_device_id}-{mac.replace(':', '')}"
         device_info = {
             KEY_CONNECTIONS: [["bluetooth", mac]],
             KEY_IDENTIFIERS: [mac],
@@ -5674,14 +5674,11 @@ if "components" in device_config:
             )
             config_data[topic] = payload
 
-        bthome_device_id_prefix = f"{original_device_id}-{mac.replace(':', '')}"
         bth_inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 
         for input_id in range(bth_inputs):
             # Create event entity for button presses
-            topic, payload = get_bthome_event(
-                input_id, btdevice_id, bthome_device_id_prefix
-            )
+            topic, payload = get_bthome_event(input_id, btdevice_id, device_id)
             config_data[topic] = payload
 
             # Create device automation triggers for each supported event type
@@ -5692,7 +5689,7 @@ if "components" in device_config:
                 EVENT_TRIPLE_PUSH,
             ]:
                 topic, payload = get_bthome_input(
-                    input_id, btdevice_id, bthome_device_id_prefix, event
+                    input_id, btdevice_id, device_id, event
                 )
                 config_data[topic] = payload
 
