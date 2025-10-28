@@ -5666,14 +5666,14 @@ if "components" in device_config:
         bthome_device_id_prefix = f"{original_device_id}-{mac.replace(':', '')}"
         bth_inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
 
-        # Create event entity for button presses
         for input_id in range(bth_inputs):
+            # Create event entity for button presses
             topic, payload = get_bthome_event(
                 input_id, btdevice_id, bthome_device_id_prefix
             )
             config_data[topic] = payload
 
-        # Create device automation triggers for each supported event type
+            # Create device automation triggers for each supported event type
             for event in [
                 EVENT_SINGLE_PUSH,
                 EVENT_DOUBLE_PUSH,
