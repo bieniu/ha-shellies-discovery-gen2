@@ -5232,8 +5232,10 @@ def configure_device():
     elif model == MODEL_PLUS_RGBW_PM:
         profile = device_config["sys"]["device"][ATTR_PROFILE]
     elif model in (
+        MODEL_DALI_DIMMER_G3,
         MODEL_DIMMER_10V_G3,
         MODEL_DIMMER_G3,
+        MODEL_PLUS_DIMMER_10V,
         MODEL_PRO_DIMMER_1PM,
         MODEL_PRO_DIMMER_2PM,
     ):
