@@ -160,6 +160,7 @@ logger:
 - the relay consumption type is taken from the device configuration (consumption type must contain `light` or `fan` to configure light or fan platform)
 - if the input type is set to button, device automation triggers are available
 - custom MQTT prefixes are supported
+- Shellies devices with many components only accessible via paginated MQTT requests
 
 ## Script arguments
 
@@ -174,6 +175,14 @@ key | optional | type | default | description
 ```yaml
 # configuration.yaml file
 python_script:
+
+mqtt:
+  sensor:
+    - name: "Shelly Discovery Store"
+      state_topic: "prep_shellies_discovery/rpc"
+      value_template: "{{ value_json.src }}"
+      json_attributes_topic: "prep_shellies_discovery/rpc"
+      json_attributes_template: "{{ value_json.result | tojson }}"
 
 # automations.yaml file
 - id: shellies_announce_gen2
@@ -199,6 +208,88 @@ python_script:
             data:
               topic: "{{ repeat.item }}/rpc"
               payload: "{{ get_components_payload }}"
+
+alias: Shelly Announce Gen 2 w Pagination
+description: ""
+triggers:
+  - trigger: homeassistant
+    event: start
+variables:
+  device_ids: # enter the list of device IDs (MQTT prefixes) here
+    - shellyplus2pm-485519a1ff8c
+  
+  # Do not touch except you know what you're doing
+  prep_topic: prep_shellies_discovery
+  shelly_discovery_topic: shellies_discovery
+actions:
+  - alias: Für jede Device Id
+    repeat:
+      for_each: "{{ device_ids }}"
+      sequence:
+        - variables:
+            current_device_id: "{{ repeat.item }}"
+            current_device_config: |
+              {{
+                { 
+                  "id": 1,
+                  "src": "src",
+                  "dst": "dst",
+                  "result": {
+                    'components':[],
+                    'not_init': true,
+                    'offset': 0,
+                    'total':100
+                  }
+                }
+              }}
+        - repeat:
+            sequence:
+              - variables:
+                  get_components_payload: |
+                    {{
+                      {
+                        'id': 1, 
+                        'src': prep_topic,
+                        'method':'Shelly.GetComponents',
+                        'params': {'include': ['config'], 'offset': (current_device_config.result.components | length) }
+                        
+                      }
+                    }}
+              - parallel:
+                  - action: mqtt.publish
+                    data:
+                      topic: "{{ current_device_id }}/rpc"
+                      payload: "{{ get_components_payload | to_json }}"
+                  - wait_for_trigger:
+                      - trigger: mqtt
+                        topic: "{{ prep_topic }}/rpc"
+              - variables:
+                  current_device_config: |
+                    {{ 
+                      { 
+                        "id": 1,
+                        "src": current_device_id,
+                        "dst": shelly_discovery_topic,
+                        "result": {
+                            'components': current_device_config.result.components + state_attr('sensor.shelly_discovery_store','components'),
+                            'cfg_rev': state_attr('sensor.shelly_discovery_store','cfg_rev'),
+                            'offset': state_attr('sensor.shelly_discovery_store','offset'),
+                            'total': state_attr('sensor.shelly_discovery_store','total')
+                          }
+                      }
+                    }}
+            until:
+              - condition: template
+                value_template: |
+                  {{ current_device_config.result.total <=
+                    (current_device_config.result.components | length) }}
+                enabled: true
+          enabled: true
+        - action: mqtt.publish
+          data:
+            topic: "{{ shelly_discovery_topic }}/rpc"
+            payload: "{{ current_device_config | to_json }}"
+          enabled: true
 
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"
