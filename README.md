@@ -222,7 +222,7 @@ variables:
   prep_topic: prep_shellies_discovery
   shelly_discovery_topic: shellies_discovery
 actions:
-  - alias: Für jede Device Id
+  - alias: for each device id
     repeat:
       for_each: "{{ device_ids }}"
       sequence:
