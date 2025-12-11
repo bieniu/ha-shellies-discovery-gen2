@@ -185,17 +185,18 @@ mqtt:
       json_attributes_template: "{{ value_json.result | tojson }}"
 
 # automations.yaml file
-- id: shellies_announce_gen2
-  alias: "Shellies Announce Gen2"
+- alias: Shelly Announce Gen 2 w Pagination
+  id: shelly_announce_gen2_w_pagination
   triggers:
     - trigger: homeassistant
       event: start
   variables:
-    get_config_payload: "{{ {'id': 1, 'src': 'shellies_discovery', 'method': 'Shelly.GetConfig'} | to_json }}"
-    get_components_payload: "{{ {'id': 1, 'src': 'shellies_discovery', 'method':'Shelly.GetComponents', 'params': {'include': ['config']}} | to_json }}"
-    device_ids:  # enter the list of device IDs (MQTT prefixes) here
+    device_ids: # enter the list of device IDs (MQTT prefixes) here
       - shellyplus2pm-485519a1ff8c
-      - custom-prefix/shelly-kitchen
+    
+    # Do not touch except you know what you're doing
+    prep_topic: prep_shellies_discovery
+    shelly_discovery_topic: shellies_discovery
   actions:
     - repeat:
         for_each: "{{ device_ids }}"
@@ -203,93 +204,67 @@ mqtt:
           - action: mqtt.publish
             data:
               topic: "{{ repeat.item }}/rpc"
-              payload: "{{ get_config_payload }}"
+              payload: "{{ {'id': 1, 'src': shelly_discovery_topic, 'method':'Shelly.GetConfig'} | to_json }}"
+          - variables:
+              current_device_id: "{{ repeat.item }}"
+              current_device_config: |
+                {{
+                  { 
+                    "id": 1,
+                    "src": "src",
+                    "dst": "dst",
+                    "result": {'components':[],'not_init': true,'offset': 0,'total':100}
+                  }
+                }}
+          - repeat:
+              sequence:
+                - variables:
+                    get_components_payload: |
+                      {{
+                        {
+                          'id': 1, 
+                          'src': prep_topic,
+                          'method':'Shelly.GetComponents',
+                          'params': {'include': ['config'], 'offset': (current_device_config.result.components | length) }
+                          
+                        }
+                      }}
+                - action: mqtt.publish
+                  data:
+                    topic: "{{ current_device_id }}/rpc"
+                    payload: "{{ get_components_payload | to_json }}"
+                - delay:
+                    hours: 0
+                    minutes: 0
+                    seconds: 1
+                    milliseconds: 0
+                - variables:
+                    current_device_config: |
+                      {{ 
+                        { 
+                          "id": 1,
+                          "src": current_device_id,
+                          "dst": shelly_discovery_topic,
+                          "result": {
+                              'components': current_device_config.result.components + state_attr('sensor.shelly_discovery_store','components'),
+                              'cfg_rev': state_attr('sensor.shelly_discovery_store','cfg_rev'),
+                              'offset': state_attr('sensor.shelly_discovery_store','offset'),
+                              'total': state_attr('sensor.shelly_discovery_store','total')
+                            }
+                        }
+                      }}
+              until:
+                - condition: template
+                  value_template: |
+                    {{ current_device_config.result.total <=
+                      (current_device_config.result.components | length) }}
+                  enabled: true
+            enabled: true
           - action: mqtt.publish
             data:
-              topic: "{{ repeat.item }}/rpc"
-              payload: "{{ get_components_payload }}"
-
-alias: Shelly Announce Gen 2 w Pagination
-description: ""
-triggers:
-  - trigger: homeassistant
-    event: start
-variables:
-  device_ids: # enter the list of device IDs (MQTT prefixes) here
-    - shellyplus2pm-485519a1ff8c
-  
-  # Do not touch except you know what you're doing
-  prep_topic: prep_shellies_discovery
-  shelly_discovery_topic: shellies_discovery
-actions:
-  - alias: for each device id
-    repeat:
-      for_each: "{{ device_ids }}"
-      sequence:
-        - variables:
-            current_device_id: "{{ repeat.item }}"
-            current_device_config: |
-              {{
-                { 
-                  "id": 1,
-                  "src": "src",
-                  "dst": "dst",
-                  "result": {
-                    'components':[],
-                    'not_init': true,
-                    'offset': 0,
-                    'total':100
-                  }
-                }
-              }}
-        - repeat:
-            sequence:
-              - variables:
-                  get_components_payload: |
-                    {{
-                      {
-                        'id': 1, 
-                        'src': prep_topic,
-                        'method':'Shelly.GetComponents',
-                        'params': {'include': ['config'], 'offset': (current_device_config.result.components | length) }
-                        
-                      }
-                    }}
-              - parallel:
-                  - action: mqtt.publish
-                    data:
-                      topic: "{{ current_device_id }}/rpc"
-                      payload: "{{ get_components_payload | to_json }}"
-                  - wait_for_trigger:
-                      - trigger: mqtt
-                        topic: "{{ prep_topic }}/rpc"
-              - variables:
-                  current_device_config: |
-                    {{ 
-                      { 
-                        "id": 1,
-                        "src": current_device_id,
-                        "dst": shelly_discovery_topic,
-                        "result": {
-                            'components': current_device_config.result.components + state_attr('sensor.shelly_discovery_store','components'),
-                            'cfg_rev': state_attr('sensor.shelly_discovery_store','cfg_rev'),
-                            'offset': state_attr('sensor.shelly_discovery_store','offset'),
-                            'total': state_attr('sensor.shelly_discovery_store','total')
-                          }
-                      }
-                    }}
-            until:
-              - condition: template
-                value_template: |
-                  {{ current_device_config.result.total <=
-                    (current_device_config.result.components | length) }}
-                enabled: true
-          enabled: true
-        - action: mqtt.publish
-          data:
-            topic: "{{ shelly_discovery_topic }}/rpc"
-            payload: "{{ current_device_config | to_json }}"
-          enabled: true
+              topic: "{{ shelly_discovery_topic }}/rpc"
+              payload: "{{ current_device_config | to_json }}"
+            enabled: true
 
 - id: shellies_discovery_gen2
   alias: "Shellies Discovery Gen2"
