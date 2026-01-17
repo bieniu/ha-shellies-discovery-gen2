@@ -1,6 +1,5 @@
 {
     "files.associations": {
         "*.yaml": "home-assistant"
-    },
-    "python.pythonPath": "venv/bin/python"
+    }
 }
