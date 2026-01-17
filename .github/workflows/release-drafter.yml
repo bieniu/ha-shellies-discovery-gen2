@@ -8,6 +8,9 @@ on:
 jobs:
   update_release_draft:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
     name: Release Drafter
     steps:
       - name: Checkout the repository
