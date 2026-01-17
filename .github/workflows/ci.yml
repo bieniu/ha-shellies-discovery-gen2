@@ -45,4 +45,3 @@ jobs:
           check-toml \
           mixed-line-ending \
           --all-files \
-          --exclude .github/ISSUE_TEMPLATE/bug_report.md
