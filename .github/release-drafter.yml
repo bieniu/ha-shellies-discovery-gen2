@@ -54,7 +54,7 @@ version-resolver:
 
 template: |
   [![Downloads for this release](https://img.shields.io/github/downloads/bieniu/ha-shellies-discovery-gen2/$RESOLVED_VERSION/total.svg)](https://github.com/bieniu/ha-shellies-discovery-gen2/releases/$RESOLVED_VERSION)
-  
+
   ## What's changed
 
   $CHANGES
