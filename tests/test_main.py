@@ -152,8 +152,10 @@ def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
-        if payload := hass.services.call.call_args_list[call][0][2].get("payload"):
-            assert json.loads(payload) == snapshot
+        payload = hass.services.call.call_args_list[call][0][2].get("payload")
+        if not payload:
+            continue
+        assert json.loads(payload) == snapshot
 
 def test_shelly_plug_m_gen3(snapshot: SnapshotAssertion) -> None:
     """Test for Shelly Plug M Gen3."""
@@ -169,8 +171,29 @@ def test_shelly_plug_m_gen3(snapshot: SnapshotAssertion) -> None:
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
-        if payload := hass.services.call.call_args_list[call][0][2].get("payload"):
-            assert json.loads(payload) == snapshot
+        payload = hass.services.call.call_args_list[call][0][2].get("payload")
+        if not payload:
+            continue
+        assert json.loads(payload) == snapshot
+
+def test_shelly_plug_pm_gen3(snapshot: SnapshotAssertion) -> None:
+    """Test for Shelly Plug PM Gen3."""
+    logger = Mock()
+    hass = Mock()
+    hass.services = Mock()
+    fixture_path = FIXTURES_PATH / "shelly_plug_pm_gen3.json"
+    data = json.loads(fixture_path.read_text())
+
+    result = run_script(logger=logger, data=data, hass=hass)
+
+    assert result.config_data
+    assert hass.services.call.called
+
+    for call in range(len(hass.services.call.call_args_list)):
+        payload = hass.services.call.call_args_list[call][0][2].get("payload")
+        if not payload:
+            continue
+        assert json.loads(payload) == snapshot
 
 def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
     """Test for Shelly BLU RC Button 4 ZB."""
@@ -186,5 +209,7 @@ def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
-        if payload := hass.services.call.call_args_list[call][0][2].get("payload"):
-            assert json.loads(payload) == snapshot
+        payload = hass.services.call.call_args_list[call][0][2].get("payload")
+        if not payload:
+            continue
+        assert json.loads(payload) == snapshot

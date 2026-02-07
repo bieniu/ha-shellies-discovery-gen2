@@ -1,0 +1,108 @@
+{
+    "id": "shellyplugpmg3-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": true
+            }
+        },
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "mqtt": {
+            "enable": false,
+            "server": "mqtt.local:1883",
+            "client_id": "shellyplugpmg3-aabbccddeeff",
+            "user": "iot",
+            "ssl_ca": null,
+            "topic_prefix": "shellyplugpmg3-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": false
+        },
+        "pm1:0": {
+            "id": 0,
+            "name": null,
+            "reverse": false
+        },
+        "sys": {
+            "device": {
+                "name": "Shelly Plug PM [DDEEFF]",
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20250924-062728/1.7.1-gd336f31",
+                "discoverable": true,
+                "eco_mode": true
+            },
+            "location": {
+                "tz": "Europe/Warsaw",
+                "lat": 11.11775,
+                "lon": 22.94637
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "ntp.local"
+            },
+            "cfg_rev": 57
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "ShellyPlugPMG3-AABBCCDDEEFF",
+                "is_open": true,
+                "enable": false,
+                "range_extender": {
+                    "enable": false
+                }
+            },
+            "sta": {
+                "ssid": "WIFI-Network",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -70,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}

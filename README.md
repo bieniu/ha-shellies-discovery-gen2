@@ -88,6 +88,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly i4 Gen3
 - Shelly Outdoor Plug S Gen3
 - Shelly Plug M Gen3
+- Shelly Plug PM Gen3
 - Shelly Plug S Gen3
 - Shelly PM Mini Gen3
 - Shelly X MOD1
