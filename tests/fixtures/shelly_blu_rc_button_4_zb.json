@@ -1,0 +1,90 @@
+{
+    "id": "shellyplugusg4-aabbccddeeff",
+    "device_config": {
+        "components": [
+            {
+                "key": "ble",
+                "status": {},
+                "config": {
+                    "enable": true,
+                    "rpc": {
+                        "enable": false
+                    }
+                }
+            },
+            {
+                "key": "bthome",
+                "status": {},
+                "config": {}
+            },
+            {
+                "key": "bthomedevice:200",
+                "status": {
+                    "id": 200,
+                    "rssi": -58,
+                    "battery": 100,
+                    "packet_id": 21,
+                    "last_updated_ts": 1768761133,
+                    "paired": true,
+                    "rpc": false,
+                    "rsv": -1,
+                    "fw_ver": "v1.1.4"
+                },
+                "config": {
+                    "id": 200,
+                    "addr": "11:22:33:44:55:66",
+                    "name": "FourButtonSwitch",
+                    "key": null,
+                    "meta": {
+                        "ui": {
+                            "view": "regular",
+                            "icon": null
+                        }
+                    }
+                },
+                "attrs": {
+                    "flags": 0,
+                    "model_id": 22
+                }
+            },
+            {
+                "key": "bthomesensor:200",
+                "status": {
+                    "id": 200,
+                    "value": 100,
+                    "last_updated_ts": 1768761133
+                },
+                "config": {
+                    "id": 200,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "obj_id": 1,
+                    "idx": 0,
+                    "meta": null
+                }
+            },
+            {
+                "key": "mqtt",
+                "status": {
+                    "connected": true
+                },
+                "config": {
+                    "enable": true,
+                    "server": "127.0.0.1",
+                    "client_id": "shellyplugusg4-aabbccddeeff",
+                    "user": "shelly",
+                    "ssl_ca": null,
+                    "topic_prefix": "shellyplugusg4-aabbccddeeff",
+                    "rpc_ntf": true,
+                    "status_ntf": true,
+                    "use_client_cert": false,
+                    "enable_rpc": true,
+                    "enable_control": true
+                }
+            }
+        ],
+        "cfg_rev": 14,
+        "offset": 0,
+        "total": 14
+    }
+}

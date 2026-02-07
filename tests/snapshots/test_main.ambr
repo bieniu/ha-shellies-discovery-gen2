@@ -843,3 +843,724 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
+# name: test_shelly_blu_rc_button_4_zb
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/bthomedevice:200',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-signal_strength',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.rssi}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.1
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'battery',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Battery',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/bthomedevice:200',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-battery',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.battery}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.10
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_1_long_push',
+    'qos': 0,
+    'stype': 'button_2',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.11
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_1_triple_push',
+    'qos': 0,
+    'stype': 'button_2',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.12
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'single_push',
+      'double_push',
+      'long_push',
+      'triple_push',
+    ]),
+    'name': 'Button 2',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-2',
+    'val_tpl': '{%if value_json.params.events.0.component=="bthomedevice:200" and value_json.params.events.0.idx is defined and value_json.params.events.0.idx==2 and value_json.params.events.0.event is defined%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.13
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_2_single_push',
+    'qos': 0,
+    'stype': 'button_3',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.14
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_2_double_push',
+    'qos': 0,
+    'stype': 'button_3',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.15
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_2_long_push',
+    'qos': 0,
+    'stype': 'button_3',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.16
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_2_triple_push',
+    'qos': 0,
+    'stype': 'button_3',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.17
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'single_push',
+      'double_push',
+      'long_push',
+      'triple_push',
+    ]),
+    'name': 'Button 3',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-3',
+    'val_tpl': '{%if value_json.params.events.0.component=="bthomedevice:200" and value_json.params.events.0.idx is defined and value_json.params.events.0.idx==3 and value_json.params.events.0.event is defined%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.18
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_3_single_push',
+    'qos': 0,
+    'stype': 'button_4',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.19
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_3_double_push',
+    'qos': 0,
+    'stype': 'button_4',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.2
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'single_push',
+      'double_push',
+      'long_push',
+      'triple_push',
+    ]),
+    'name': 'Button 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-0',
+    'val_tpl': '{%if value_json.params.events.0.component=="bthomedevice:200" and value_json.params.events.0.idx is defined and value_json.params.events.0.idx==0 and value_json.params.events.0.event is defined%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.20
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_3_long_push',
+    'qos': 0,
+    'stype': 'button_4',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.21
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_3_triple_push',
+    'qos': 0,
+    'stype': 'button_4',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.3
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_0_single_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.4
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_0_double_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.5
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_0_long_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.6
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_0_triple_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.7
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'single_push',
+      'double_push',
+      'long_push',
+      'triple_push',
+    ]),
+    'name': 'Button 1',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-200-1',
+    'val_tpl': '{%if value_json.params.events.0.component=="bthomedevice:200" and value_json.params.events.0.idx is defined and value_json.params.events.0.idx==1 and value_json.params.events.0.event is defined%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.8
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_1_single_push',
+    'qos': 0,
+    'stype': 'button_2',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_blu_rc_button_4_zb.9
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU RC Button 4 ZB',
+      'mdl_id': 'SBBT-104CUS',
+      'mf': 'Shelly',
+      'name': 'FourButtonSwitch',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:200_1_double_push',
+    'qos': 0,
+    'stype': 'button_2',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---

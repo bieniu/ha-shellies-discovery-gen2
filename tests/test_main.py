@@ -128,3 +128,22 @@ def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
     for call in range(len(hass.services.call.call_args_list)):
         if payload := hass.services.call.call_args_list[call][0][2].get("payload"):
             assert json.loads(payload) == snapshot
+
+def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
+    """Test for Shelly BLU RC Button 4 ZB."""
+    logger = Mock()
+    hass = Mock()
+    hass.services = Mock()
+    fixture_path = FIXTURES_PATH / "shelly_blu_rc_button_4_zb.json"
+    data = json.loads(fixture_path.read_text())
+
+    result = runpy.run_path(
+        str(SCRIPT_PATH), init_globals={"logger": logger, "data": data, "hass": hass}
+    )
+
+    assert result["config_data"]
+    assert hass.services.call.called
+
+    for call in range(len(hass.services.call.call_args_list)):
+        if payload := hass.services.call.call_args_list[call][0][2].get("payload"):
+            assert json.loads(payload) == snapshot
