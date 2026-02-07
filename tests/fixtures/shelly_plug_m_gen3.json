@@ -1,0 +1,166 @@
+{
+    "id": "shellyplugmg3-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": false
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "knx": {
+            "enable": false,
+            "ia": "15.15.255",
+            "routing": {
+                "addr": "224.0.23.12:3671"
+            }
+        },
+        "matter": {
+            "enable": true
+        },
+        "mqtt": {
+            "client_id": "shellyplugmg3-aabbccddeeff",
+            "enable": false,
+            "enable_control": true,
+            "enable_rpc": true,
+            "rpc_ntf": true,
+            "server": null,
+            "ssl_ca": null,
+            "status_ntf": false,
+            "topic_prefix": "shellyplugmg3-aabbccddeeff",
+            "use_client_cert": false,
+            "user": null
+        },
+        "plugs_ui": {
+            "controls": {
+                "switch:0": {
+                    "in_mode": "momentary"
+                }
+            },
+            "leds": {
+                "colors": {
+                    "power": {
+                        "brightness": 100
+                    },
+                    "switch:0": {
+                        "off": {
+                            "brightness": 100,
+                            "rgb": [
+                                100,
+                                0,
+                                0
+                            ]
+                        },
+                        "on": {
+                            "brightness": 100,
+                            "rgb": [
+                                0,
+                                100,
+                                0
+                            ]
+                        }
+                    }
+                },
+                "mode": "power",
+                "night_mode": {
+                    "active_between": [],
+                    "brightness": 100,
+                    "enable": false
+                }
+            }
+        },
+        "switch:0": {
+            "auto_off": false,
+            "auto_off_delay": 60,
+            "auto_on": false,
+            "auto_on_delay": 60,
+            "autorecover_voltage_errors": false,
+            "current_limit": 12,
+            "id": 0,
+            "initial_state": "off",
+            "name": null,
+            "power_limit": 2500,
+            "reverse": false,
+            "voltage_limit": 280
+        },
+        "sys": {
+            "cfg_rev": 12,
+            "debug": {
+                "file_level": null,
+                "level": 2,
+                "mqtt": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                },
+                "websocket": {
+                    "enable": false
+                }
+            },
+            "device": {
+                "discoverable": true,
+                "eco_mode": true,
+                "fw_id": "20260120-145242/1.7.4-gf9878b6",
+                "mac": "aabbccddeeff",
+                "name": "Shelly Plug M Gen3 [DDEEFF]"
+            },
+            "location": {
+                "lat": 46.2222,
+                "lon": 90.12121,
+                "tz": "Europe/Warsaw"
+            },
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "ntp.local"
+            },
+            "ui_data": {}
+        },
+        "wifi": {
+            "ap": {
+                "enable": false,
+                "is_open": true,
+                "range_extender": {
+                    "enable": false
+                },
+                "ssid": "shellyplugmg3-aabbccddeeff"
+            },
+            "roam": {
+                "interval": 60,
+                "rssi_thr": -80
+            },
+            "sta": {
+                "enable": true,
+                "gw": null,
+                "ip": null,
+                "ipv4mode": "dhcp",
+                "is_open": false,
+                "nameserver": null,
+                "netmask": null,
+                "ssid": "WiFi-Network"
+            },
+            "sta1": {
+                "enable": false,
+                "gw": null,
+                "ip": null,
+                "ipv4mode": "dhcp",
+                "is_open": true,
+                "nameserver": null,
+                "netmask": null,
+                "ssid": null
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}
