@@ -12,8 +12,7 @@ SCRIPT_PATH = (
     / "python_scripts"
     / "shellies_discovery_gen2.py"
 )
-FIXTURE_PATH = Path(__file__).resolve().parent / "fixtures" / "shelly_1_gen4.json"
-
+FIXTURES_PATH = Path(__file__).resolve().parent / "fixtures"
 
 def test_none_device_id() -> None:
     """Test that the script raises a ValueError when the device id is None."""
@@ -116,7 +115,8 @@ def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
     logger = Mock()
     hass = Mock()
     hass.services = Mock()
-    data = json.loads(FIXTURE_PATH.read_text())
+    fixture_path = FIXTURES_PATH / "shelly_1_gen4.json"
+    data = json.loads(fixture_path.read_text())
 
     result = runpy.run_path(
         str(SCRIPT_PATH), init_globals={"logger": logger, "data": data, "hass": hass}
