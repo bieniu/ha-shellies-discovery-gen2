@@ -14,8 +14,8 @@ SCRIPT_PATH = (
 )
 
 
-def test_main_block_rejects_none_device_id() -> None:
-    """Test that the main block raises a ValueError when the device id is None."""
+def test_none_device_id() -> None:
+    """Test that the script raises a ValueError when the device id is None."""
     logger = Mock()
     data = {"id": None}
 
