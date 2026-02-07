@@ -12,6 +12,7 @@ repos:
     hooks:
       - id: end-of-file-fixer
       - id: trailing-whitespace
+        exclude: \.ambr$
       - id: check-added-large-files
       - id: check-yaml
       - id: check-json

@@ -19,6 +19,7 @@ categories:
       - "enhancement"
       - "refactor"
       - "performance"
+      - "tests"
 
   - title: "🧰 Maintenance"
     labels:
@@ -50,6 +51,7 @@ version-resolver:
       - "enhancement"
       - "performance"
       - "refactor"
+      - "tests"
   default: patch
 
 template: |

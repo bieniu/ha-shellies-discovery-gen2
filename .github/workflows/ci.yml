@@ -23,7 +23,7 @@ jobs:
       with:
         enable-cache: true
         activate-environment: true
-        python-version: 3.13
+        python-version: 3.14
 
     - name: Install dependencies
       run: uv pip install -r requirements-test.txt
@@ -45,3 +45,24 @@ jobs:
           check-toml \
           mixed-line-ending \
           --all-files \
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v6
+
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        activate-environment: true
+        python-version: 3.14
+
+    - name: Install dependencies
+      run: uv pip install -r requirements-test.txt
+
+    - name: Run tests
+      run: pytest tests --timeout=30 --cov --cov-branch --cov-report=xml --error-for-skips
