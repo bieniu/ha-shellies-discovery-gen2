@@ -1,3 +1,4 @@
 prek==0.3.1
 pytest==9.0.2
 ruff==0.14.14
+syrupy==5.1.0

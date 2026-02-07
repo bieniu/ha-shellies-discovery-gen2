@@ -1,0 +1,845 @@
+# serializer version: 1
+# name: test_shelly_1_gen4
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20250114',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_1_gen4.1
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+
+        function sendDeviceStatus() {
+          try {
+            let installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("Shelly.GetStatus", {}, function (status) {
+              status.sys.installed_version = installedVersion;
+              MQTT.publish(topicPrefix + "/status/rpc", JSON.stringify(status));
+            });
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          console.log("Using topic prefix: ", topicPrefix);
+
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+
+        initScript();
+
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_1_gen4.10
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_double_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_1_gen4.11
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_long_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_1_gen4.12
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_single_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_1_gen4.13
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_triple_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_1_gen4.14
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shelly1g4-aabbccddeeff-restart',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.15
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly 1 Gen4 [DDEEFF] Firmware',
+    'uniq_id': 'shelly1g4-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.16
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly 1 Gen4 [DDEEFF] Firmware',
+    'uniq_id': 'shelly1g4-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.17
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.18
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.19
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.2
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_1_gen4.20
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.21
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.3
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_1_gen4.4
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_off_tpl': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
+    'cmd_on_tpl': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'name': 'Mirror light',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'schema': 'template',
+    'stat_t': '~status/switch:0',
+    'stat_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    'uniq_id': 'shelly1g4-aabbccddeeff-0',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.5
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Mirror light Temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shelly1g4-aabbccddeeff-0-temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json["switch:0"].temperature.tC}}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.6
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Mirror light Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shelly1g4-aabbccddeeff-0-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.7
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'btn_down',
+      'btn_up',
+      'double_push',
+      'long_push',
+      'single_push',
+      'triple_push',
+    ]),
+    'name': 'Button 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shelly1g4-aabbccddeeff-0',
+    'val_tpl': '{%if value_json.params.events.0.id==0%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shelly1g4-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_1_gen4.8
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_down',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_down',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_shelly_1_gen4.9
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_up',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_up',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
