@@ -46,8 +46,8 @@ jobs:
           mixed-line-ending \
           --all-files \
 
-  tests:
-    name: Tests
+  test:
+    name: Test
     runs-on: ubuntu-latest
 
     steps:
