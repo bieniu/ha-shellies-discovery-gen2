@@ -1,11 +1,13 @@
-# Shellies Discovery Gen2
-
+[![CI](https://img.shields.io/github/actions/workflow/status/bieniu/ha-shellies-discovery-gen2/ci.yml?branch=master&label=CI&logo=github&style=popout)](https://github.com/bieniu/ha-shellies-discovery-gen2/actions/workflows/ci.yml?query=branch%3Amaster)
+[![codecov](https://codecov.io/gh/bieniu/ha-shellies-discovery-gen2/graph/badge.svg?token=EWE6F3THLU)](https://codecov.io/gh/bieniu/ha-shellies-discovery-gen2)
 [![GitHub Release][releases-shield]][releases]
 [![GitHub All Releases][downloads-total-shield]][releases]
 [![Community Forum][forum-shield]][forum]
 [![Buy me a coffee][buy-me-a-coffee-shield]][buy-me-a-coffee]
 [![PayPal_Me][paypal-me-shield]][paypal-me]
 [![Revolut.Me][revolut-me-shield]][revolut-me]
+
+# Shellies Discovery Gen2
 
 This script adds MQTT discovery support for Shelly Gen2, Gen3 and Gen4 devices in the [Home Assistant](https://home-assistant.io/).
 
