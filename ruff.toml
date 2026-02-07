@@ -22,11 +22,11 @@ lint.ignore = [
     "TRY003",   # Avoid specifying long messages outside the exception class
 ]
 
-[tool.ruff.lint.per-file-ignores]
+[lint.per-file-ignores]
 "tests/*" = [
     "PLR2004",  # Magic value used in comparison
     "S101",     # Use of `assert` detected
-    ]
+]
 
 [lint.mccabe]
 max-complexity = 25
