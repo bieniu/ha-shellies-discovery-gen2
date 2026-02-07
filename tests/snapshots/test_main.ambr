@@ -2569,3 +2569,720 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
+# name: test_shelly_plug_pm_gen3
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20250114',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.1
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        
+        function sendDeviceStatus() {
+          try {
+            let installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("Shelly.GetStatus", {}, function (status) {
+              status.sys.installed_version = installedVersion;
+              MQTT.publish(topicPrefix + "/status/rpc", JSON.stringify(status));
+            });
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.10
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/pm1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.11
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/pm1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.12
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.13
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/pm1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.14
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.15
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.16
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.2
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.3
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.4
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-restart',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.5
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plug PM [DDEEFF] Firmware',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.6
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plug PM [DDEEFF] Firmware',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.7
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/pm1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.8
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/pm1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_shelly_plug_pm_gen3.9
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugpmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug PM Gen3',
+      'mdl_id': 'S3PL-30116EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug PM [DDEEFF]',
+      'sw': '20250924-062728/1.7.1-gd336f31',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplugpmg3-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellyplugpmg3-aabbccddeeff/',
+  })
+# ---
