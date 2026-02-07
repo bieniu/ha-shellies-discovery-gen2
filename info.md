@@ -105,6 +105,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 
 - Shelly BLU Button1 (via Shelly Pro or Gen3+ device)
 - Shelly BLU H&T (via Shelly Pro or Gen3+ device)
+- Shelly BLU H&T Display ZB (via Shelly Pro or Gen3+ device)
 - Shelly BLU Motion (via Shelly Pro or Gen3+ device)
 - Shelly BLU RC Button 4 (via Shelly Pro or Gen3+ device)
 - Shelly BLU RC Button 4 ZB (via Shelly Pro or Gen3+ device)
