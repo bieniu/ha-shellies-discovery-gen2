@@ -45,3 +45,6 @@ jobs:
           check-toml \
           mixed-line-ending \
           --all-files \
+
+    - name: Run tests
+      run: pytest tests
