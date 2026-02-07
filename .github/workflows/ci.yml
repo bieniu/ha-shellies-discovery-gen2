@@ -65,4 +65,4 @@ jobs:
       run: uv pip install -r requirements-test.txt
 
     - name: Run tests
-      run: pytest tests
+      run: pytest tests --cov=python_scripts.shellies_discovery_gen2

@@ -1,11 +1,14 @@
 """Tests for shellies_discovery_gen2.py."""
 
 import json
-import runpy
+import sys
+import types
+from importlib import util
 from pathlib import Path
 from unittest.mock import Mock
-from syrupy import SnapshotAssertion
+
 import pytest
+from syrupy import SnapshotAssertion
 
 SCRIPT_PATH = (
     Path(__file__).resolve().parents[1]
@@ -13,6 +16,31 @@ SCRIPT_PATH = (
     / "shellies_discovery_gen2.py"
 )
 FIXTURES_PATH = Path(__file__).resolve().parent / "fixtures"
+MODULE_NAME = "python_scripts.shellies_discovery_gen2"
+
+
+def run_script(*, data, logger, hass=None):
+    """Load and execute the script as a module for coverage."""
+    if MODULE_NAME in sys.modules:
+        del sys.modules[MODULE_NAME]
+
+    if "python_scripts" not in sys.modules:
+        package = types.ModuleType("python_scripts")
+        package.__path__ = [str(SCRIPT_PATH.parent)]
+        sys.modules["python_scripts"] = package
+
+    spec = util.spec_from_file_location(MODULE_NAME, SCRIPT_PATH)
+    if spec is None or spec.loader is None:
+        raise RuntimeError("Unable to load module spec for shellies_discovery_gen2")
+
+    module = util.module_from_spec(spec)
+    module.data = data
+    module.logger = logger
+    if hass is not None:
+        module.hass = hass
+    sys.modules[MODULE_NAME] = module
+    spec.loader.exec_module(module)
+    return module
 
 def test_none_device_id() -> None:
     """Test that the script raises a ValueError when the device id is None."""
@@ -22,7 +50,7 @@ def test_none_device_id() -> None:
     with pytest.raises(
         ValueError, match="id value None is not valid, check script configuration"
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_unsupported_model() -> None:
@@ -34,7 +62,7 @@ def test_unsupported_model() -> None:
         ValueError,
         match="model unsupported is not supported, please open a feature request",
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_script_prefix_with_trailing_slash() -> None:
@@ -50,7 +78,7 @@ def test_script_prefix_with_trailing_slash() -> None:
         ValueError,
         match="Script prefix value bad/prefix/ is not valid, check script configuration",
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_invalid_qos() -> None:
@@ -65,7 +93,7 @@ def test_invalid_qos() -> None:
     with pytest.raises(
         ValueError, match="QoS value 3 is not valid, check script configuration"
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_missing_mqtt_component() -> None:
@@ -84,7 +112,7 @@ def test_missing_mqtt_component() -> None:
         ValueError,
         match="Missing MQTT component, probably 'Shelly.GetComponent' pagination problem",
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_mqtt_prefix_with_space() -> None:
@@ -107,7 +135,7 @@ def test_mqtt_prefix_with_space() -> None:
         ValueError,
         match="MQTT prefix value bad topic/ is not valid, check device configuration",
     ):
-        runpy.run_path(str(SCRIPT_PATH), init_globals={"logger": logger, "data": data})
+        run_script(logger=logger, data=data)
 
 
 def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
@@ -118,11 +146,9 @@ def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
     fixture_path = FIXTURES_PATH / "shelly_1_gen4.json"
     data = json.loads(fixture_path.read_text())
 
-    result = runpy.run_path(
-        str(SCRIPT_PATH), init_globals={"logger": logger, "data": data, "hass": hass}
-    )
+    result = run_script(logger=logger, data=data, hass=hass)
 
-    assert result["config_data"]
+    assert result.config_data
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
@@ -137,11 +163,9 @@ def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
     fixture_path = FIXTURES_PATH / "shelly_blu_rc_button_4_zb.json"
     data = json.loads(fixture_path.read_text())
 
-    result = runpy.run_path(
-        str(SCRIPT_PATH), init_globals={"logger": logger, "data": data, "hass": hass}
-    )
+    result = run_script(logger=logger, data=data, hass=hass)
 
-    assert result["config_data"]
+    assert result.config_data
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
