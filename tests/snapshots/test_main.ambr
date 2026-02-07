@@ -17,7 +17,7 @@
       'code': '''
         let topicPrefix = null;
         let updateTimer = null;
-
+        
         function sendDeviceStatus() {
           try {
             let installedVersion = Shelly.getDeviceInfo().ver;
@@ -29,16 +29,16 @@
             console.log("sendDeviceStatus has failed: ", e);
           }
         }
-
+        
         function onMQTTConfigReceived(config) {
           topicPrefix = config.topic_prefix;
           console.log("Using topic prefix: ", topicPrefix);
-
+        
           if (!updateTimer) {
             updateTimer = Timer.set(30000, true, sendDeviceStatus);
           }
         }
-
+        
         function initScript() {
           console.log("Starting shellies_discovery_gen2_script");
           try {
@@ -47,9 +47,9 @@
             console.log("initScript has failed: ", e);
           }
         }
-
+        
         initScript();
-
+  
       ''',
       'id': 1,
     }),
