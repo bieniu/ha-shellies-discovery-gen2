@@ -138,69 +138,13 @@ def test_mqtt_prefix_with_space() -> None:
         run_script(logger=logger, data=data)
 
 
-def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly 1 Gen4."""
+@pytest.mark.parametrize("device_fixture", ["shelly_1_gen4", "shelly_plug_m_gen3", "shelly_plug_pm_gen3", "shelly_blu_rc_button_4_zb"])
+def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
+    """Test for Shelly devices."""
     logger = Mock()
     hass = Mock()
     hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_1_gen4.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_plug_m_gen3(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly Plug M Gen3."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_plug_m_gen3.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_plug_pm_gen3(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly Plug PM Gen3."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_plug_pm_gen3.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly BLU RC Button 4 ZB."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_blu_rc_button_4_zb.json"
+    fixture_path = FIXTURES_PATH / f"{device_fixture}.json"
     data = json.loads(fixture_path.read_text())
 
     result = run_script(logger=logger, data=data, hass=hass)

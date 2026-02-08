@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_shelly_1_gen4
+# name: test_device[shelly_1_gen4]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -9,7 +9,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_1_gen4.1
+# name: test_device[shelly_1_gen4].1
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -56,7 +56,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_1_gen4.10
+# name: test_device[shelly_1_gen4].10
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -85,7 +85,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_1_gen4.11
+# name: test_device[shelly_1_gen4].11
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -114,7 +114,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_1_gen4.12
+# name: test_device[shelly_1_gen4].12
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -143,7 +143,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_1_gen4.13
+# name: test_device[shelly_1_gen4].13
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -172,7 +172,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_1_gen4.14
+# name: test_device[shelly_1_gen4].14
   dict({
     'avty': list([
       dict({
@@ -219,7 +219,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.15
+# name: test_device[shelly_1_gen4].15
   dict({
     'avty': list([
       dict({
@@ -273,7 +273,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.16
+# name: test_device[shelly_1_gen4].16
   dict({
     'avty': list([
       dict({
@@ -327,7 +327,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.17
+# name: test_device[shelly_1_gen4].17
   dict({
     'avty': list([
       dict({
@@ -374,7 +374,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.18
+# name: test_device[shelly_1_gen4].18
   dict({
     'avty': list([
       dict({
@@ -421,7 +421,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.19
+# name: test_device[shelly_1_gen4].19
   dict({
     'avty': list([
       dict({
@@ -468,7 +468,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.2
+# name: test_device[shelly_1_gen4].2
   dict({
     'id': 1,
     'method': 'Script.Start',
@@ -478,7 +478,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_1_gen4.20
+# name: test_device[shelly_1_gen4].20
   dict({
     'avty': list([
       dict({
@@ -527,7 +527,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.21
+# name: test_device[shelly_1_gen4].21
   dict({
     'avty': list([
       dict({
@@ -574,7 +574,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.3
+# name: test_device[shelly_1_gen4].3
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -587,7 +587,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_1_gen4.4
+# name: test_device[shelly_1_gen4].4
   dict({
     'avty': list([
       dict({
@@ -635,7 +635,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.5
+# name: test_device[shelly_1_gen4].5
   dict({
     'avty': list([
       dict({
@@ -685,7 +685,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.6
+# name: test_device[shelly_1_gen4].6
   dict({
     'avty': list([
       dict({
@@ -732,7 +732,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.7
+# name: test_device[shelly_1_gen4].7
   dict({
     'avty': list([
       dict({
@@ -785,7 +785,7 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_1_gen4.8
+# name: test_device[shelly_1_gen4].8
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -814,7 +814,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_1_gen4.9
+# name: test_device[shelly_1_gen4].9
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -843,7 +843,7 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb
+# name: test_device[shelly_blu_rc_button_4_zb]
   dict({
     'avty': list([
       dict({
@@ -890,7 +890,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.1
+# name: test_device[shelly_blu_rc_button_4_zb].1
   dict({
     'avty': list([
       dict({
@@ -936,7 +936,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.10
+# name: test_device[shelly_blu_rc_button_4_zb].10
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -963,7 +963,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.11
+# name: test_device[shelly_blu_rc_button_4_zb].11
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -990,7 +990,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.12
+# name: test_device[shelly_blu_rc_button_4_zb].12
   dict({
     'avty': list([
       dict({
@@ -1039,7 +1039,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.13
+# name: test_device[shelly_blu_rc_button_4_zb].13
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1066,7 +1066,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.14
+# name: test_device[shelly_blu_rc_button_4_zb].14
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1093,7 +1093,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.15
+# name: test_device[shelly_blu_rc_button_4_zb].15
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1120,7 +1120,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.16
+# name: test_device[shelly_blu_rc_button_4_zb].16
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1147,7 +1147,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.17
+# name: test_device[shelly_blu_rc_button_4_zb].17
   dict({
     'avty': list([
       dict({
@@ -1196,7 +1196,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.18
+# name: test_device[shelly_blu_rc_button_4_zb].18
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1223,7 +1223,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.19
+# name: test_device[shelly_blu_rc_button_4_zb].19
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1250,7 +1250,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.2
+# name: test_device[shelly_blu_rc_button_4_zb].2
   dict({
     'avty': list([
       dict({
@@ -1299,7 +1299,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.20
+# name: test_device[shelly_blu_rc_button_4_zb].20
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1326,7 +1326,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.21
+# name: test_device[shelly_blu_rc_button_4_zb].21
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1353,7 +1353,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.3
+# name: test_device[shelly_blu_rc_button_4_zb].3
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1380,7 +1380,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.4
+# name: test_device[shelly_blu_rc_button_4_zb].4
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1407,7 +1407,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.5
+# name: test_device[shelly_blu_rc_button_4_zb].5
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1434,7 +1434,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.6
+# name: test_device[shelly_blu_rc_button_4_zb].6
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1461,7 +1461,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.7
+# name: test_device[shelly_blu_rc_button_4_zb].7
   dict({
     'avty': list([
       dict({
@@ -1510,7 +1510,7 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.8
+# name: test_device[shelly_blu_rc_button_4_zb].8
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1537,7 +1537,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_blu_rc_button_4_zb.9
+# name: test_device[shelly_blu_rc_button_4_zb].9
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1564,7 +1564,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_shelly_plug_m_gen3
+# name: test_device[shelly_plug_m_gen3]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -1574,7 +1574,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_m_gen3.1
+# name: test_device[shelly_plug_m_gen3].1
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -1621,7 +1621,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_m_gen3.10
+# name: test_device[shelly_plug_m_gen3].10
   dict({
     'avty': list([
       dict({
@@ -1671,7 +1671,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.11
+# name: test_device[shelly_plug_m_gen3].11
   dict({
     'avty': list([
       dict({
@@ -1720,7 +1720,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.12
+# name: test_device[shelly_plug_m_gen3].12
   dict({
     'avty': list([
       dict({
@@ -1767,7 +1767,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.13
+# name: test_device[shelly_plug_m_gen3].13
   dict({
     'avty': list([
       dict({
@@ -1814,7 +1814,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.14
+# name: test_device[shelly_plug_m_gen3].14
   dict({
     'avty': list([
       dict({
@@ -1861,7 +1861,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.15
+# name: test_device[shelly_plug_m_gen3].15
   dict({
     'avty': list([
       dict({
@@ -1908,7 +1908,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.16
+# name: test_device[shelly_plug_m_gen3].16
   dict({
     'avty': list([
       dict({
@@ -1962,7 +1962,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.17
+# name: test_device[shelly_plug_m_gen3].17
   dict({
     'avty': list([
       dict({
@@ -2016,7 +2016,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.18
+# name: test_device[shelly_plug_m_gen3].18
   dict({
     'avty': list([
       dict({
@@ -2063,7 +2063,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.19
+# name: test_device[shelly_plug_m_gen3].19
   dict({
     'avty': list([
       dict({
@@ -2110,7 +2110,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.2
+# name: test_device[shelly_plug_m_gen3].2
   dict({
     'id': 1,
     'method': 'Script.Start',
@@ -2120,7 +2120,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_m_gen3.20
+# name: test_device[shelly_plug_m_gen3].20
   dict({
     'avty': list([
       dict({
@@ -2167,7 +2167,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.21
+# name: test_device[shelly_plug_m_gen3].21
   dict({
     'avty': list([
       dict({
@@ -2216,7 +2216,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.22
+# name: test_device[shelly_plug_m_gen3].22
   dict({
     'avty': list([
       dict({
@@ -2263,7 +2263,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.3
+# name: test_device[shelly_plug_m_gen3].3
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -2276,7 +2276,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_m_gen3.4
+# name: test_device[shelly_plug_m_gen3].4
   dict({
     'avty': list([
       dict({
@@ -2325,7 +2325,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.5
+# name: test_device[shelly_plug_m_gen3].5
   dict({
     'avty': list([
       dict({
@@ -2374,7 +2374,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.6
+# name: test_device[shelly_plug_m_gen3].6
   dict({
     'avty': list([
       dict({
@@ -2423,7 +2423,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.7
+# name: test_device[shelly_plug_m_gen3].7
   dict({
     'avty': list([
       dict({
@@ -2471,7 +2471,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.8
+# name: test_device[shelly_plug_m_gen3].8
   dict({
     'avty': list([
       dict({
@@ -2520,7 +2520,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_m_gen3.9
+# name: test_device[shelly_plug_m_gen3].9
   dict({
     'avty': list([
       dict({
@@ -2569,7 +2569,7 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3
+# name: test_device[shelly_plug_pm_gen3]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -2579,7 +2579,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.1
+# name: test_device[shelly_plug_pm_gen3].1
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -2626,7 +2626,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.10
+# name: test_device[shelly_plug_pm_gen3].10
   dict({
     'avty': list([
       dict({
@@ -2675,7 +2675,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.11
+# name: test_device[shelly_plug_pm_gen3].11
   dict({
     'avty': list([
       dict({
@@ -2724,7 +2724,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.12
+# name: test_device[shelly_plug_pm_gen3].12
   dict({
     'avty': list([
       dict({
@@ -2771,7 +2771,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.13
+# name: test_device[shelly_plug_pm_gen3].13
   dict({
     'avty': list([
       dict({
@@ -2820,7 +2820,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.14
+# name: test_device[shelly_plug_pm_gen3].14
   dict({
     'avty': list([
       dict({
@@ -2867,7 +2867,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.15
+# name: test_device[shelly_plug_pm_gen3].15
   dict({
     'avty': list([
       dict({
@@ -2916,7 +2916,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.16
+# name: test_device[shelly_plug_pm_gen3].16
   dict({
     'avty': list([
       dict({
@@ -2963,7 +2963,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.2
+# name: test_device[shelly_plug_pm_gen3].2
   dict({
     'id': 1,
     'method': 'Script.Start',
@@ -2973,7 +2973,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.3
+# name: test_device[shelly_plug_pm_gen3].3
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -2986,7 +2986,7 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.4
+# name: test_device[shelly_plug_pm_gen3].4
   dict({
     'avty': list([
       dict({
@@ -3033,7 +3033,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.5
+# name: test_device[shelly_plug_pm_gen3].5
   dict({
     'avty': list([
       dict({
@@ -3087,7 +3087,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.6
+# name: test_device[shelly_plug_pm_gen3].6
   dict({
     'avty': list([
       dict({
@@ -3141,7 +3141,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.7
+# name: test_device[shelly_plug_pm_gen3].7
   dict({
     'avty': list([
       dict({
@@ -3190,7 +3190,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.8
+# name: test_device[shelly_plug_pm_gen3].8
   dict({
     'avty': list([
       dict({
@@ -3239,7 +3239,7 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_shelly_plug_pm_gen3.9
+# name: test_device[shelly_plug_pm_gen3].9
   dict({
     'avty': list([
       dict({
