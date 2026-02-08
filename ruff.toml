@@ -19,6 +19,7 @@ lint.ignore = [
     "PLR0912",  # Too many branches
     "PLR0913",  # Too many arguments to function cal
     "PLR0915",  # Too many statements
+    "TC002",    # Move third-party import `syrupy.SnapshotAssertion` into a type-checking block
     "TRY003",   # Avoid specifying long messages outside the exception class
 ]
 

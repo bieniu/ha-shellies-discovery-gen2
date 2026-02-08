@@ -1,6 +1,7 @@
 """Tests for shellies_discovery_gen2.py."""
 
 import json
+import re
 import sys
 import types
 from importlib import util
@@ -42,13 +43,15 @@ def run_script(*, data, logger, hass=None):
     spec.loader.exec_module(module)
     return module
 
+
 def test_none_device_id() -> None:
     """Test that the script raises a ValueError when the device id is None."""
     logger = Mock()
     data = {"id": None}
 
     with pytest.raises(
-        ValueError, match="id value None is not valid, check script configuration"
+        ValueError,
+        match=re.escape("id value None is not valid, check script configuration"),
     ):
         run_script(logger=logger, data=data)
 
@@ -60,7 +63,9 @@ def test_unsupported_model() -> None:
 
     with pytest.raises(
         ValueError,
-        match="model unsupported is not supported, please open a feature request",
+        match=re.escape(
+            "model unsupported is not supported, please open a feature request"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -76,7 +81,9 @@ def test_script_prefix_with_trailing_slash() -> None:
 
     with pytest.raises(
         ValueError,
-        match="Script prefix value bad/prefix/ is not valid, check script configuration",
+        match=re.escape(
+            "Script prefix value bad/prefix/ is not valid, check script configuration"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -91,7 +98,8 @@ def test_invalid_qos() -> None:
     }
 
     with pytest.raises(
-        ValueError, match="QoS value 3 is not valid, check script configuration"
+        ValueError,
+        match=re.escape("QoS value 3 is not valid, check script configuration"),
     ):
         run_script(logger=logger, data=data)
 
@@ -110,7 +118,9 @@ def test_missing_mqtt_component() -> None:
 
     with pytest.raises(
         ValueError,
-        match="Missing MQTT component, probably 'Shelly.GetComponent' pagination problem",
+        match=re.escape(
+            "Missing MQTT component, probably 'Shelly.GetComponent' pagination problem"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -133,12 +143,22 @@ def test_mqtt_prefix_with_space() -> None:
 
     with pytest.raises(
         ValueError,
-        match="MQTT prefix value bad topic/ is not valid, check device configuration",
+        match=re.escape(
+            "MQTT prefix value bad topic/ is not valid, check device configuration"
+        ),
     ):
         run_script(logger=logger, data=data)
 
 
-@pytest.mark.parametrize("device_fixture", ["shelly_1_gen4", "shelly_plug_m_gen3", "shelly_plug_pm_gen3", "shelly_blu_rc_button_4_zb"])
+@pytest.mark.parametrize(
+    "device_fixture",
+    [
+        "shelly_1_gen4",
+        "shelly_plug_m_gen3",
+        "shelly_plug_pm_gen3",
+        "shelly_blu_rc_button_4_zb",
+    ],
+)
 def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
     """Test for Shelly devices."""
     logger = Mock()
