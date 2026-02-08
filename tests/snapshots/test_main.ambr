@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_device[shelly_1_gen4]
+# name: test_device[shelly_1_gen4][0-payload]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -9,7 +9,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_1_gen4].1
+# name: test_device[shelly_1_gen4][0-topic]
+  'shelly1g4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_1_gen4][1-payload]
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -56,7 +59,74 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_1_gen4].10
+# name: test_device[shelly_1_gen4][1-topic]
+  'shelly1g4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_1_gen4][10-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_down',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_down',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_1_gen4][10-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/btn_down/config'
+# ---
+# name: test_device[shelly_1_gen4][11-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shelly1g4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly 1 Gen4',
+      'mdl_id': 'S4SW-001X16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly 1 Gen4 [DDEEFF]',
+      'sw': '20260120-145311/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_up',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shelly1g4-aabbccddeeff/events/rpc',
+    'type': 'button_up',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_1_gen4][11-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/btn_up/config'
+# ---
+# name: test_device[shelly_1_gen4][12-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -85,7 +155,10 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_1_gen4].11
+# name: test_device[shelly_1_gen4][12-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/double_push/config'
+# ---
+# name: test_device[shelly_1_gen4][13-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -114,7 +187,10 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_1_gen4].12
+# name: test_device[shelly_1_gen4][13-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/long_push/config'
+# ---
+# name: test_device[shelly_1_gen4][14-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -143,7 +219,10 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_1_gen4].13
+# name: test_device[shelly_1_gen4][14-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/single_push/config'
+# ---
+# name: test_device[shelly_1_gen4][15-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -172,7 +251,10 @@
     'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_1_gen4].14
+# name: test_device[shelly_1_gen4][15-topic]
+  'homeassistant/device_automation/shelly1g4-aabbccddeeff-input-0/triple_push/config'
+# ---
+# name: test_device[shelly_1_gen4][17-payload]
   dict({
     'avty': list([
       dict({
@@ -219,7 +301,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].15
+# name: test_device[shelly_1_gen4][17-topic]
+  'homeassistant/button/shelly1g4-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_1_gen4][18-payload]
   dict({
     'avty': list([
       dict({
@@ -273,7 +358,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].16
+# name: test_device[shelly_1_gen4][18-topic]
+  'homeassistant/update/shelly1g4-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_1_gen4][19-payload]
   dict({
     'avty': list([
       dict({
@@ -327,7 +415,23 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].17
+# name: test_device[shelly_1_gen4][19-topic]
+  'homeassistant/update/shelly1g4-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_1_gen4][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_1_gen4][2-topic]
+  'shelly1g4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_1_gen4][20-payload]
   dict({
     'avty': list([
       dict({
@@ -374,7 +478,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].18
+# name: test_device[shelly_1_gen4][20-topic]
+  'homeassistant/sensor/shelly1g4-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_1_gen4][21-payload]
   dict({
     'avty': list([
       dict({
@@ -421,7 +528,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].19
+# name: test_device[shelly_1_gen4][21-topic]
+  'homeassistant/sensor/shelly1g4-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_1_gen4][22-payload]
   dict({
     'avty': list([
       dict({
@@ -468,17 +578,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].2
-  dict({
-    'id': 1,
-    'method': 'Script.Start',
-    'params': dict({
-      'id': 1,
-    }),
-    'src': 'shellies_discovery_script',
-  })
+# name: test_device[shelly_1_gen4][22-topic]
+  'homeassistant/sensor/shelly1g4-aabbccddeeff-wifi_ip/config'
 # ---
-# name: test_device[shelly_1_gen4].20
+# name: test_device[shelly_1_gen4][23-payload]
   dict({
     'avty': list([
       dict({
@@ -527,7 +630,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].21
+# name: test_device[shelly_1_gen4][23-topic]
+  'homeassistant/sensor/shelly1g4-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_1_gen4][24-payload]
   dict({
     'avty': list([
       dict({
@@ -574,7 +680,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].3
+# name: test_device[shelly_1_gen4][24-topic]
+  'homeassistant/binary_sensor/shelly1g4-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_1_gen4][3-payload]
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -587,7 +696,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_1_gen4].4
+# name: test_device[shelly_1_gen4][3-topic]
+  'shelly1g4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_1_gen4][5-payload]
   dict({
     'avty': list([
       dict({
@@ -635,7 +747,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].5
+# name: test_device[shelly_1_gen4][5-topic]
+  'homeassistant/light/shelly1g4-aabbccddeeff-0/config'
+# ---
+# name: test_device[shelly_1_gen4][7-payload]
   dict({
     'avty': list([
       dict({
@@ -685,7 +800,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].6
+# name: test_device[shelly_1_gen4][7-topic]
+  'homeassistant/sensor/shelly1g4-aabbccddeeff-0-temperature/config'
+# ---
+# name: test_device[shelly_1_gen4][8-payload]
   dict({
     'avty': list([
       dict({
@@ -732,7 +850,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].7
+# name: test_device[shelly_1_gen4][8-topic]
+  'homeassistant/binary_sensor/shelly1g4-aabbccddeeff-0-overtemp/config'
+# ---
+# name: test_device[shelly_1_gen4][9-payload]
   dict({
     'avty': list([
       dict({
@@ -785,65 +906,10 @@
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_1_gen4].8
-  dict({
-    'atype': 'trigger',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shelly1g4-aabbccddeeff.local/',
-      'hw': 'gen4',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly 1 Gen4',
-      'mdl_id': 'S4SW-001X16EU',
-      'mf': 'Shelly',
-      'name': 'Shelly 1 Gen4 [DDEEFF]',
-      'sw': '20260120-145311/1.7.4-gf9878b6',
-    }),
-    'pl': '0_btn_down',
-    'qos': 0,
-    'stype': 'button_1',
-    't': 'shelly1g4-aabbccddeeff/events/rpc',
-    'type': 'button_down',
-    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
-  })
+# name: test_device[shelly_1_gen4][9-topic]
+  'homeassistant/event/shelly1g4-aabbccddeeff-input-0/config'
 # ---
-# name: test_device[shelly_1_gen4].9
-  dict({
-    'atype': 'trigger',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shelly1g4-aabbccddeeff.local/',
-      'hw': 'gen4',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly 1 Gen4',
-      'mdl_id': 'S4SW-001X16EU',
-      'mf': 'Shelly',
-      'name': 'Shelly 1 Gen4 [DDEEFF]',
-      'sw': '20260120-145311/1.7.4-gf9878b6',
-    }),
-    'pl': '0_btn_up',
-    'qos': 0,
-    'stype': 'button_1',
-    't': 'shelly1g4-aabbccddeeff/events/rpc',
-    'type': 'button_up',
-    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
-  })
-# ---
-# name: test_device[shelly_blu_rc_button_4_zb]
+# name: test_device[shelly_blu_rc_button_4_zb][0-payload]
   dict({
     'avty': list([
       dict({
@@ -890,7 +956,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].1
+# name: test_device[shelly_blu_rc_button_4_zb][0-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-112233445566-200-signal_strength/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][1-payload]
   dict({
     'avty': list([
       dict({
@@ -936,7 +1005,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].10
+# name: test_device[shelly_blu_rc_button_4_zb][1-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-112233445566-200-battery/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][10-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -963,7 +1035,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].11
+# name: test_device[shelly_blu_rc_button_4_zb][10-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/long_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][11-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -990,7 +1065,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].12
+# name: test_device[shelly_blu_rc_button_4_zb][11-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/triple_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][12-payload]
   dict({
     'avty': list([
       dict({
@@ -1039,7 +1117,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].13
+# name: test_device[shelly_blu_rc_button_4_zb][12-topic]
+  'homeassistant/event/shellyplugusg4-aabbccddeeff-112233445566-200-2/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][13-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1066,7 +1147,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].14
+# name: test_device[shelly_blu_rc_button_4_zb][13-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-2/single_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][14-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1093,7 +1177,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].15
+# name: test_device[shelly_blu_rc_button_4_zb][14-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-2/double_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][15-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1120,7 +1207,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].16
+# name: test_device[shelly_blu_rc_button_4_zb][15-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-2/long_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][16-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1147,7 +1237,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].17
+# name: test_device[shelly_blu_rc_button_4_zb][16-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-2/triple_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][17-payload]
   dict({
     'avty': list([
       dict({
@@ -1196,7 +1289,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].18
+# name: test_device[shelly_blu_rc_button_4_zb][17-topic]
+  'homeassistant/event/shellyplugusg4-aabbccddeeff-112233445566-200-3/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][18-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1223,7 +1319,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].19
+# name: test_device[shelly_blu_rc_button_4_zb][18-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-3/single_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][19-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1250,7 +1349,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].2
+# name: test_device[shelly_blu_rc_button_4_zb][19-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-3/double_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][2-payload]
   dict({
     'avty': list([
       dict({
@@ -1299,7 +1401,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].20
+# name: test_device[shelly_blu_rc_button_4_zb][2-topic]
+  'homeassistant/event/shellyplugusg4-aabbccddeeff-112233445566-200-0/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][20-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1326,7 +1431,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].21
+# name: test_device[shelly_blu_rc_button_4_zb][20-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-3/long_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][21-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1353,7 +1461,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].3
+# name: test_device[shelly_blu_rc_button_4_zb][21-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-3/triple_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][3-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1380,7 +1491,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].4
+# name: test_device[shelly_blu_rc_button_4_zb][3-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/single_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][4-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1407,7 +1521,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].5
+# name: test_device[shelly_blu_rc_button_4_zb][4-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/double_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][5-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1434,7 +1551,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].6
+# name: test_device[shelly_blu_rc_button_4_zb][5-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/long_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][6-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1461,7 +1581,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].7
+# name: test_device[shelly_blu_rc_button_4_zb][6-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/triple_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][7-payload]
   dict({
     'avty': list([
       dict({
@@ -1510,7 +1633,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].8
+# name: test_device[shelly_blu_rc_button_4_zb][7-topic]
+  'homeassistant/event/shellyplugusg4-aabbccddeeff-112233445566-200-1/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][8-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1537,7 +1663,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_rc_button_4_zb].9
+# name: test_device[shelly_blu_rc_button_4_zb][8-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/single_push/config'
+# ---
+# name: test_device[shelly_blu_rc_button_4_zb][9-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1564,7 +1693,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3]
+# name: test_device[shelly_blu_rc_button_4_zb][9-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/double_push/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][0-payload]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -1574,7 +1706,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].1
+# name: test_device[shelly_plug_m_gen3][0-topic]
+  'shellyplugmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_m_gen3][1-payload]
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -1621,7 +1756,114 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].10
+# name: test_device[shelly_plug_m_gen3][1-topic]
+  'shellyplugmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_m_gen3][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug M Gen3',
+      'mdl_id': 'S3PL-30110EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug M Gen3 [DDEEFF]',
+      'sw': '20260120-145242/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Relay 0 Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugmg3-aabbccddeeff-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellyplugmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plug_m_gen3][10-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-power/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplugmg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plug M Gen3',
+      'mdl_id': 'S3PL-30110EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plug M Gen3 [DDEEFF]',
+      'sw': '20260120-145242/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Relay 0 Returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugmg3-aabbccddeeff-0-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellyplugmg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plug_m_gen3][11-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-returned_energy/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][12-payload]
   dict({
     'avty': list([
       dict({
@@ -1671,7 +1913,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].11
+# name: test_device[shelly_plug_m_gen3][12-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-temperature/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][13-payload]
   dict({
     'avty': list([
       dict({
@@ -1720,7 +1965,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].12
+# name: test_device[shelly_plug_m_gen3][13-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-voltage/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][14-payload]
   dict({
     'avty': list([
       dict({
@@ -1767,7 +2015,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].13
+# name: test_device[shelly_plug_m_gen3][14-topic]
+  'homeassistant/binary_sensor/shellyplugmg3-aabbccddeeff-0-overpower/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][15-payload]
   dict({
     'avty': list([
       dict({
@@ -1814,7 +2065,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].14
+# name: test_device[shelly_plug_m_gen3][15-topic]
+  'homeassistant/binary_sensor/shellyplugmg3-aabbccddeeff-0-overtemp/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][16-payload]
   dict({
     'avty': list([
       dict({
@@ -1861,7 +2115,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].15
+# name: test_device[shelly_plug_m_gen3][16-topic]
+  'homeassistant/binary_sensor/shellyplugmg3-aabbccddeeff-0-overvoltage/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][17-payload]
   dict({
     'avty': list([
       dict({
@@ -1908,7 +2165,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].16
+# name: test_device[shelly_plug_m_gen3][17-topic]
+  'homeassistant/button/shellyplugmg3-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][18-payload]
   dict({
     'avty': list([
       dict({
@@ -1962,7 +2222,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].17
+# name: test_device[shelly_plug_m_gen3][18-topic]
+  'homeassistant/update/shellyplugmg3-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][19-payload]
   dict({
     'avty': list([
       dict({
@@ -2016,7 +2279,23 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].18
+# name: test_device[shelly_plug_m_gen3][19-topic]
+  'homeassistant/update/shellyplugmg3-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plug_m_gen3][2-topic]
+  'shellyplugmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_m_gen3][20-payload]
   dict({
     'avty': list([
       dict({
@@ -2063,7 +2342,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].19
+# name: test_device[shelly_plug_m_gen3][20-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][21-payload]
   dict({
     'avty': list([
       dict({
@@ -2110,17 +2392,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].2
-  dict({
-    'id': 1,
-    'method': 'Script.Start',
-    'params': dict({
-      'id': 1,
-    }),
-    'src': 'shellies_discovery_script',
-  })
+# name: test_device[shelly_plug_m_gen3][21-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-ssid/config'
 # ---
-# name: test_device[shelly_plug_m_gen3].20
+# name: test_device[shelly_plug_m_gen3][22-payload]
   dict({
     'avty': list([
       dict({
@@ -2167,7 +2442,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].21
+# name: test_device[shelly_plug_m_gen3][22-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][23-payload]
   dict({
     'avty': list([
       dict({
@@ -2216,7 +2494,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].22
+# name: test_device[shelly_plug_m_gen3][23-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][24-payload]
   dict({
     'avty': list([
       dict({
@@ -2263,7 +2544,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].3
+# name: test_device[shelly_plug_m_gen3][24-topic]
+  'homeassistant/binary_sensor/shellyplugmg3-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][3-payload]
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -2276,7 +2560,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].4
+# name: test_device[shelly_plug_m_gen3][3-topic]
+  'shellyplugmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_m_gen3][4-payload]
   dict({
     'avty': list([
       dict({
@@ -2325,7 +2612,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].5
+# name: test_device[shelly_plug_m_gen3][4-topic]
+  'homeassistant/switch/shellyplugmg3-aabbccddeeff-0/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][7-payload]
   dict({
     'avty': list([
       dict({
@@ -2374,7 +2664,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].6
+# name: test_device[shelly_plug_m_gen3][7-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-current/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][8-payload]
   dict({
     'avty': list([
       dict({
@@ -2423,7 +2716,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].7
+# name: test_device[shelly_plug_m_gen3][8-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-energy/config'
+# ---
+# name: test_device[shelly_plug_m_gen3][9-payload]
   dict({
     'avty': list([
       dict({
@@ -2471,105 +2767,10 @@
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_m_gen3].8
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shellyplugmg3-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Plug M Gen3',
-      'mdl_id': 'S3PL-30110EU',
-      'mf': 'Shelly',
-      'name': 'Shelly Plug M Gen3 [DDEEFF]',
-      'sw': '20260120-145242/1.7.4-gf9878b6',
-    }),
-    'dev_cla': 'power',
-    'en': 'true',
-    'name': 'Relay 0 Power',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/switch:0',
-    'sug_dsp_prc': 1,
-    'uniq_id': 'shellyplugmg3-aabbccddeeff-0-power',
-    'unit_of_meas': 'W',
-    'val_tpl': '{{value_json.apower}}',
-    '~': 'shellyplugmg3-aabbccddeeff/',
-  })
+# name: test_device[shelly_plug_m_gen3][9-topic]
+  'homeassistant/sensor/shellyplugmg3-aabbccddeeff-0-frequency/config'
 # ---
-# name: test_device[shelly_plug_m_gen3].9
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shellyplugmg3-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Plug M Gen3',
-      'mdl_id': 'S3PL-30110EU',
-      'mf': 'Shelly',
-      'name': 'Shelly Plug M Gen3 [DDEEFF]',
-      'sw': '20260120-145242/1.7.4-gf9878b6',
-    }),
-    'dev_cla': 'energy',
-    'en': 'false',
-    'name': 'Relay 0 Returned energy',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'total_increasing',
-    'stat_t': '~status/switch:0',
-    'sug_dsp_prc': 1,
-    'uniq_id': 'shellyplugmg3-aabbccddeeff-0-returned_energy',
-    'unit_of_meas': 'Wh',
-    'val_tpl': '{{value_json.ret_aenergy.total}}',
-    '~': 'shellyplugmg3-aabbccddeeff/',
-  })
-# ---
-# name: test_device[shelly_plug_pm_gen3]
+# name: test_device[shelly_plug_pm_gen3][0-payload]
   dict({
     'id': 1,
     'method': 'Script.Create',
@@ -2579,7 +2780,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].1
+# name: test_device[shelly_plug_pm_gen3][0-topic]
+  'shellyplugpmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_pm_gen3][1-payload]
   dict({
     'id': 1,
     'method': 'Script.PutCode',
@@ -2626,7 +2830,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].10
+# name: test_device[shelly_plug_pm_gen3][1-topic]
+  'shellyplugpmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_pm_gen3][10-payload]
   dict({
     'avty': list([
       dict({
@@ -2675,7 +2882,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].11
+# name: test_device[shelly_plug_pm_gen3][10-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-power/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][11-payload]
   dict({
     'avty': list([
       dict({
@@ -2724,7 +2934,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].12
+# name: test_device[shelly_plug_pm_gen3][11-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-returned_energy/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][12-payload]
   dict({
     'avty': list([
       dict({
@@ -2771,7 +2984,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].13
+# name: test_device[shelly_plug_pm_gen3][12-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][13-payload]
   dict({
     'avty': list([
       dict({
@@ -2820,7 +3036,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].14
+# name: test_device[shelly_plug_pm_gen3][13-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-voltage/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][14-payload]
   dict({
     'avty': list([
       dict({
@@ -2867,7 +3086,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].15
+# name: test_device[shelly_plug_pm_gen3][14-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][15-payload]
   dict({
     'avty': list([
       dict({
@@ -2916,7 +3138,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].16
+# name: test_device[shelly_plug_pm_gen3][15-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][16-payload]
   dict({
     'avty': list([
       dict({
@@ -2963,7 +3188,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].2
+# name: test_device[shelly_plug_pm_gen3][16-topic]
+  'homeassistant/binary_sensor/shellyplugpmg3-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][2-payload]
   dict({
     'id': 1,
     'method': 'Script.Start',
@@ -2973,7 +3201,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].3
+# name: test_device[shelly_plug_pm_gen3][2-topic]
+  'shellyplugpmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_pm_gen3][3-payload]
   dict({
     'id': 1,
     'method': 'Script.SetConfig',
@@ -2986,7 +3217,10 @@
     'src': 'shellies_discovery_script',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].4
+# name: test_device[shelly_plug_pm_gen3][3-topic]
+  'shellyplugpmg3-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plug_pm_gen3][4-payload]
   dict({
     'avty': list([
       dict({
@@ -3033,7 +3267,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].5
+# name: test_device[shelly_plug_pm_gen3][4-topic]
+  'homeassistant/button/shellyplugpmg3-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][5-payload]
   dict({
     'avty': list([
       dict({
@@ -3087,7 +3324,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].6
+# name: test_device[shelly_plug_pm_gen3][5-topic]
+  'homeassistant/update/shellyplugpmg3-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][6-payload]
   dict({
     'avty': list([
       dict({
@@ -3141,7 +3381,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].7
+# name: test_device[shelly_plug_pm_gen3][6-topic]
+  'homeassistant/update/shellyplugpmg3-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][7-payload]
   dict({
     'avty': list([
       dict({
@@ -3190,7 +3433,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].8
+# name: test_device[shelly_plug_pm_gen3][7-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-current/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][8-payload]
   dict({
     'avty': list([
       dict({
@@ -3239,7 +3485,10 @@
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_plug_pm_gen3].9
+# name: test_device[shelly_plug_pm_gen3][8-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-energy/config'
+# ---
+# name: test_device[shelly_plug_pm_gen3][9-payload]
   dict({
     'avty': list([
       dict({
@@ -3285,4 +3534,7 @@
     'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
+# ---
+# name: test_device[shelly_plug_pm_gen3][9-topic]
+  'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-last_restart/config'
 # ---

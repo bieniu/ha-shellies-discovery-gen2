@@ -173,7 +173,9 @@ def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
+        topic = hass.services.call.call_args_list[call][0][2]["topic"]
         payload = hass.services.call.call_args_list[call][0][2].get("payload")
         if not payload:
             continue
-        assert json.loads(payload) == snapshot
+        assert topic == snapshot(name=f"{call}-topic")
+        assert json.loads(payload) == snapshot(name=f"{call}-payload")
