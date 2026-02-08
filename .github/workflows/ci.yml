@@ -29,10 +29,10 @@ jobs:
       run: uv pip install -r requirements-test.txt
 
     - name: Lint with ruff
-      run: ruff check python_scripts
+      run: ruff check python_scripts tests
 
     - name: Check code formatting with ruff
-      run: ruff format --check python_scripts
+      run: ruff format --check python_scripts tests
 
     - name: Run prek
       run: |

@@ -1,6 +1,7 @@
 """Tests for shellies_discovery_gen2.py."""
 
 import json
+import re
 import sys
 import types
 from importlib import util
@@ -42,13 +43,15 @@ def run_script(*, data, logger, hass=None):
     spec.loader.exec_module(module)
     return module
 
+
 def test_none_device_id() -> None:
     """Test that the script raises a ValueError when the device id is None."""
     logger = Mock()
     data = {"id": None}
 
     with pytest.raises(
-        ValueError, match="id value None is not valid, check script configuration"
+        ValueError,
+        match=re.escape("id value None is not valid, check script configuration"),
     ):
         run_script(logger=logger, data=data)
 
@@ -60,7 +63,9 @@ def test_unsupported_model() -> None:
 
     with pytest.raises(
         ValueError,
-        match="model unsupported is not supported, please open a feature request",
+        match=re.escape(
+            "model unsupported is not supported, please open a feature request"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -76,7 +81,9 @@ def test_script_prefix_with_trailing_slash() -> None:
 
     with pytest.raises(
         ValueError,
-        match="Script prefix value bad/prefix/ is not valid, check script configuration",
+        match=re.escape(
+            "Script prefix value bad/prefix/ is not valid, check script configuration"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -91,7 +98,8 @@ def test_invalid_qos() -> None:
     }
 
     with pytest.raises(
-        ValueError, match="QoS value 3 is not valid, check script configuration"
+        ValueError,
+        match=re.escape("QoS value 3 is not valid, check script configuration"),
     ):
         run_script(logger=logger, data=data)
 
@@ -110,7 +118,9 @@ def test_missing_mqtt_component() -> None:
 
     with pytest.raises(
         ValueError,
-        match="Missing MQTT component, probably 'Shelly.GetComponent' pagination problem",
+        match=re.escape(
+            "Missing MQTT component, probably 'Shelly.GetComponent' pagination problem"
+        ),
     ):
         run_script(logger=logger, data=data)
 
@@ -133,17 +143,28 @@ def test_mqtt_prefix_with_space() -> None:
 
     with pytest.raises(
         ValueError,
-        match="MQTT prefix value bad topic/ is not valid, check device configuration",
+        match=re.escape(
+            "MQTT prefix value bad topic/ is not valid, check device configuration"
+        ),
     ):
         run_script(logger=logger, data=data)
 
 
-def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly 1 Gen4."""
+@pytest.mark.parametrize(
+    "device_fixture",
+    [
+        "shelly_1_gen4",
+        "shelly_plug_m_gen3",
+        "shelly_plug_pm_gen3",
+        "shelly_blu_rc_button_4_zb",
+    ],
+)
+def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
+    """Test for Shelly devices."""
     logger = Mock()
     hass = Mock()
     hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_1_gen4.json"
+    fixture_path = FIXTURES_PATH / f"{device_fixture}.json"
     data = json.loads(fixture_path.read_text())
 
     result = run_script(logger=logger, data=data, hass=hass)
@@ -152,64 +173,9 @@ def test_shelly_1_gen4(snapshot: SnapshotAssertion) -> None:
     assert hass.services.call.called
 
     for call in range(len(hass.services.call.call_args_list)):
+        topic = hass.services.call.call_args_list[call][0][2]["topic"]
         payload = hass.services.call.call_args_list[call][0][2].get("payload")
         if not payload:
             continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_plug_m_gen3(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly Plug M Gen3."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_plug_m_gen3.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_plug_pm_gen3(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly Plug PM Gen3."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_plug_pm_gen3.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
-
-def test_shelly_blu_rc_button_4_zb(snapshot: SnapshotAssertion) -> None:
-    """Test for Shelly BLU RC Button 4 ZB."""
-    logger = Mock()
-    hass = Mock()
-    hass.services = Mock()
-    fixture_path = FIXTURES_PATH / "shelly_blu_rc_button_4_zb.json"
-    data = json.loads(fixture_path.read_text())
-
-    result = run_script(logger=logger, data=data, hass=hass)
-
-    assert result.config_data
-    assert hass.services.call.called
-
-    for call in range(len(hass.services.call.call_args_list)):
-        payload = hass.services.call.call_args_list[call][0][2].get("payload")
-        if not payload:
-            continue
-        assert json.loads(payload) == snapshot
+        assert topic == snapshot(name=f"{call}-topic")
+        assert json.loads(payload) == snapshot(name=f"{call}-payload")

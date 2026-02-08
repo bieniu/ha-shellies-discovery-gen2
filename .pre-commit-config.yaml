@@ -5,9 +5,7 @@ repos:
       - id: ruff
         args:
           - --fix
-        files: ^((python_scripts)/.+)?[^/]+\.py$
       - id: ruff-format
-        files: ^((python_scripts)/.+)?[^/]+\.py$
   - repo: builtin
     hooks:
       - id: end-of-file-fixer

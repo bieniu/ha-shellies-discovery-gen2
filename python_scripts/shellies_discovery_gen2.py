@@ -836,10 +836,9 @@ DESCRIPTION_SENSOR_EMETER_PHASE_CURRENT = {
     KEY_VALUE_TEMPLATE: TPL_EMETER_PHASE_CURRENT,
 }
 DESCRIPTION_SENSOR_COUNTER = {
-    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(
-        f"input:{input_id}", {}
-    ).get("type")
-    != "count",
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: (
+        config.get(f"input:{input_id}", {}).get("type") != "count"
+    ),
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Pulse counter {input}",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
@@ -848,20 +847,18 @@ DESCRIPTION_SENSOR_COUNTER = {
     KEY_VALUE_TEMPLATE: TPL_COUNTER,
 }
 DESCRIPTION_SENSOR_COUNTER_VALUE = {
-    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(f"input:{input_id}", {})
-    .get("xcounts", {})
-    .get("expr")
-    is None,
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: (
+        config.get(f"input:{input_id}", {}).get("xcounts", {}).get("expr") is None
+    ),
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Counter value {input}",
     KEY_STATE_TOPIC: TOPIC_INPUT,
     KEY_VALUE_TEMPLATE: TPL_COUNTER_VALUE,
 }
 DESCRIPTION_SENSOR_ANALOG_INPUT = {
-    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(
-        f"input:{input_id}", {}
-    ).get("type")
-    != "percent",
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: (
+        config.get(f"input:{input_id}", {}).get("type") != "percent"
+    ),
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Analog input {input}",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
@@ -870,10 +867,9 @@ DESCRIPTION_SENSOR_ANALOG_INPUT = {
     KEY_VALUE_TEMPLATE: TPL_ANALOG_INPUT,
 }
 DESCRIPTION_SENSOR_ANALOG_VALUE = {
-    ATTR_REMOVAL_CONDITION: lambda config, input_id: config.get(f"input:{input_id}", {})
-    .get("xpercent", {})
-    .get("expr")
-    is None,
+    ATTR_REMOVAL_CONDITION: lambda config, input_id: (
+        config.get(f"input:{input_id}", {}).get("xpercent", {}).get("expr") is None
+    ),
     KEY_ENABLED_BY_DEFAULT: True,
     KEY_NAME: "Analog value {input}",
     KEY_STATE_TOPIC: TOPIC_INPUT,
