@@ -28,6 +28,9 @@ You won't find **Shellies Discovery Gen2** in the HACS **Integrations** section,
 
 Shellies Discovery Gen2 will automatically install/update the script on your Shelly device. Due to `python_scripts` integration limitations, updating the device script requires the `announce` automation to run twice.
 
+> [!IMPORTANT]
+> You cannot manually run the **Shellies Discovery** automation. You can only manually run the **Shellies Announce** automation to begin the device configuration process.
+
 ## Supported devices
 
 ### Gen2
