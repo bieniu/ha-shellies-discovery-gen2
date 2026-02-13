@@ -1137,6 +1137,53 @@
       'name': 'Shelly BLU H&T Display ZB 112233445566',
       'via_device': 'aa:bb:cc:dd:ee:ff',
     }),
+    'dev_cla': 'light',
+    'en': 'true',
+    'name': 'Light',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/bthomesensor:201',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-112233445566-201-light',
+    'val_tpl': '{{"ON" if value_json.value else "OFF"}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_display_zb][4-topic]
+  'homeassistant/binary_sensor/shellyplugusg4-aabbccddeeff-112233445566-201-light/config'
+# ---
+# name: test_device[shelly_blu_ht_display_zb][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly BLU H&T Display ZB',
+      'mdl_id': 'SBHT-103C',
+      'mf': 'Shelly',
+      'name': 'Shelly BLU H&T Display ZB 112233445566',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
     'dev_cla': 'button',
     'evt_typ': list([
       'single_push',
@@ -1157,10 +1204,10 @@
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
-# name: test_device[shelly_blu_ht_display_zb][4-topic]
+# name: test_device[shelly_blu_ht_display_zb][5-topic]
   'homeassistant/event/shellyplugusg4-aabbccddeeff-112233445566-200-0/config'
 # ---
-# name: test_device[shelly_blu_ht_display_zb][5-payload]
+# name: test_device[shelly_blu_ht_display_zb][6-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1187,10 +1234,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_ht_display_zb][5-topic]
+# name: test_device[shelly_blu_ht_display_zb][6-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/single_push/config'
 # ---
-# name: test_device[shelly_blu_ht_display_zb][6-payload]
+# name: test_device[shelly_blu_ht_display_zb][7-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1217,10 +1264,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_ht_display_zb][6-topic]
+# name: test_device[shelly_blu_ht_display_zb][7-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/double_push/config'
 # ---
-# name: test_device[shelly_blu_ht_display_zb][7-payload]
+# name: test_device[shelly_blu_ht_display_zb][8-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1247,10 +1294,10 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_ht_display_zb][7-topic]
+# name: test_device[shelly_blu_ht_display_zb][8-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/long_push/config'
 # ---
-# name: test_device[shelly_blu_ht_display_zb][8-payload]
+# name: test_device[shelly_blu_ht_display_zb][9-payload]
   dict({
     'atype': 'trigger',
     'dev': dict({
@@ -1277,7 +1324,7 @@
     'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
   })
 # ---
-# name: test_device[shelly_blu_ht_display_zb][8-topic]
+# name: test_device[shelly_blu_ht_display_zb][9-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/triple_push/config'
 # ---
 # name: test_device[shelly_blu_rc_button_4_zb][0-payload]
