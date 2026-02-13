@@ -1,0 +1,123 @@
+{
+    "id": "shellyplugusg4-aabbccddeeff",
+    "device_config": {
+        "components": [
+            {
+                "key": "bthomedevice:200",
+                "status": {
+                    "id": 200,
+                    "rssi": -56,
+                    "battery": 100,
+                    "packet_id": 71,
+                    "last_updated_ts": 1769771089,
+                    "paired": true,
+                    "rpc": false,
+                    "rsv": -1,
+                    "fw_ver": null
+                },
+                "config": {
+                    "id": 200,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "key": null,
+                    "meta": {
+                        "ui": {
+                            "view": "regular",
+                            "icon": null
+                        }
+                    }
+                },
+                "attrs": {
+                    "flags": 0,
+                    "model_id": 12
+                }
+            },
+            {
+                "key": "bthomesensor:200",
+                "status": {
+                    "id": 200,
+                    "value": 100,
+                    "last_updated_ts": 1769771089
+                },
+                "config": {
+                    "id": 200,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "obj_id": 1,
+                    "idx": 0,
+                    "meta": null
+                }
+            },
+            {
+                "key": "bthomesensor:201",
+                "status": {
+                    "id": 201,
+                    "value": false,
+                    "last_updated_ts": 1769771089
+                },
+                "config": {
+                    "id": 201,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "obj_id": 30,
+                    "idx": 0,
+                    "meta": null
+                }
+            },
+            {
+                "key": "bthomesensor:202",
+                "status": {
+                    "id": 202,
+                    "value": 47,
+                    "last_updated_ts": 1769771089
+                },
+                "config": {
+                    "id": 202,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "obj_id": 46,
+                    "idx": 0,
+                    "meta": null
+                }
+            },
+            {
+                "key": "bthomesensor:203",
+                "status": {
+                    "id": 203,
+                    "value": 23.4,
+                    "last_updated_ts": 1769771089
+                },
+                "config": {
+                    "id": 203,
+                    "addr": "11:22:33:44:55:66",
+                    "name": null,
+                    "obj_id": 69,
+                    "idx": 0,
+                    "meta": null
+                }
+            },
+            {
+                "key": "mqtt",
+                "status": {
+                    "connected": true
+                },
+                "config": {
+                    "enable": true,
+                    "server": "127.0.0.1",
+                    "client_id": "shellyplugusg4-aabbccddeeff",
+                    "user": "shelly",
+                    "ssl_ca": null,
+                    "topic_prefix": "shellyplugusg4-aabbccddeeff",
+                    "rpc_ntf": true,
+                    "status_ntf": true,
+                    "use_client_cert": false,
+                    "enable_rpc": true,
+                    "enable_control": true
+                }
+            }
+        ],
+        "cfg_rev": 61,
+        "offset": 0,
+        "total": 5
+    }
+}
