@@ -2114,6 +2114,461 @@
 # name: test_device[shelly_blu_rc_button_4_zb][9-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/double_push/config'
 # ---
+# name: test_device[shelly_flood_s_gen4][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20250114',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][0-topic]
+  'shellyfloodsg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_flood_s_gen4][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        
+        function sendDeviceStatus() {
+          try {
+            let installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("Shelly.GetStatus", {}, function (status) {
+              status.sys.installed_version = installedVersion;
+              MQTT.publish(topicPrefix + "/status/rpc", JSON.stringify(status));
+            });
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][1-topic]
+  'shellyfloodsg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_flood_s_gen4][10-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/cloud',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][10-topic]
+  'homeassistant/binary_sensor/shellyfloodsg4-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][11-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'update',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'json_attr_t': '~status/sys',
+    'json_attr_tpl': '{{value_json.available_updates.get("stable",{})|to_json}}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-firmware',
+    'val_tpl': '{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][11-topic]
+  'homeassistant/binary_sensor/shellyfloodsg4-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][12-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'moisture',
+    'en': 'true',
+    'expire_after': 51840.0,
+    'name': 'Flood',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/flood:0',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-flood',
+    'val_tpl': '{%if value_json.alarm%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][12-topic]
+  'homeassistant/binary_sensor/shellyfloodsg4-aabbccddeeff-flood/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][2-topic]
+  'shellyfloodsg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_flood_s_gen4][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][3-topic]
+  'shellyfloodsg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_flood_s_gen4][4-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'battery',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'name': 'Battery',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/devicepower:0',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-battery',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.battery.percent}}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][4-topic]
+  'homeassistant/sensor/shellyfloodsg4-aabbccddeeff-battery/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][5-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][5-topic]
+  'homeassistant/sensor/shellyfloodsg4-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][6-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.ssid}}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][6-topic]
+  'homeassistant/sensor/shellyfloodsg4-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][7-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.sta_ip}}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][7-topic]
+  'homeassistant/sensor/shellyfloodsg4-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][8-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/wifi',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.rssi}}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][8-topic]
+  'homeassistant/sensor/shellyfloodsg4-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_flood_s_gen4][9-payload]
+  dict({
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyfloodsg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Flood S Gen4',
+      'mdl_id': 'S4SN-0071Z',
+      'mf': 'Shelly',
+      'name': 'Shelly Flood S Gen4',
+      'sw': '20260115-183849/gad8663f',
+    }),
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'expire_after': 51840.0,
+    'name': 'Alarm sound',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/flood:0',
+    'uniq_id': 'shellyfloodsg4-aabbccddeeff-alarm_sound',
+    'val_tpl': '{%if value_json.mute%}OFF{%else%}ON{%endif%}',
+    '~': 'shellyfloodsg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_flood_s_gen4][9-topic]
+  'homeassistant/binary_sensor/shellyfloodsg4-aabbccddeeff-alarm_sound/config'
+# ---
 # name: test_device[shelly_plug_m_gen3][0-payload]
   dict({
     'id': 1,
