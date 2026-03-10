@@ -1,0 +1,118 @@
+{
+    "id": "shellyfloodsg4-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": false
+            }
+        },
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "devicepower:0": {},
+        "flood:0": {
+            "id": 0,
+            "name": "Kitchen",
+            "alarm_mode": "disabled",
+            "report_holdoff": 0
+        },
+        "matter": {
+            "enable": false
+        },
+        "mqtt": {
+            "enable": false,
+            "server": null,
+            "client_id": "shellyfloodsg4-aabbccddeeff",
+            "user": null,
+            "ssl_ca": null,
+            "topic_prefix": "shellyfloodsg4-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": false,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "sys": {
+            "device": {
+                "name": "Shelly Flood S Gen4",
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20260115-183849/gad8663f",
+                "discoverable": true,
+                "eco_mode": false,
+                "tls_check_cert_validity_time": true,
+                "enhanced_security": false
+            },
+            "location": {
+                "tz": "Europe/Madrit",
+                "lat": 23.2671,
+                "lon": 57.0901
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": false
+                },
+                "file_log": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": "35.205.173.252:8910"
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "ntp.server.local"
+            },
+            "cfg_rev": 15
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "ShellyFloodSG4-AABBCCDDEEFF",
+                "is_open": true,
+                "enable": false
+            },
+            "sta": {
+                "ssid": "Wifi-Network",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -80,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": true,
+            "server": "ws://11.11.11.11:8123/api/shelly/ws",
+            "ssl_ca": "*"
+        },
+        "zigbee": {
+            "enable": false
+        }
+    }
+}
