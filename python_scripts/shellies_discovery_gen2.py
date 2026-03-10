@@ -539,7 +539,7 @@ TPL_SET_THERMOSTAT_MODE = "{{%if value==^off^%}}{{%set enable=false%}}{{%else%}}
 TPL_ALARM = "{%if value_json.alarm%}ON{%else%}OFF{%endif%}"
 TPL_MUTE = "{%if value_json.mute%}OFF{%else%}ON{%endif%}"
 TPL_CABLE_UNPLUGGED = (
-    "{%if ^cable_unplugged^ in value_json.get(^errors^)%}ON{%else%}OFF{%endif%}"
+    "{%if ^cable_unplugged^ in value_json.get(^errors^, [])%}ON{%else%}OFF{%endif%}"
 )
 TPL_TARGET_TEMPERATURE = "{{value_json.target_C}}"
 TPL_TEMPERATURE = "{{value_json.temperature.tC}}"
