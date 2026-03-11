@@ -1,0 +1,127 @@
+{
+    "id": "shellyplus1pm-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": false
+            }
+        },
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "input:0": {
+            "id": 0,
+            "name": "Light button",
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "mqtt": {
+            "enable": false,
+            "server": "mqtt.local",
+            "client_id": "shellyplus1pm-aabbccddeeff",
+            "user": "user",
+            "ssl_ca": null,
+            "topic_prefix": "shellyplus1pm-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "switch:0": {
+            "id": 0,
+            "name": "Office Light",
+            "in_mode": "detached",
+            "in_locked": false,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60.0,
+            "auto_off": false,
+            "auto_off_delay": 60.0,
+            "power_limit": 4480,
+            "voltage_limit": 280,
+            "autorecover_voltage_errors": false,
+            "current_limit": 16.0
+        },
+        "sys": {
+            "device": {
+                "name": "Shelly Plus 1PM",
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20260120-145239/1.7.4-gf9878b6",
+                "discoverable": true,
+                "eco_mode": true,
+                "addon_type": null
+            },
+            "location": {
+                "tz": "Europe/Warsaw",
+                "lat": 12.673123,
+                "lon": 65.232165
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": true
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "ntp.local"
+            },
+            "cfg_rev": 55
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "ShellyPlus1PM-AABBCCDDEEFF",
+                "is_open": true,
+                "enable": false,
+                "range_extender": {
+                    "enable": false
+                }
+            },
+            "sta": {
+                "ssid": "Wifi-Network",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -70,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}

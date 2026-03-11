@@ -4411,3 +4411,1222 @@
 # name: test_device[shelly_plug_pm_gen3][9-topic]
   'homeassistant/sensor/shellyplugpmg3-aabbccddeeff-last_restart/config'
 # ---
+# name: test_device[shelly_plus_1pm][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20250114',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][0-topic]
+  'shellyplus1pm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_1pm][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        
+        function sendDeviceStatus() {
+          try {
+            let installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("Shelly.GetStatus", {}, function (status) {
+              status.sys.installed_version = installedVersion;
+              MQTT.publish(topicPrefix + "/status/rpc", JSON.stringify(status));
+            });
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][1-topic]
+  'shellyplus1pm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_1pm][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Office Light Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][10-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-power/config'
+# ---
+# name: test_device[shelly_plus_1pm][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Office Light Temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.temperature.tC}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][11-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-temperature/config'
+# ---
+# name: test_device[shelly_plus_1pm][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Office Light Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][12-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-voltage/config'
+# ---
+# name: test_device[shelly_plus_1pm][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Office Light Overpower',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-overpower',
+    'val_tpl': '{%if "overpower" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][13-topic]
+  'homeassistant/binary_sensor/shellyplus1pm-aabbccddeeff-0-overpower/config'
+# ---
+# name: test_device[shelly_plus_1pm][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Office Light Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][14-topic]
+  'homeassistant/binary_sensor/shellyplus1pm-aabbccddeeff-0-overtemp/config'
+# ---
+# name: test_device[shelly_plus_1pm][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Office Light Overvoltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-overvoltage',
+    'val_tpl': '{%if "overvoltage" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][15-topic]
+  'homeassistant/binary_sensor/shellyplus1pm-aabbccddeeff-0-overvoltage/config'
+# ---
+# name: test_device[shelly_plus_1pm][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'btn_down',
+      'btn_up',
+      'double_push',
+      'long_push',
+      'single_push',
+      'triple_push',
+    ]),
+    'name': 'Light button',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0',
+    'val_tpl': '{%if value_json.params.events.0.id==0%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][16-topic]
+  'homeassistant/event/shellyplus1pm-aabbccddeeff-input-0/config'
+# ---
+# name: test_device[shelly_plus_1pm][17-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_down',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_down',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][17-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/btn_down/config'
+# ---
+# name: test_device[shelly_plus_1pm][18-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_btn_up',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_up',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][18-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/btn_up/config'
+# ---
+# name: test_device[shelly_plus_1pm][19-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_double_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][19-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/double_push/config'
+# ---
+# name: test_device[shelly_plus_1pm][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][2-topic]
+  'shellyplus1pm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_1pm][20-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_long_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][20-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/long_push/config'
+# ---
+# name: test_device[shelly_plus_1pm][21-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_single_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][21-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/single_push/config'
+# ---
+# name: test_device[shelly_plus_1pm][22-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'pl': '0_triple_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplus1pm-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.id}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][22-topic]
+  'homeassistant/device_automation/shellyplus1pm-aabbccddeeff-input-0/triple_push/config'
+# ---
+# name: test_device[shelly_plus_1pm][24-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-restart',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][24-topic]
+  'homeassistant/button/shellyplus1pm-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_plus_1pm][25-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plus 1PM Firmware',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][25-topic]
+  'homeassistant/update/shellyplus1pm-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_plus_1pm][26-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plus 1PM Firmware',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][26-topic]
+  'homeassistant/update/shellyplus1pm-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_plus_1pm][27-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][27-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_plus_1pm][28-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][28-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_plus_1pm][29-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][29-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_plus_1pm][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][3-topic]
+  'shellyplus1pm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_1pm][30-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][30-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_plus_1pm][31-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][31-topic]
+  'homeassistant/binary_sensor/shellyplus1pm-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_plus_1pm][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'name': 'Office Light',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0',
+    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][4-topic]
+  'homeassistant/switch/shellyplus1pm-aabbccddeeff-0/config'
+# ---
+# name: test_device[shelly_plus_1pm][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Office Light Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][7-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-current/config'
+# ---
+# name: test_device[shelly_plus_1pm][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus 1PM',
+      'mdl_id': 'SNSW-001P16EU',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus 1PM',
+      'sw': '20260120-145239/1.7.4-gf9878b6',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Office Light Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellyplus1pm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_1pm][8-topic]
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-energy/config'
+# ---

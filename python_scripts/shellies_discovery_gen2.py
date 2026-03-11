@@ -2628,7 +2628,7 @@ SUPPORTED_MODELS = {
         ATTR_RELAY_SENSORS: {
             SENSOR_CURRENT: DESCRIPTION_SENSOR_CURRENT,
             SENSOR_ENERGY: DESCRIPTION_SENSOR_ENERGY,
-            SENSOR_FREQUENCY: DESCRIPTION_SENSOR_FREQUENCY,
+            SENSOR_FREQUENCY: {},
             SENSOR_POWER: DESCRIPTION_SENSOR_POWER,
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RELAY_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_VOLTAGE,
@@ -4921,6 +4921,9 @@ def get_sensor(
         and description.get(ATTR_REMOVAL_CONDITION)
         and description[ATTR_REMOVAL_CONDITION](device_config, input_id)
     ):
+        return topic, ""
+
+    if not description:
         return topic, ""
 
     if profile == ATTR_LIGHT and light_id is None:
