@@ -2,6 +2,20 @@ name: New device suport
 description: Suggest support for a new device
 labels: new-device-support
 body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for requesting support for a new device.
+
+        Complete the fields below. For Bluetooth devices, retrieve data from the Shelly device with which the Bluetooth device is paired.
+
+  - type: input
+    attributes:
+      label: Shelly device model
+      description: Provide the model name of the Shelly device
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: Shelly.GetStatus response (JSON)
@@ -43,3 +57,13 @@ body:
       render: json
     validations:
       required: true
+
+  - type: textarea
+    attributes:
+      label: Shelly.GetComponents response (JSON)
+      description: Paste the full JSON response to `curl http://<DEVICE_IP>/rpc/Shelly.GetComponents?dynamic_only=true`
+      placeholder: |
+        {
+          "id": "shelly-aabbccddeeff"
+        }
+      render: json
