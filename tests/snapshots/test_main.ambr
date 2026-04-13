@@ -1327,6 +1327,377 @@
 # name: test_device[shelly_blu_ht_display_zb][9-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-0/triple_push/config'
 # ---
+# name: test_device[shelly_blu_ht_zb][0-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'true',
+    'name': 'Temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/bthomesensor:206',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-206-temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][0-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-206-temperature/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][1-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'humidity',
+    'en': 'true',
+    'name': 'Humidity',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/bthomesensor:205',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-205-humidity',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][1-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-205-humidity/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][2-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/bthomedevice:201',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-201-signal_strength',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.rssi}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][2-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-201-signal_strength/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][3-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'battery',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Battery',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/bthomedevice:204',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-204-battery',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.battery}}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][3-topic]
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-204-battery/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+      'single_push',
+      'double_push',
+      'long_push',
+      'triple_push',
+    ]),
+    'name': 'Button 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-201-0',
+    'val_tpl': '{%if value_json.params.events.0.component=="bthomedevice:201" and value_json.params.events.0.idx is defined and value_json.params.events.0.idx==0 and value_json.params.events.0.event is defined%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplugusg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][4-topic]
+  'homeassistant/event/shellyplugusg4-aabbccddeeff-f844772233cc-201-0/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][5-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:201_0_single_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_short_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][5-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-f844772233cc-201-0/single_push/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][6-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:201_0_double_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_double_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][6-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-f844772233cc-201-0/double_push/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][7-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:201_0_long_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_long_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][7-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-f844772233cc-201-0/long_push/config'
+# ---
+# name: test_device[shelly_blu_ht_zb][8-payload]
+  dict({
+    'atype': 'trigger',
+    'dev': dict({
+      'cns': list([
+        list([
+          'bluetooth',
+          'f8:44:77:22:33:cc',
+        ]),
+      ]),
+      'ids': list([
+        'f8:44:77:22:33:cc',
+      ]),
+      'mdl': 'Shelly BLU H&T ZB',
+      'mdl_id': 'SBHT-203C',
+      'mf': 'Shelly',
+      'name': 'Terrasse',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'pl': 'bthomedevice:201_0_triple_push',
+    'qos': 0,
+    'stype': 'button_1',
+    't': 'shellyplugusg4-aabbccddeeff/events/rpc',
+    'type': 'button_triple_press',
+    'val_tpl': '{{value_json.params.events.0.component}}_{{value_json.params.events.0.idx}}_{{value_json.params.events.0.event}}',
+  })
+# ---
+# name: test_device[shelly_blu_ht_zb][8-topic]
+  'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-f844772233cc-201-0/triple_push/config'
+# ---
 # name: test_device[shelly_blu_rc_button_4_zb][0-payload]
   dict({
     'avty': list([
