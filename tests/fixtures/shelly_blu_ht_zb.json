@@ -1,0 +1,106 @@
+{
+    "id": "shellyplugusg4-aabbccddeeff",
+    "device_config": {
+        "cfg_rev": 35,
+        "components": [
+            {
+                "attrs": {
+                    "flags": 0,
+                    "model_id": 17
+                },
+                "config": {
+                    "addr": "f8:44:77:22:33:cc",
+                    "id": 201,
+                    "key": null,
+                    "meta": {
+                        "ui": {
+                            "view": "regular"
+                        }
+                    },
+                    "name": "Terrasse"
+                },
+                "key": "bthomedevice:201",
+                "status": {
+                    "battery": 97,
+                    "fw_ver": "v1.1.10",
+                    "id": 201,
+                    "last_updated_ts": 1775913527,
+                    "packet_id": 49,
+                    "paired": true,
+                    "rpc": false,
+                    "rssi": -86,
+                    "rsv": -1
+                }
+            },
+            {
+                "config": {
+                    "addr": "f8:44:77:22:33:cc",
+                    "id": 204,
+                    "idx": 0,
+                    "meta": null,
+                    "name": null,
+                    "obj_id": 1
+                },
+                "key": "bthomesensor:204",
+                "status": {
+                    "id": 204,
+                    "last_updated_ts": 1775913527,
+                    "value": 97
+                }
+            },
+            {
+                "config": {
+                    "addr": "f8:44:77:22:33:cc",
+                    "id": 205,
+                    "idx": 0,
+                    "meta": null,
+                    "name": null,
+                    "obj_id": 46
+                },
+                "key": "bthomesensor:205",
+                "status": {
+                    "id": 205,
+                    "last_updated_ts": 1775913527,
+                    "value": 50
+                }
+            },
+            {
+                "config": {
+                    "addr": "f8:44:77:22:33:cc",
+                    "id": 206,
+                    "idx": 0,
+                    "meta": null,
+                    "name": null,
+                    "obj_id": 69
+                },
+                "key": "bthomesensor:206",
+                "status": {
+                    "id": 206,
+                    "last_updated_ts": 1775913527,
+                    "value": 17.8
+                }
+            },
+            {
+                "key": "mqtt",
+                "status": {
+                    "connected": true
+                },
+                "config": {
+                    "enable": true,
+                    "server": "127.0.0.1",
+                    "client_id": "shellyplugusg4-aabbccddeeff",
+                    "user": "shelly",
+                    "ssl_ca": null,
+                    "topic_prefix": "shellyplugusg4-aabbccddeeff",
+                    "rpc_ntf": true,
+                    "status_ntf": true,
+                    "use_client_cert": false,
+                    "enable_rpc": true,
+                    "enable_control": true
+                }
+            }
+        ],
+        "offset": 0,
+        "total": 9
+    }
+}
