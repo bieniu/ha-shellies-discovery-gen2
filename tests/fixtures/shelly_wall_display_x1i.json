@@ -1,0 +1,168 @@
+{
+    "id": "ShellyWallDisplay-AABBCCDDEEFF",
+    "device_config": {
+        "ble": {
+            "enable": true,
+            "observer": {
+                "enable": true
+            },
+            "rpc": {
+                "enable": true
+            }
+        },
+        "wifi": {
+            "sta": {
+                "enable": true,
+                "ssid": "WiFi",
+                "is_open": false,
+                "ipv4mode": "dhcp",
+                "ip": "10.10.30.116",
+                "netmask": "255.255.255.0",
+                "gw": "10.10.30.1",
+                "nameserver": "10.10.30.1"
+            }
+        },
+        "switch:0": {
+            "id": 0,
+            "auto_off": false,
+            "auto_on_delay": 0,
+            "initial_state": "off",
+            "in_mode": "follow",
+            "name": null
+        },
+        "occupancy:0": {
+            "id": 0,
+            "wake_screen": true
+        },
+        "input:0": {
+            "enable": false,
+            "id": 0,
+            "type": "switch",
+            "invert": false,
+            "factory_reset": true,
+            "name": null
+        },
+        "temperature:0": {
+            "id": 0,
+            "report_thr_C": 1,
+            "offset_C": 0,
+            "name": null
+        },
+        "humidity:0": {
+            "id": 0,
+            "report_thr": 1,
+            "offset": 0,
+            "name": null
+        },
+        "illuminance:0": {
+            "id": 0,
+            "bright_thr": 200,
+            "dark_thr": 30,
+            "name": null
+        },
+        "ui": {
+            "lock_type": "none",
+            "disable_gestures_when_locked": false,
+            "use_F": false,
+            "screen_saver": {
+                "enable": false,
+                "timeout": 20,
+                "priority_element": "CLOCK"
+            },
+            "brightness": {
+                "auto": true,
+                "level": 5,
+                "min_level": 3,
+                "auto_off": {
+                    "enable": false,
+                    "by_lux": false,
+                    "timeout": 0
+                },
+                "auto_dim": {
+                    "enable": true,
+                    "timeout": 5
+                }
+            },
+            "relay_state_overlay": {
+                "enable": false,
+                "always_visible": false
+            }
+        },
+        "sys": {
+            "device": {
+                "name": "Shelly Wall Display X1i",
+                "fw_id": "20260515-122917/2.6.1-4762e18a",
+                "mac": "AABBCCDDEEFF",
+                "discoverable": true
+            },
+            "cfg_rev": 26,
+            "location": {
+                "tz": "Europe/Warsaw",
+                "lat": 11,
+                "lon": 66
+            },
+            "tzdata": "2026a",
+            "icu_version": "2026a",
+            "sntp": {
+                "server": "time.local"
+            },
+            "debug": {
+                "websocket": {
+                    "enable": false
+                },
+                "mqtt": {
+                    "enable": false
+                },
+                "logs": {
+                    "Generic": true,
+                    "Bluetooth": true,
+                    "Cloud": true,
+                    "Interface": true,
+                    "Media": true,
+                    "MQTT": true,
+                    "Network": true,
+                    "Radar": true,
+                    "RPC": true,
+                    "Thermostat": true,
+                    "Screen": true,
+                    "UART": true,
+                    "Webhooks": true,
+                    "WebSocket": true
+                }
+            },
+            "media_player_enabled": true,
+            "ui_data": {
+                "device_revision": "1-8"
+            }
+        },
+        "cloud": {
+            "server": "shelly-api-eu.shelly.cloud:6022/jrpc",
+            "enable": false
+        },
+        "mqtt": {
+            "enable": true,
+            "server": "mqtt.local:1883",
+            "client_id": "ShellyWallDisplay-AABBCCDDEEFF",
+            "user": "mqtt_client",
+            "topic_prefix": "ShellyWallDisplay-AABBCCDDEEFF",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "enable_rpc": true,
+            "enable_control": true,
+            "use_v5": false,
+            "debug": false
+        },
+        "ws": {
+            "enable": false,
+            "ssl_ca": "ca.pem"
+        },
+        "media": {
+            "rev": 0
+        },
+        "script:1": {
+            "id": 1,
+            "name": "shellies_discovery_gen2_script_20250114",
+            "enable": true
+        }
+    }
+}
