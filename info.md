@@ -59,6 +59,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - Shelly Pro Dual Cover PM
 - Shelly Pro EM
 - Shelly Wall Display
+- Shelly Wall Display X1i
 - Shelly Wall Display X2
 
 ### Gen3
