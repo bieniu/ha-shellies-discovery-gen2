@@ -5868,8 +5868,15 @@ if "components" in device_config:
                     btsensor_id = comp_id.split(":")[-1]
                     break
 
+            bt_id = (
+                btdevice_id
+                if description[KEY_STATE_TOPIC] == TOPIC_STATUS_BTH_DEVICE
+                else btsensor_id
+            )
             topic, payload = get_sensor(
-                sensor, description, bt_id=btsensor_id or btdevice_id
+                sensor,
+                description,
+                bt_id=bt_id,
             )
             config_data[topic] = payload
 
@@ -5880,9 +5887,12 @@ if "components" in device_config:
                     btsensor_id = comp_id.split(":")[-1]
                     break
 
-            topic, payload = get_binary_sensor(
-                binary_sensor, description, bt_id=btsensor_id or btdevice_id
+            bt_id = (
+                btdevice_id
+                if description[KEY_STATE_TOPIC] == TOPIC_STATUS_BTH_DEVICE
+                else btsensor_id
             )
+            topic, payload = get_binary_sensor(binary_sensor, description, bt_id=bt_id)
             config_data[topic] = payload
 
         bth_inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
