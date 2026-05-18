@@ -5892,9 +5892,7 @@ if "components" in device_config:
                 if description[KEY_STATE_TOPIC] == TOPIC_STATUS_BTH_DEVICE
                 else btsensor_id
             )
-            topic, payload = get_binary_sensor(
-                binary_sensor, description, bt_id=bt_id
-            )
+            topic, payload = get_binary_sensor(binary_sensor, description, bt_id=bt_id)
             config_data[topic] = payload
 
         bth_inputs = SUPPORTED_MODELS[model].get(ATTR_INPUTS, 0)
