@@ -1516,15 +1516,15 @@
       'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
     }),
     'qos': 0,
-    'stat_t': '~status/bthomedevice:204',
-    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-204-battery',
+    'stat_t': '~status/bthomedevice:201',
+    'uniq_id': 'shellyplugusg4-aabbccddeeff-f844772233cc-201-battery',
     'unit_of_meas': '%',
     'val_tpl': '{{value_json.battery}}',
     '~': 'shellyplugusg4-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_blu_ht_zb][3-topic]
-  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-204-battery/config'
+  'homeassistant/sensor/shellyplugusg4-aabbccddeeff-f844772233cc-201-battery/config'
 # ---
 # name: test_device[shelly_blu_ht_zb][4-payload]
   dict({
