@@ -6198,6 +6198,7 @@ device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
 
+mac_from_device_id = device_id.rsplit("-", 1)[-1]
 model = device_id.rsplit("-", 1)[0]
 if model not in SUPPORTED_MODELS:
     raise ValueError(
@@ -6461,7 +6462,7 @@ if "components" in device_config:
 
     if has_virtual_components:
         sys_config = components["sys"]["device"]
-        mac = format_mac(original_device_id.rsplit(":", 1)[-1]).lower()
+        mac = format_mac(mac_from_device_id).lower()
         device_info = {
             KEY_CONNECTIONS: [[KEY_MAC, mac]],
             KEY_IDENTIFIERS: [mac],
