@@ -6948,7 +6948,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'current',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase A current',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7000,7 +7000,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'power',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase A power',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7052,7 +7052,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'voltage',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase A voltage',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7104,7 +7104,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'current',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase B current',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7156,7 +7156,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'power',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase B power',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7208,7 +7208,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'voltage',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase B voltage',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7260,7 +7260,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'current',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase C current',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7312,7 +7312,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'power',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase C power',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7364,7 +7364,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'dev_cla': 'voltage',
-    'en': 'true',
+    'en': 'false',
     'name': 'Phase C voltage',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
@@ -7906,7 +7906,7 @@
       'sw': '20250821-190155/g7a8da83',
     }),
     'icon': 'mdi:ev-station',
-    'name': 'Start charging',
+    'name': 'Charging',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -8180,7 +8180,7 @@
     'dev_cla': 'enum',
     'en': 'true',
     'icon': 'mdi:ev-station',
-    'name': 'Charger state',
+    'name': 'Status',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
