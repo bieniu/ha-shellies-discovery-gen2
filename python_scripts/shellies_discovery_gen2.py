@@ -5674,11 +5674,6 @@ def get_virtual_component_step(component):
     return component.get("meta", {}).get("ui", {}).get("step")
 
 
-def get_virtual_component_icon(component):
-    """Return the configured icon for a virtual component."""
-    return component.get("meta", {}).get("ui", {}).get("icon")
-
-
 def get_virtual_button(component_key, component):
     """Create configuration for Shelly virtual button entity."""
     _, component_id = get_virtual_component_key(component_key)
@@ -5699,8 +5694,6 @@ def get_virtual_button(component_key, component):
 
     if availability:
         payload[KEY_AVAILABILITY] = availability
-    if icon := get_virtual_component_icon(component):
-        payload[KEY_ICON] = icon
 
     return topic, payload
 
@@ -5729,9 +5722,6 @@ def get_virtual_switch(component_key, component):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
-    if icon := get_virtual_component_icon(component):
-        payload[KEY_ICON] = icon
-
     return topic, payload
 
 
@@ -5756,8 +5746,6 @@ def get_virtual_binary_sensor(component_key, component):
 
     if availability:
         payload[KEY_AVAILABILITY] = availability
-    if icon := get_virtual_component_icon(component):
-        payload[KEY_ICON] = icon
 
     return topic, payload
 
@@ -5790,8 +5778,6 @@ def get_virtual_number(component_key, component, mode):
         payload[KEY_STEP] = step
     if unit := get_virtual_component_unit(component):
         payload[KEY_UNIT] = unit
-    if icon := get_virtual_component_icon(component):
-        payload[KEY_ICON] = icon
 
     return topic, payload
 
@@ -5820,8 +5806,6 @@ def get_virtual_sensor(component_key, component, is_enum=False):
         payload[KEY_OPTIONS] = component.get("options", [])
     if unit := get_virtual_component_unit(component):
         payload[KEY_UNIT] = unit
-    if icon := get_virtual_component_icon(component):
-        payload[KEY_ICON] = icon
 
     return topic, payload
 
