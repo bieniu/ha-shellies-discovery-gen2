@@ -6461,28 +6461,11 @@ if "components" in device_config:
 
     if has_virtual_components:
         sys_config = components["sys"]["device"]
-        firmware_id = sys_config[ATTR_FW_ID]
-        mac = format_mac(sys_config[ATTR_MAC]).lower()
-        device_name = (
-            sys_config.get(ATTR_NAME)
-            or f"{SUPPORTED_MODELS[gateway_model][ATTR_NAME]} {mac.upper().replace(':', '')}"
-        ).replace("'", "_")
-        device_url = f"http://{original_device_id}.local/"
-        gen = SUPPORTED_MODELS[gateway_model].get(ATTR_GEN, 2)
-        device_id = original_device_id
+        mac = format_mac(original_device_id.rsplit(":", 1)[-1]).lower()
         device_info = {
             KEY_CONNECTIONS: [[KEY_MAC, mac]],
             KEY_IDENTIFIERS: [mac],
-            KEY_NAME: device_name,
-            KEY_MODEL: SUPPORTED_MODELS[gateway_model][ATTR_NAME],
-            KEY_MODEL_ID: SUPPORTED_MODELS[gateway_model].get(ATTR_MODEL_ID),
-            KEY_SW_VERSION: firmware_id,
-            KEY_HW_VERSION: f"gen{gen}",
-            KEY_MANUFACTURER: ATTR_MANUFACTURER,
-            KEY_CONFIGURATION_URL: device_url,
         }
-        if brand := SUPPORTED_MODELS[gateway_model].get(ATTR_BRAND):
-            device_info[KEY_MANUFACTURER] = f"{brand} (Powered by {ATTR_MANUFACTURER})"
 
         config_data.update(get_virtual_components(components))
 
