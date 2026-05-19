@@ -1845,7 +1845,7 @@ DESCRIPTION_SWITCH_THERMOSTAT = {
 DESCRIPTION_SWITCH_TOPAC_START_CHARGING = {
     ATTR_ID: 200,
     ATTR_KEY: "boolean",
-    KEY_NAME: "Start charging",
+    KEY_NAME: "Charging",
     KEY_ICON: "mdi:ev-station",
     KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
@@ -1869,7 +1869,7 @@ DESCRIPTION_NUMBER_TOPAC_CURRENT_LIMIT = {
 DESCRIPTION_SENSOR_TOPAC_CHARGER_STATE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENUM,
     KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Charger state",
+    KEY_NAME: "Status",
     KEY_ICON: "mdi:ev-station",
     KEY_OPTIONS: [
         "charger_free",
