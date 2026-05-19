@@ -313,6 +313,7 @@ MODEL_GENERIC_BTHOME_DEVICE = "Generic BTHome Device"
 MODEL_OGEMRAY_25A = "ogemray25a"
 MODEL_ST1820 = "st1820"
 MODEL_ST802_B = "st-802"
+MODEL_TOPAC_EVE01_11R = "eve01"
 MODEL_WATER_VALVE = "watervalve"
 
 NUMBER_EXTERNAL_TEMPERATURE = "external_temperature"
@@ -327,6 +328,7 @@ SENSOR_APPARENT_POWER = "apparent_power"
 SENSOR_BATTERY = "battery"
 SENSOR_CABLE_UNPLUGGED = "cable_unplugged"
 SENSOR_CALIBRATION = "calibration"
+SENSOR_CHARGER_STATE = "charger_state"
 SENSOR_CLOUD = "cloud"
 SENSOR_COUNTER = "counter"
 SENSOR_COUNTER_VALUE = "counter_value"
@@ -351,11 +353,22 @@ SENSOR_OCCUPANCY = "occupancy"
 SENSOR_OVERPOWER = "overpower"
 SENSOR_OVERTEMP = "overtemp"
 SENSOR_OVERVOLTAGE = "overvoltage"
+SENSOR_PHASE_A_CURRENT = "phase_a_current"
+SENSOR_PHASE_A_POWER = "phase_a_power"
+SENSOR_PHASE_A_VOLTAGE = "phase_a_voltage"
+SENSOR_PHASE_B_CURRENT = "phase_b_current"
+SENSOR_PHASE_B_POWER = "phase_b_power"
+SENSOR_PHASE_B_VOLTAGE = "phase_b_voltage"
+SENSOR_PHASE_C_CURRENT = "phase_c_current"
+SENSOR_PHASE_C_POWER = "phase_c_power"
+SENSOR_PHASE_C_VOLTAGE = "phase_c_voltage"
 SENSOR_POWER = "power"
 SENSOR_POWER_FACTOR = "power_factor"
 SENSOR_POWER_SUPPLY = "power_supply"
 SENSOR_PRESENCE = "presence"
 SENSOR_RETURNED_ENERGY = "returned_energy"
+SENSOR_SESSION_DURATION = "session_duration"
+SENSOR_SESSION_ENERGY = "session_energy"
 SENSOR_SIGNAL_STRENGTH = "signal_strength"
 SENSOR_SMOKE = "smoke"
 SENSOR_SSID = "ssid"
@@ -365,6 +378,7 @@ SENSOR_TOTAL_ACTIVE_POWER = "total_active_power"
 SENSOR_TOTAT_ACTIVE_RETURNED_ENERGY = "total_active_returned_energy"
 SENSOR_TOTAL_APPARENT_POWER = "total_apparent_power"
 SENSOR_TOTAL_CURRENT = "total_current"
+SENSOR_TOTAL_POWER = "total_power"
 SENSOR_VALVE_POSITION = "valve_position"
 SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
@@ -586,6 +600,7 @@ UNIT_AMPERE = "A"
 UNIT_CELSIUS = "°C"
 UNIT_DBM = "dBm"
 UNIT_HERTZ = "Hz"
+UNIT_KILOWATTH = "kWh"
 UNIT_LUX = "lx"
 UNIT_MINUTES = "min"
 UNIT_PERCENT = "%"
@@ -1839,6 +1854,186 @@ DESCRIPTION_SWITCH_THERMOSTAT = {
     KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
     KEY_STATE_TOPIC: "~status/boolean:{id}",
     KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
+}
+DESCRIPTION_SWITCH_TOPAC_START_CHARGING = {
+    ATTR_ID: 200,
+    ATTR_KEY: "boolean",
+    KEY_NAME: "Charging",
+    KEY_ICON: "mdi:ev-station",
+    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
+    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
+    KEY_STATE_TOPIC: "~status/boolean:{id}",
+    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
+}
+DESCRIPTION_NUMBER_TOPAC_CURRENT_LIMIT = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Current limit",
+    KEY_STATE_TOPIC: "~status/number:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+    KEY_COMMAND_TOPIC: TOPIC_RPC,
+    KEY_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_ICON: "mdi:current-ac",
+    KEY_MIN: 6,
+    KEY_MAX: 16,
+    KEY_STEP: 1,
+    KEY_MODE: "slider",
+}
+DESCRIPTION_SENSOR_TOPAC_CHARGER_STATE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENUM,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Status",
+    KEY_ICON: "mdi:ev-station",
+    KEY_OPTIONS: [
+        "charger_free",
+        "charger_insert",
+        "charger_free_fault",
+        "charger_wait",
+        "charger_charging",
+        "charger_pause",
+        "charger_end",
+        "charger_fault",
+    ],
+    KEY_STATE_TOPIC: "~status/enum:200",
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+}
+DESCRIPTION_SENSOR_TOPAC_SESSION_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Session energy",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/number:201",
+    KEY_UNIT: UNIT_KILOWATTH,
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+}
+DESCRIPTION_SENSOR_TOPAC_SESSION_DURATION = {
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Session duration",
+    KEY_ICON: "mdi:timer-outline",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/number:202",
+    KEY_UNIT: UNIT_MINUTES,
+    KEY_VALUE_TEMPLATE: TPL_VALUE,
+}
+DESCRIPTION_SENSOR_TOPAC_TOTAL_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Total current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.total_current}}",
+}
+DESCRIPTION_SENSOR_TOPAC_TOTAL_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Total power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.total_power}}",
+}
+DESCRIPTION_SENSOR_TOPAC_TOTAL_ACTIVE_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Total active energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.total_act_energy}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_A_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase A voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_a.voltage}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_A_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase A current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_a.current}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_A_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase A power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_a.power}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_B_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase B voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_b.voltage}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_B_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase B current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_b.current}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_B_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase B power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_b.power}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_C_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase C voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_c.voltage}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_C_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase C current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_c.current}}",
+}
+DESCRIPTION_SENSOR_TOPAC_PHASE_C_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Phase C power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: "~status/object:200",
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: "{{value_json.value.phase_c.power}}",
 }
 DESCRIPTION_THERMOSTAT = {
     ATTR_TEMPERATURE_MIN: 5,
@@ -4404,6 +4599,46 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20241128,
     },
+    MODEL_TOPAC_EVE01_11R: {
+        ATTR_NAME: "TopAC EVE01-11R",
+        ATTR_MODEL_ID: "S3XT-0S",
+        ATTR_BRAND: "TopAC",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
+        ATTR_NUMBERS: {
+            "current_limit": DESCRIPTION_NUMBER_TOPAC_CURRENT_LIMIT,
+        },
+        ATTR_SENSORS: {
+            SENSOR_CHARGER_STATE: DESCRIPTION_SENSOR_TOPAC_CHARGER_STATE,
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_PHASE_A_CURRENT: DESCRIPTION_SENSOR_TOPAC_PHASE_A_CURRENT,
+            SENSOR_PHASE_A_POWER: DESCRIPTION_SENSOR_TOPAC_PHASE_A_POWER,
+            SENSOR_PHASE_A_VOLTAGE: DESCRIPTION_SENSOR_TOPAC_PHASE_A_VOLTAGE,
+            SENSOR_PHASE_B_CURRENT: DESCRIPTION_SENSOR_TOPAC_PHASE_B_CURRENT,
+            SENSOR_PHASE_B_POWER: DESCRIPTION_SENSOR_TOPAC_PHASE_B_POWER,
+            SENSOR_PHASE_B_VOLTAGE: DESCRIPTION_SENSOR_TOPAC_PHASE_B_VOLTAGE,
+            SENSOR_PHASE_C_CURRENT: DESCRIPTION_SENSOR_TOPAC_PHASE_C_CURRENT,
+            SENSOR_PHASE_C_POWER: DESCRIPTION_SENSOR_TOPAC_PHASE_C_POWER,
+            SENSOR_PHASE_C_VOLTAGE: DESCRIPTION_SENSOR_TOPAC_PHASE_C_VOLTAGE,
+            SENSOR_SESSION_DURATION: DESCRIPTION_SENSOR_TOPAC_SESSION_DURATION,
+            SENSOR_SESSION_ENERGY: DESCRIPTION_SENSOR_TOPAC_SESSION_ENERGY,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_TOTAL_ACTIVE_ENERGY: DESCRIPTION_SENSOR_TOPAC_TOTAL_ACTIVE_ENERGY,
+            SENSOR_TOTAL_CURRENT: DESCRIPTION_SENSOR_TOPAC_TOTAL_CURRENT,
+            SENSOR_TOTAL_POWER: DESCRIPTION_SENSOR_TOPAC_TOTAL_POWER,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_SWITCHES: {
+            "start_charging": DESCRIPTION_SWITCH_TOPAC_START_CHARGING,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20250821,
+    },
 }
 
 
@@ -5549,6 +5784,10 @@ def configure_device():
         topic, payload = get_switch(switch_id, ATTR_SWITCH, switch, description)
         config[topic] = payload
 
+    for number, description in numbers.items():
+        topic, payload = get_number(number, description)
+        config[topic] = payload
+
     for input_id in inputs:
         input_type = device_config[f"input:{input_id}"]["type"]
 
@@ -6082,6 +6321,7 @@ else:
     rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
 
     buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
+    numbers = SUPPORTED_MODELS[model].get(ATTR_NUMBERS, {})
     sensors = SUPPORTED_MODELS[model].get(ATTR_SENSORS, {})
     binary_sensors = SUPPORTED_MODELS[model].get(ATTR_BINARY_SENSORS, {})
     updates = SUPPORTED_MODELS[model].get(ATTR_UPDATES, {})

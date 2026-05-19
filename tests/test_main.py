@@ -162,6 +162,7 @@ def test_mqtt_prefix_with_space() -> None:
         "shelly_flood_s_gen4",
         "shelly_plus_1pm",
         "shelly_wall_display_x1i",
+        "topac_eve01_11r",
     ],
 )
 def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:

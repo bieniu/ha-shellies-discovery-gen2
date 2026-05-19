@@ -1,0 +1,117 @@
+{
+    "id": "eve01-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": true,
+            "rpc": {
+                "enable": true
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": true,
+            "server": "shelly-222-eu.shelly.cloud:6022/jrpc"
+        },
+        "mqtt": {
+            "enable": true,
+            "server": "192.168.0.11:1883",
+            "client_id": "eve01-aabbccddeeff",
+            "user": "shelly",
+            "ssl_ca": null,
+            "topic_prefix": "eve01-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "service:0": {
+            "auto_balance": {
+                "enable": false,
+                "em_ip": null,
+                "max_current": 24,
+                "exclude_self_current": true
+            },
+            "auto_charge": true,
+            "global_charge_limit": null,
+            "global_time_limit": null,
+            "id": 0
+        },
+        "sys": {
+            "device": {
+                "name": null,
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20250821-190155/g7a8da83",
+                "discoverable": true,
+                "tls_check_cert_validity_time": true,
+                "enhanced_security": false
+            },
+            "location": {
+                "tz": "Europe/Vienna",
+                "lat": 33,
+                "lon": 11
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": true
+                },
+                "udp": {
+                    "addr": "35.205.173.252:8910"
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "time.cloudflare.com"
+            },
+            "cfg_rev": 26
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "EVE01-AABBCCDDEEFF",
+                "is_open": true,
+                "enable": false,
+                "range_extender": {
+                    "enable": false
+                }
+            },
+            "sta": {
+                "ssid": "WiFi-Network",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -80,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}

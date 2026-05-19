@@ -121,6 +121,7 @@ Shellies Discovery Gen2 will automatically install/update the script on your She
 - LinkedGo Smart Thermostat ST1820
 - LinkedGo Smart Thermostat ST802-B
 - Ogemray 25A Smart Switch
+- TopAC EVE01-11R
 
 ## Battery powered devices
 

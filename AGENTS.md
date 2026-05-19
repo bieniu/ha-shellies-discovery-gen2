@@ -183,7 +183,8 @@ Support for a new Shelly model must include a full-device fixture test.
    ```
 5. Review the generated snapshot carefully. Verify that all MQTT topics and
    payloads match Home Assistant MQTT discovery rules before committing.
-6. Update `README.md` to include the new model in the supported devices list.
+6. Update `README.md` and `info.md` to include the new model in the supported devices
+   list.
 
 ### Checklist for a New Device
 
@@ -194,7 +195,7 @@ Support for a new Shelly model must include a full-device fixture test.
 - [ ] Snapshot generated and reviewed
 - [ ] `ruff check` and `ruff format --check` pass
 - [ ] All existing snapshot tests still pass
-- [ ] `README.md` updated with new model
+- [ ] `README.md` and `info.md` updated with new model
 
 ## Snapshot Changes
 
@@ -234,12 +235,12 @@ maintainer. Changing the version number in the VERSION constant in the script
 
 ## Documentation Notes
 
-- Update `README.md` when supported devices, script arguments, installation
-  behavior, or user-visible MQTT discovery behavior changes.
+- Update `README.md` and `info.md` when supported devices, script arguments,
+  installation behavior, or user-visible MQTT discovery behavior changes.
 - Keep Home Assistant-specific wording aligned with current official
   documentation, especially around `python_script` and MQTT discovery.
-- The supported devices table in `README.md` is user-facing; keep model names and
-  links accurate.
+- The supported devices table in `README.md` and `info.md` is user-facing; keep model
+  names and links accurate.
 
 ## Contribution Checklist
 
@@ -248,7 +249,7 @@ Before submitting any change, verify:
 - [ ] `ruff check` and `ruff format --check` pass with zero errors
 - [ ] All existing snapshot tests pass without unexpected changes
 - [ ] New device: fixture added, snapshot generated and reviewed
-- [ ] `README.md` updated if supported devices or script arguments changed
+- [ ] `README.md` and `info.md` updated if supported devices or script arguments changed
 - [ ] No new runtime imports added to `shellies_discovery_gen2.py`
 - [ ] Snapshot diff reviewed — no unexpected topic, unique ID, or payload changes
 - [ ] Commit message describes the reason for any intentional snapshot update
