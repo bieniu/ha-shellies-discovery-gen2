@@ -5659,9 +5659,9 @@ def get_virtual_component_entity(component_key):
     return f"{component_type}-{component_id}"
 
 
-def get_virtual_component_name(component):
+def get_virtual_component_name(component_key, component):
     """Return the configured virtual component name."""
-    return (component.get(ATTR_NAME) or "Virtual component").replace("'", "_")
+    return component.get(ATTR_NAME) or component_key.replace(":", " ").title()
 
 
 def get_virtual_component_unit(component):
@@ -5686,7 +5686,7 @@ def get_virtual_button(component_key, component):
     topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{entity}/config")
 
     payload = {
-        KEY_NAME: get_virtual_component_name(component),
+        KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_PRESS: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Button.Trigger^,^params^:{{^id^:{component_id}}}}}",
         KEY_ENABLED_BY_DEFAULT: "true",
@@ -5712,7 +5712,7 @@ def get_virtual_switch(component_key, component):
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{entity}/config")
 
     payload = {
-        KEY_NAME: get_virtual_component_name(component),
+        KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:false}}}}",
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:true}}}}",
@@ -5743,7 +5743,7 @@ def get_virtual_binary_sensor(component_key, component):
     )
 
     payload = {
-        KEY_NAME: get_virtual_component_name(component),
+        KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_STATE_TOPIC: f"~status/{component_key}",
         KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
         KEY_ENABLED_BY_DEFAULT: "true",
@@ -5769,7 +5769,7 @@ def get_virtual_number(component_key, component, mode):
     topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{entity}/config")
 
     payload = {
-        KEY_NAME: get_virtual_component_name(component),
+        KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Number.Set^,^params^:{{^id^:{component_id},^value^:value}}}}|tojson}}}}",
         KEY_STATE_TOPIC: f"~status/{component_key}",
@@ -5802,7 +5802,7 @@ def get_virtual_sensor(component_key, component, is_enum=False):
     topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{entity}/config")
 
     payload = {
-        KEY_NAME: get_virtual_component_name(component),
+        KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_STATE_TOPIC: f"~status/{component_key}",
         KEY_VALUE_TEMPLATE: TPL_VALUE,
         KEY_ENABLED_BY_DEFAULT: "true",
