@@ -5683,7 +5683,7 @@ def get_virtual_button(component_key, component):
     payload = {
         KEY_NAME: get_virtual_component_name(component_key, component),
         KEY_COMMAND_TOPIC: TOPIC_RPC,
-        KEY_PAYLOAD_PRESS: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Button.Trigger^,^params^:{{^id^:{component_id}}}}}",
+        KEY_PAYLOAD_PRESS: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Button.Trigger^,^params^:{{^id^:{component_id},^event^:^single_push^}}}}",
         KEY_ENABLED_BY_DEFAULT: "true",
         KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
         KEY_QOS: qos,
