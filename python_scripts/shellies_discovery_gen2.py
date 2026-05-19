@@ -614,6 +614,13 @@ VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
 
+VIRTUAL_COMPONENT_TYPES = ("boolean", "button", "enum", "number", "text")
+VIRTUAL_VIEW_BUTTON = "button"
+VIRTUAL_VIEW_FIELD = "field"
+VIRTUAL_VIEW_LABEL = "label"
+VIRTUAL_VIEW_SLIDER = "slider"
+VIRTUAL_VIEW_TOGGLE = "toggle"
+
 BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
@@ -2097,6 +2104,18 @@ def get_component_ids(component: str, config):
     return [
         int(key.split(":")[-1]) for key in config if key.startswith(f"{component}:")
     ]
+
+
+def get_component_response_items(components):
+    """Return components from a flat or paginated GetComponent response."""
+    component_items = []
+    for component in components:
+        if "components" in component:
+            component_items.extend(component["components"])
+        else:
+            component_items.append(component)
+
+    return component_items
 
 
 SUPPORTED_MODELS = {
@@ -5623,6 +5642,234 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
     return topic, payload
 
 
+def get_virtual_component_key(component_key):
+    """Return the type and ID for a virtual component."""
+    component_type, component_id = component_key.split(":", 1)
+    return component_type, component_id
+
+
+def get_virtual_component_view(component):
+    """Return the UI view for a virtual component."""
+    return component.get("meta", {}).get("ui", {}).get("view")
+
+
+def get_virtual_component_entity(component_key):
+    """Return a stable entity suffix for a virtual component."""
+    component_type, component_id = get_virtual_component_key(component_key)
+    return f"{component_type}-{component_id}"
+
+
+def get_virtual_component_name(component):
+    """Return the configured virtual component name."""
+    return (component.get(ATTR_NAME) or "Virtual component").replace("'", "_")
+
+
+def get_virtual_component_unit(component):
+    """Return the configured unit for a virtual component."""
+    return component.get("meta", {}).get("ui", {}).get("unit")
+
+
+def get_virtual_component_step(component):
+    """Return the configured step for a virtual number component."""
+    return component.get("meta", {}).get("ui", {}).get("step")
+
+
+def get_virtual_component_icon(component):
+    """Return the configured icon for a virtual component."""
+    return component.get("meta", {}).get("ui", {}).get("icon")
+
+
+def get_virtual_button(component_key, component):
+    """Create configuration for Shelly virtual button entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_PRESS: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Button.Trigger^,^params^:{{^id^:{component_id}}}}}",
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+    if icon := get_virtual_component_icon(component):
+        payload[KEY_ICON] = icon
+
+    return topic, payload
+
+
+def get_virtual_switch(component_key, component):
+    """Create configuration for Shelly virtual boolean switch entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:false}}}}",
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:true}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
+        KEY_STATE_OFF: VALUE_OFF,
+        KEY_STATE_ON: VALUE_ON,
+        KEY_AVAILABILITY: availability,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if icon := get_virtual_component_icon(component):
+        payload[KEY_ICON] = icon
+
+    return topic, payload
+
+
+def get_virtual_binary_sensor(component_key, component):
+    """Create configuration for Shelly virtual boolean binary sensor entity."""
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(
+        f"{disc_prefix}/binary_sensor/{device_id}-{entity}/config"
+    )
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component),
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+    if icon := get_virtual_component_icon(component):
+        payload[KEY_ICON] = icon
+
+    return topic, payload
+
+
+def get_virtual_number(component_key, component, mode):
+    """Create configuration for Shelly virtual number entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Number.Set^,^params^:{{^id^:{component_id},^value^:value}}}}|tojson}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_MIN: component[KEY_MIN],
+        KEY_MAX: component[KEY_MAX],
+        KEY_MODE: mode,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+    }
+
+    if step := get_virtual_component_step(component):
+        payload[KEY_STEP] = step
+    if unit := get_virtual_component_unit(component):
+        payload[KEY_UNIT] = unit
+    if icon := get_virtual_component_icon(component):
+        payload[KEY_ICON] = icon
+
+    return topic, payload
+
+
+def get_virtual_sensor(component_key, component, is_enum=False):
+    """Create configuration for Shelly virtual sensor entity."""
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component),
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+    if is_enum:
+        payload[KEY_DEVICE_CLASS] = DEVICE_CLASS_ENUM
+        payload[KEY_OPTIONS] = component.get("options", [])
+    if unit := get_virtual_component_unit(component):
+        payload[KEY_UNIT] = unit
+    if icon := get_virtual_component_icon(component):
+        payload[KEY_ICON] = icon
+
+    return topic, payload
+
+
+def get_virtual_component(component_key, component):
+    """Create configuration for supported Shelly virtual components."""
+    component_type, _ = get_virtual_component_key(component_key)
+    view = get_virtual_component_view(component)
+
+    if component_type == "boolean" and view == VIRTUAL_VIEW_TOGGLE:
+        return get_virtual_switch(component_key, component)
+    if component_type == "boolean" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_binary_sensor(component_key, component)
+    if component_type == "button" and view == VIRTUAL_VIEW_BUTTON:
+        return get_virtual_button(component_key, component)
+    if component_type == "enum" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component, is_enum=True)
+    if component_type == "number" and view == VIRTUAL_VIEW_SLIDER:
+        return get_virtual_number(component_key, component, "slider")
+    if component_type == "number" and view == VIRTUAL_VIEW_FIELD:
+        return get_virtual_number(component_key, component, "box")
+    if component_type == "number" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component)
+    if component_type == "text" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component)
+
+    return None, None
+
+
+def get_virtual_components(components):
+    """Create configuration for all supported Shelly virtual components."""
+    config = {}
+
+    for component_key, component in components.items():
+        if ":" not in component_key:
+            continue
+
+        component_type, _ = get_virtual_component_key(component_key)
+        if component_type not in VIRTUAL_COMPONENT_TYPES:
+            continue
+
+        topic, payload = get_virtual_component(component_key, component)
+        if topic and payload:
+            config[topic] = payload
+
+    return config
+
+
 def get_update(update, description):
     """Create configuration for Shelly update entity."""
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
@@ -6023,10 +6270,11 @@ if qos not in (0, 1, 2):
     raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
 if "components" in device_config:
+    component_items = get_component_response_items(device_config["components"])
     components = {
         comp["key"]: {**comp["config"], **comp.get("attrs", {})}
-        for comp in device_config["components"]
-        if comp["key"].startswith(("blu", "bt", "mqtt"))
+        for comp in component_items
+        if "key" in comp
     }
 
     if "mqtt" not in components:
@@ -6072,6 +6320,7 @@ if "components" in device_config:
     via_device = format_mac(device_id.rsplit("-", 1)[-1])
 
     original_device_id = device_id
+    gateway_model = model
 
     for device, config in bthome_devices.items():
         btdevice_id = device.split(":")[-1]
@@ -6217,6 +6466,41 @@ if "components" in device_config:
                 number, description, thermostat_id=thermostat_id
             )
             config_data[topic] = payload
+
+    has_virtual_components = False
+    for component_key in components:
+        if ":" in component_key and component_key.split(":", 1)[0] in (
+            VIRTUAL_COMPONENT_TYPES
+        ):
+            has_virtual_components = True
+            break
+
+    if has_virtual_components:
+        sys_config = components["sys"]["device"]
+        firmware_id = sys_config[ATTR_FW_ID]
+        mac = format_mac(sys_config[ATTR_MAC]).lower()
+        device_name = (
+            sys_config.get(ATTR_NAME)
+            or f"{SUPPORTED_MODELS[gateway_model][ATTR_NAME]} {mac.upper().replace(':', '')}"
+        ).replace("'", "_")
+        device_url = f"http://{original_device_id}.local/"
+        gen = SUPPORTED_MODELS[gateway_model].get(ATTR_GEN, 2)
+        device_id = original_device_id
+        device_info = {
+            KEY_CONNECTIONS: [[KEY_MAC, mac]],
+            KEY_IDENTIFIERS: [mac],
+            KEY_NAME: device_name,
+            KEY_MODEL: SUPPORTED_MODELS[gateway_model][ATTR_NAME],
+            KEY_MODEL_ID: SUPPORTED_MODELS[gateway_model].get(ATTR_MODEL_ID),
+            KEY_SW_VERSION: firmware_id,
+            KEY_HW_VERSION: f"gen{gen}",
+            KEY_MANUFACTURER: ATTR_MANUFACTURER,
+            KEY_CONFIGURATION_URL: device_url,
+        }
+        if brand := SUPPORTED_MODELS[gateway_model].get(ATTR_BRAND):
+            device_info[KEY_MANUFACTURER] = f"{brand} (Powered by {ATTR_MANUFACTURER})"
+
+        config_data.update(get_virtual_components(components))
 
 else:
     if (

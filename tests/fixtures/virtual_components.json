@@ -1,0 +1,311 @@
+{
+    "id": "shellyplugusg4-AABBCCDDEEFF",
+    "device_config": {
+        "components": [
+            {
+                "cfg_rev": 64,
+                "components": [
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": true,
+                            "id": 200,
+                            "meta": {
+                                "ui": {
+                                    "buttonIcons": null,
+                                    "icon": "",
+                                    "titles": [
+                                        "",
+                                        ""
+                                    ],
+                                    "view": "toggle"
+                                }
+                            },
+                            "name": "Boolean Toogle",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "boolean:200",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": true
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": true,
+                            "id": 201,
+                            "meta": {
+                                "ui": {
+                                    "buttonIcons": null,
+                                    "icon": "",
+                                    "titles": [
+                                        "",
+                                        ""
+                                    ],
+                                    "view": "label"
+                                }
+                            },
+                            "name": "Boolean Label",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "boolean:201",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": true
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "id": 200,
+                            "meta": {
+                                "ui": {
+                                    "icon": null,
+                                    "view": "button"
+                                }
+                            },
+                            "name": "Button",
+                            "owner": ""
+                        },
+                        "key": "button:200",
+                        "status": {}
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": "test_2",
+                            "id": 200,
+                            "meta": {
+                                "ui": {
+                                    "icon": "",
+                                    "images": {
+                                        "test_1": null,
+                                        "test_2": null
+                                    },
+                                    "titles": {
+                                        "test_1": "Test 1",
+                                        "test_2": "Test 2"
+                                    },
+                                    "view": "label"
+                                }
+                            },
+                            "name": "Enum Label",
+                            "options": [
+                                "test_1",
+                                "test_2"
+                            ],
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "enum:200",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": "test_2"
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": "my value",
+                            "id": 200,
+                            "max_len": 255,
+                            "meta": {
+                                "ui": {
+                                    "icon": null,
+                                    "view": "label"
+                                }
+                            },
+                            "name": "Text Label",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "text:200",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": "my value"
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": 32,
+                            "id": 200,
+                            "max": 100,
+                            "meta": {
+                                "ui": {
+                                    "icon": "",
+                                    "step": 1,
+                                    "unit": "%",
+                                    "view": "slider"
+                                }
+                            },
+                            "min": 0,
+                            "name": "Number Slider",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "number:200",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": 32
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": -1.5,
+                            "id": 201,
+                            "max": 10,
+                            "meta": {
+                                "ui": {
+                                    "icon": "",
+                                    "step": 0.5,
+                                    "unit": "m",
+                                    "view": "field"
+                                }
+                            },
+                            "min": -10,
+                            "name": "Number Field",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "number:201",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": -1.5
+                        }
+                    },
+                    {
+                        "config": {
+                            "access": "*",
+                            "default_value": 45.5,
+                            "id": 202,
+                            "max": 100,
+                            "meta": {
+                                "ui": {
+                                    "icon": "",
+                                    "step": 0.5,
+                                    "unit": "%",
+                                    "view": "label"
+                                }
+                            },
+                            "min": 0,
+                            "name": "Number Label",
+                            "owner": "",
+                            "persisted": false
+                        },
+                        "key": "number:202",
+                        "status": {
+                            "last_update_ts": 0,
+                            "source": "",
+                            "value": 45.5
+                        }
+                    },
+                    {
+                        "key": "mqtt",
+                        "status": {
+                            "connected": true
+                        },
+                        "config": {
+                            "enable": true,
+                            "server": "127.0.0.1",
+                            "client_id": "shellyplugusg4-aabbccddeeff",
+                            "user": "shelly",
+                            "ssl_ca": null,
+                            "topic_prefix": "shellyplugusg4-aabbccddeeff",
+                            "rpc_ntf": true,
+                            "status_ntf": true,
+                            "use_client_cert": false,
+                            "enable_rpc": true,
+                            "enable_control": true
+                        }
+                    },
+                    {
+                        "config": {
+                            "cfg_rev": 65,
+                            "debug": {
+                                "file_level": null,
+                                "file_log": {
+                                    "enable": false
+                                },
+                                "level": 2,
+                                "mqtt": {
+                                    "enable": false
+                                },
+                                "udp": {
+                                    "addr": null
+                                },
+                                "websocket": {
+                                    "enable": false
+                                }
+                            },
+                            "device": {
+                                "addon_type": null,
+                                "discoverable": true,
+                                "eco_mode": true,
+                                "enhanced_security": false,
+                                "fw_id": "20260518-122931/2.0.0-beta2-gfc0edf7",
+                                "mac": "AABBCCDDEEFF",
+                                "name": "Shelly Plug US Gen4",
+                                "sys_btn_toggle": true,
+                                "tls_check_cert_validity_time": true
+                            },
+                            "location": {
+                                "lat": 5,
+                                "lon": 34,
+                                "tz": "Europe/Warsaw"
+                            },
+                            "rpc_udp": {
+                                "dst_addr": null,
+                                "listen_port": null
+                            },
+                            "sntp": {
+                                "server": "time.cloudflare.com"
+                            },
+                            "ui_data": {
+                                "device_revision": "1-47"
+                            }
+                        },
+                        "key": "sys",
+                        "status": {
+                            "available_updates": {
+                                "stable": {
+                                    "version": "1.7.5"
+                                }
+                            },
+                            "btrelay_rev": 0,
+                            "cfg_rev": 65,
+                            "fs_free": 167936,
+                            "fs_size": 524288,
+                            "kvs_rev": 0,
+                            "last_sync_ts": 1779199676,
+                            "mac": "AABBCCDDEEFF",
+                            "ram_free": 129944,
+                            "ram_min_free": 111684,
+                            "ram_size": 264168,
+                            "reset_reason": 3,
+                            "restart_required": false,
+                            "schedule_rev": 0,
+                            "time": "16:29",
+                            "unixtime": 1779200977,
+                            "uptime": 3240,
+                            "utc_offset": 7200,
+                            "webhook_rev": 0
+                        }
+                    }
+                ],
+                "offset": 0,
+                "total": 23
+            }
+        ]
+    }
+}
