@@ -193,7 +193,7 @@
                     "meta": {
                         "ui": {
                             "view": "label",
-                            "unit": "°C"
+                            "unit": "\u00b0C"
                         },
                         "cloud": [
                             "measurement",
@@ -226,7 +226,7 @@
                         ],
                         "ui": {
                             "step": 0.5,
-                            "unit": "°C",
+                            "unit": "\u00b0C",
                             "view": "slider"
                         }
                     },
