@@ -1,0 +1,116 @@
+{
+    "id": "st1820-ccddeeff0011",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": false
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": false,
+            "server": "wss://repo.shelly.cloud:6022/jrpc"
+        },
+        "mqtt": {
+            "enable": true,
+            "server": "mqtt_broker:1883",
+            "client_id": "st1820-ccddeeff0011",
+            "user": "mqtt_client",
+            "ssl_ca": null,
+            "topic_prefix": "st1820-ccddeeff0011",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "service:0": {
+            "temp_range": [
+                15,
+                40
+            ],
+            "temp_hysteresis": 1,
+            "power_down_memory": true,
+            "temp_anti_freeze": 5,
+            "temp_offset": 0,
+            "humidity_offset": 0,
+            "id": 0
+        },
+        "sys": {
+            "device": {
+                "name": "LinkedGo Starlight Thermostat ST1820",
+                "mac": "CCDDEEFF0011",
+                "fw_id": "20250318-152132/1.5.1-g01dd7ff",
+                "discoverable": true,
+                "eco_mode": false
+            },
+            "location": {
+                "tz": "Europe/Warsaw",
+                "lat": 45,
+                "lon": 11
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": true
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "time.cloudflare.com"
+            },
+            "cfg_rev": 68
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "ST1820-CCDDEEFF0011",
+                "is_open": true,
+                "enable": false,
+                "range_extender": {
+                    "enable": false
+                }
+            },
+            "sta": {
+                "ssid": "WiFi-Iot",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -80,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}

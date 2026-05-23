@@ -1,0 +1,386 @@
+{
+    "id": "st1820-ccddeeff0011",
+    "device_config": {
+        "components": [
+            {
+                "key": "ble",
+                "status": {},
+                "config": {
+                    "enable": false,
+                    "rpc": {
+                        "enable": false
+                    }
+                }
+            },
+            {
+                "key": "boolean:200",
+                "status": {
+                    "value": false,
+                    "source": "rpc",
+                    "last_update_ts": 1779531089
+                },
+                "config": {
+                    "id": 200,
+                    "name": "Anti-freeze",
+                    "meta": {
+                        "ui": {
+                            "view": "toggle",
+                            "titles": [
+                                "Disabled",
+                                "Enabled"
+                            ]
+                        },
+                        "cloud": [
+                            "log"
+                        ]
+                    },
+                    "persisted": false,
+                    "default_value": false,
+                    "owner": "service:0",
+                    "access": "crw"
+                },
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "anti_freeze"
+                }
+            },
+            {
+                "key": "boolean:201",
+                "status": {
+                    "value": false,
+                    "source": "rpc",
+                    "last_update_ts": 1779531088
+                },
+                "config": {
+                    "id": 201,
+                    "name": "Child lock",
+                    "meta": {
+                        "ui": {
+                            "view": "toggle",
+                            "titles": [
+                                "Disabled",
+                                "Enabled"
+                            ]
+                        },
+                        "cloud": [
+                            "log"
+                        ]
+                    },
+                    "persisted": false,
+                    "default_value": false,
+                    "owner": "service:0",
+                    "access": "crw"
+                },
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "child_lock"
+                }
+            },
+            {
+                "key": "boolean:202",
+                "status": {
+                    "value": false,
+                    "source": "rpc",
+                    "last_update_ts": 1779531087
+                },
+                "config": {
+                    "id": 202,
+                    "name": "Enable thermostat",
+                    "meta": {
+                        "ui": {
+                            "view": "toggle",
+                            "titles": [
+                                "Disabled",
+                                "Enable"
+                            ]
+                        },
+                        "cloud": [
+                            "log"
+                        ]
+                    },
+                    "persisted": false,
+                    "default_value": false,
+                    "owner": "service:0",
+                    "access": "crw"
+                },
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "enable"
+                }
+            },
+            {
+                "key": "bthome",
+                "status": {
+                    "errors": [
+                        "bluetooth_disabled"
+                    ]
+                },
+                "config": {}
+            },
+            {
+                "key": "cloud",
+                "status": {
+                    "connected": false
+                },
+                "config": {
+                    "enable": false,
+                    "server": "wss://repo.shelly.cloud:6022/jrpc"
+                }
+            },
+            {
+                "key": "mqtt",
+                "status": {
+                    "connected": true
+                },
+                "config": {
+                    "enable": true,
+                    "server": "mqtt_broker:1883",
+                    "client_id": "st1820-ccddeeff0011",
+                    "user": "mqtt_client",
+                    "ssl_ca": null,
+                    "topic_prefix": "st1820-ccddeeff0011",
+                    "rpc_ntf": true,
+                    "status_ntf": true,
+                    "use_client_cert": false,
+                    "enable_rpc": true,
+                    "enable_control": true
+                }
+            },
+            {
+                "key": "number:200",
+                "status": {
+                    "value": 41,
+                    "source": "sys",
+                    "last_update_ts": 1779532077
+                },
+                "config": {
+                    "id": 200,
+                    "name": "Current humidity",
+                    "min": 0,
+                    "max": 100,
+                    "meta": {
+                        "ui": {
+                            "unit": "%",
+                            "view": "label"
+                        },
+                        "cloud": [
+                            "measurement",
+                            "log"
+                        ]
+                    },
+                    "persisted": false,
+                    "default_value": 0,
+                    "owner": "service:0",
+                    "access": "cr"
+                },
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "current_humidity"
+                }
+            },
+            {
+                "key": "number:201",
+                "status": {
+                    "value": 26.3,
+                    "source": "sys",
+                    "last_update_ts": 1779531657
+                },
+                "config": {
+                    "id": 201,
+                    "name": "Current temperature",
+                    "min": 15,
+                    "max": 40,
+                    "meta": {
+                        "ui": {
+                            "view": "label",
+                            "unit": "\u00b0C"
+                        },
+                        "cloud": [
+                            "measurement",
+                            "log"
+                        ]
+                    },
+                    "persisted": false,
+                    "default_value": 27.5,
+                    "owner": "service:0",
+                    "access": "cr"
+                },
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "current_temperature"
+                }
+            },
+            {
+                "attrs": {
+                    "owner": "service:0",
+                    "role": "target_temperature"
+                },
+                "config": {
+                    "access": "crw",
+                    "default_value": 27.5,
+                    "id": 202,
+                    "max": 40,
+                    "meta": {
+                        "cloud": [
+                            "log"
+                        ],
+                        "ui": {
+                            "step": 0.5,
+                            "unit": "\u00b0C",
+                            "view": "slider"
+                        }
+                    },
+                    "min": 15,
+                    "name": "Target temperature",
+                    "owner": "service:0",
+                    "persisted": false
+                },
+                "key": "number:202",
+                "status": {
+                    "last_update_ts": 1779530372,
+                    "source": "sys",
+                    "value": 23.5
+                }
+            },
+            {
+                "config": {
+                    "humidity_offset": 0,
+                    "id": 0,
+                    "power_down_memory": true,
+                    "temp_anti_freeze": 5,
+                    "temp_hysteresis": 1,
+                    "temp_offset": 0,
+                    "temp_range": [
+                        15,
+                        40
+                    ]
+                },
+                "key": "service:0",
+                "status": {
+                    "etag": "e276ee46a3ee86b240bc13b4f0ea6e54",
+                    "state": "running",
+                    "stats": {
+                        "mem": 732,
+                        "mem_peak": 925
+                    }
+                }
+            },
+            {
+                "config": {
+                    "cfg_rev": 68,
+                    "debug": {
+                        "file_level": null,
+                        "level": 2,
+                        "mqtt": {
+                            "enable": false
+                        },
+                        "udp": {
+                            "addr": null
+                        },
+                        "websocket": {
+                            "enable": true
+                        }
+                    },
+                    "device": {
+                        "discoverable": true,
+                        "eco_mode": false,
+                        "fw_id": "20250318-152132/1.5.1-g01dd7ff",
+                        "mac": "CCDDEEFF0011",
+                        "name": "LinkedGo Starlight Thermostat ST1820"
+                    },
+                    "location": {
+                        "lat": 11,
+                        "lon": 22,
+                        "tz": "Europe/Warsaw"
+                    },
+                    "rpc_udp": {
+                        "dst_addr": null,
+                        "listen_port": null
+                    },
+                    "sntp": {
+                        "server": "time.cloudflare.com"
+                    },
+                    "ui_data": {}
+                },
+                "key": "sys",
+                "status": {
+                    "available_updates": {},
+                    "btrelay_rev": 0,
+                    "cfg_rev": 68,
+                    "fs_free": 581632,
+                    "fs_size": 1048576,
+                    "kvs_rev": 0,
+                    "last_sync_ts": 1779530582,
+                    "mac": "CCDDEEFF0011",
+                    "ram_free": 111324,
+                    "ram_min_free": 98440,
+                    "ram_size": 255676,
+                    "reset_reason": 3,
+                    "restart_required": false,
+                    "schedule_rev": 1,
+                    "time": "12:28",
+                    "unixtime": 1779532131,
+                    "uptime": 1554,
+                    "webhook_rev": 1
+                }
+            },
+            {
+                "config": {
+                    "ap": {
+                        "enable": false,
+                        "is_open": true,
+                        "range_extender": {
+                            "enable": false
+                        },
+                        "ssid": "ST1820-CCDDEEFF0011"
+                    },
+                    "roam": {
+                        "interval": 60,
+                        "rssi_thr": -80
+                    },
+                    "sta": {
+                        "enable": true,
+                        "gw": null,
+                        "ip": null,
+                        "ipv4mode": "dhcp",
+                        "is_open": false,
+                        "nameserver": null,
+                        "netmask": null,
+                        "ssid": "WiFi-Iot"
+                    },
+                    "sta1": {
+                        "enable": false,
+                        "gw": null,
+                        "ip": null,
+                        "ipv4mode": "dhcp",
+                        "is_open": true,
+                        "nameserver": null,
+                        "netmask": null,
+                        "ssid": null
+                    }
+                },
+                "key": "wifi",
+                "status": {
+                    "rssi": -57,
+                    "ssid": "WiFi-Iot",
+                    "sta_ip": "10.10.30.189",
+                    "status": "got ip"
+                }
+            },
+            {
+                "config": {
+                    "enable": false,
+                    "server": null,
+                    "ssl_ca": "ca.pem"
+                },
+                "key": "ws",
+                "status": {
+                    "connected": false
+                }
+            }
+        ],
+        "cfg_rev": 68,
+        "offset": 0,
+        "total": 14
+    }
+}

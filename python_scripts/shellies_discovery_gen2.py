@@ -614,6 +614,14 @@ VALUE_OFF = "off"
 VALUE_ON = "on"
 VALUE_TRIGGER = "trigger"
 
+VIRTUAL_COMPONENT_TYPES = ("boolean", "button", "enum", "number", "text")
+VIRTUAL_VIEW_BUTTON = "button"
+VIRTUAL_VIEW_DROPDOWN = "dropdown"
+VIRTUAL_VIEW_FIELD = "field"
+VIRTUAL_VIEW_LABEL = "label"
+VIRTUAL_VIEW_SLIDER = "slider"
+VIRTUAL_VIEW_TOGGLE = "toggle"
+
 BTH_HUMIDITY = 46
 BTH_MOTION = 33
 BTH_TEMPERATURE = 69
@@ -792,14 +800,6 @@ DESCRIPTION_SENSOR_PRESENCE = {
     KEY_NAME: "Occupancy",
     KEY_STATE_TOPIC: TOPIC_STATUS_PRESENCE,
     KEY_VALUE_TEMPLATE: TPL_PRESENCE,
-}
-DESCRIPTION_SENSOR_POWER_SUPPLY = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_PLUG,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Power supply",
-    KEY_STATE_TOPIC: "~status/boolean:200",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
 }
 DESCRIPTION_SENSOR_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -1631,16 +1631,6 @@ DESCRIPTION_SENSOR_HUMIDITY = {
     KEY_UNIT: UNIT_PERCENT,
     KEY_VALUE_TEMPLATE: TPL_HUMIDITY,
 }
-DESCRIPTION_SENSOR_HUMIDITY_200 = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Humidity",
-    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: "~status/number:200",
-    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
-    KEY_UNIT: UNIT_PERCENT,
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
-}
 DESCRIPTION_SENSOR_BTH_HUMIDITY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_HUMIDITY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1684,16 +1674,6 @@ DESCRIPTION_SENSOR_TEMPERATURE = {
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE_INDEPENDENT,
-}
-DESCRIPTION_SENSOR_TEMPERATURE_201 = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Temperature",
-    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: "~status/number:201",
-    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
-    KEY_UNIT: UNIT_CELSIUS,
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
 }
 DESCRIPTION_SENSOR_BTH_TEMPERATURE = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
@@ -1826,94 +1806,6 @@ DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER = {
     KEY_STATE_TOPIC: TOPIC_VOLTMETER,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
-}
-DESCRIPTION_SWITCH_CHILD_LOCK = {
-    ATTR_ID: 201,
-    KEY_NAME: "Child lock",
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
-    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
-    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
-    KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
-}
-DESCRIPTION_SWITCH_ANTI_FREEZE = {
-    ATTR_ID: 200,
-    KEY_NAME: "Anti-freeze",
-    KEY_ICON: "mdi:snowflake-off",
-    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_CONFIG,
-    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
-    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
-    KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
-}
-DESCRIPTION_SWITCH_THERMOSTAT = {
-    ATTR_ID: 201,
-    KEY_NAME: "Thermostat",
-    KEY_ICON: "mdi:thermostat",
-    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
-    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
-    KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
-}
-DESCRIPTION_SWITCH_TOPAC_START_CHARGING = {
-    ATTR_ID: 200,
-    ATTR_KEY: "boolean",
-    KEY_NAME: "Charging",
-    KEY_ICON: "mdi:ev-station",
-    KEY_PAYLOAD_OFF: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:false}}}}",
-    KEY_PAYLOAD_ON: "{{^id^:1,^src^:^{source}^,^method^:^Boolean.Set^,^params^:{{^id^:{id},^value^:true}}}}",
-    KEY_STATE_TOPIC: "~status/boolean:{id}",
-    KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
-}
-DESCRIPTION_NUMBER_TOPAC_CURRENT_LIMIT = {
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Current limit",
-    KEY_STATE_TOPIC: "~status/number:200",
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
-    KEY_COMMAND_TOPIC: TOPIC_RPC,
-    KEY_COMMAND_TEMPLATE: "{{{{{{^id^:1,^src^:^{source}^,^method^:^Number.Set^,^params^:{{^id^:200,^value^:value}}}}|tojson}}}}",
-    KEY_UNIT: UNIT_AMPERE,
-    KEY_ICON: "mdi:current-ac",
-    KEY_MIN: 6,
-    KEY_MAX: 16,
-    KEY_STEP: 1,
-    KEY_MODE: "slider",
-}
-DESCRIPTION_SENSOR_TOPAC_CHARGER_STATE = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_ENUM,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Status",
-    KEY_ICON: "mdi:ev-station",
-    KEY_OPTIONS: [
-        "charger_free",
-        "charger_insert",
-        "charger_free_fault",
-        "charger_wait",
-        "charger_charging",
-        "charger_pause",
-        "charger_end",
-        "charger_fault",
-    ],
-    KEY_STATE_TOPIC: "~status/enum:200",
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
-}
-DESCRIPTION_SENSOR_TOPAC_SESSION_ENERGY = {
-    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Session energy",
-    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: "~status/number:201",
-    KEY_UNIT: UNIT_KILOWATTH,
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
-}
-DESCRIPTION_SENSOR_TOPAC_SESSION_DURATION = {
-    KEY_ENABLED_BY_DEFAULT: True,
-    KEY_NAME: "Session duration",
-    KEY_ICON: "mdi:timer-outline",
-    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
-    KEY_STATE_TOPIC: "~status/number:202",
-    KEY_UNIT: UNIT_MINUTES,
-    KEY_VALUE_TEMPLATE: TPL_VALUE,
 }
 DESCRIPTION_SENSOR_TOPAC_TOTAL_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
@@ -2097,6 +1989,18 @@ def get_component_ids(component: str, config):
     return [
         int(key.split(":")[-1]) for key in config if key.startswith(f"{component}:")
     ]
+
+
+def get_component_response_items(components):
+    """Return components from a flat or paginated GetComponent response."""
+    component_items = []
+    for component in components:
+        if "components" in component:
+            component_items.extend(component["components"])
+        else:
+            component_items.append(component)
+
+    return component_items
 
 
 SUPPORTED_MODELS = {
@@ -4490,16 +4394,16 @@ SUPPORTED_MODELS = {
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
-            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
+            SENSOR_HUMIDITY: {},
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
-            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_201,
+            SENSOR_TEMPERATURE: {},
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_SWITCHES: {
-            SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE,
-            SWITCH_CHILD_LOCK: DESCRIPTION_SWITCH_CHILD_LOCK,
+            SWITCH_ANTI_FREEZE: {ATTR_ID: 200},
+            SWITCH_CHILD_LOCK: {ATTR_ID: 201},
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
         ATTR_UPDATES: {
@@ -4519,16 +4423,16 @@ SUPPORTED_MODELS = {
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
         ATTR_SENSORS: {
-            SENSOR_HUMIDITY: DESCRIPTION_SENSOR_HUMIDITY_200,
+            SENSOR_HUMIDITY: {},
             SENSOR_LAST_RESTART: DESCRIPTION_SLEEPING_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SLEEPING_SENSOR_SSID,
-            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_TEMPERATURE_201,
+            SENSOR_TEMPERATURE: {},
             SENSOR_WIFI_IP: DESCRIPTION_SLEEPING_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_SWITCHES: {
-            SWITCH_THERMOSTAT: DESCRIPTION_SWITCH_THERMOSTAT,
-            SWITCH_ANTI_FREEZE: DESCRIPTION_SWITCH_ANTI_FREEZE,
+            SWITCH_THERMOSTAT: {ATTR_ID: 201},
+            SWITCH_ANTI_FREEZE: {ATTR_ID: 200},
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST802_B},
         ATTR_UPDATES: {
@@ -4544,7 +4448,6 @@ SUPPORTED_MODELS = {
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {
             SENSOR_CLOUD: DESCRIPTION_SLEEPING_SENSOR_CLOUD,
-            SENSOR_POWER_SUPPLY: DESCRIPTION_SENSOR_POWER_SUPPLY,
             SENSOR_FIRMWARE: DESCRIPTION_SLEEPING_SENSOR_FIRMWARE,
         },
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
@@ -4606,11 +4509,7 @@ SUPPORTED_MODELS = {
         ATTR_GEN: 3,
         ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
         ATTR_BUTTONS: {BUTTON_RESTART: DESCRIPTION_BUTTON_RESTART},
-        ATTR_NUMBERS: {
-            "current_limit": DESCRIPTION_NUMBER_TOPAC_CURRENT_LIMIT,
-        },
         ATTR_SENSORS: {
-            SENSOR_CHARGER_STATE: DESCRIPTION_SENSOR_TOPAC_CHARGER_STATE,
             SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
             SENSOR_PHASE_A_CURRENT: DESCRIPTION_SENSOR_TOPAC_PHASE_A_CURRENT,
             SENSOR_PHASE_A_POWER: DESCRIPTION_SENSOR_TOPAC_PHASE_A_POWER,
@@ -4621,17 +4520,12 @@ SUPPORTED_MODELS = {
             SENSOR_PHASE_C_CURRENT: DESCRIPTION_SENSOR_TOPAC_PHASE_C_CURRENT,
             SENSOR_PHASE_C_POWER: DESCRIPTION_SENSOR_TOPAC_PHASE_C_POWER,
             SENSOR_PHASE_C_VOLTAGE: DESCRIPTION_SENSOR_TOPAC_PHASE_C_VOLTAGE,
-            SENSOR_SESSION_DURATION: DESCRIPTION_SENSOR_TOPAC_SESSION_DURATION,
-            SENSOR_SESSION_ENERGY: DESCRIPTION_SENSOR_TOPAC_SESSION_ENERGY,
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
             SENSOR_TOTAL_ACTIVE_ENERGY: DESCRIPTION_SENSOR_TOPAC_TOTAL_ACTIVE_ENERGY,
             SENSOR_TOTAL_CURRENT: DESCRIPTION_SENSOR_TOPAC_TOTAL_CURRENT,
             SENSOR_TOTAL_POWER: DESCRIPTION_SENSOR_TOPAC_TOTAL_POWER,
             SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
-        },
-        ATTR_SWITCHES: {
-            "start_charging": DESCRIPTION_SWITCH_TOPAC_START_CHARGING,
         },
         ATTR_UPDATES: {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
@@ -4926,6 +4820,9 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
 def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
+
+    if description and description.get(KEY_STATE_TOPIC) is None:
+        return topic, ""
 
     key = description.get(ATTR_KEY) or ATTR_SWITCH
 
@@ -5623,6 +5520,245 @@ def get_number(number: str, description, thermostat_id=None) -> tuple:
     return topic, payload
 
 
+def get_virtual_component_key(component_key):
+    """Return the type and ID for a virtual component."""
+    component_type, component_id = component_key.split(":", 1)
+    return component_type, component_id
+
+
+def get_virtual_component_view(component):
+    """Return the UI view for a virtual component."""
+    return component.get("meta", {}).get("ui", {}).get("view")
+
+
+def get_virtual_component_entity(component_key):
+    """Return a stable entity suffix for a virtual component."""
+    component_type, component_id = get_virtual_component_key(component_key)
+    return f"{component_type}-{component_id}"
+
+
+def get_virtual_component_name(component_key, component):
+    """Return the configured virtual component name."""
+    return component.get(ATTR_NAME) or component_key.replace(":", " ").title()
+
+
+def get_virtual_component_unit(component):
+    """Return the configured unit for a virtual component."""
+    return component.get("meta", {}).get("ui", {}).get("unit")
+
+
+def get_virtual_component_step(component):
+    """Return the configured step for a virtual number component."""
+    return component.get("meta", {}).get("ui", {}).get("step")
+
+
+def get_virtual_button(component_key, component):
+    """Create configuration for Shelly virtual button entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/button/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_PRESS: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Button.Trigger^,^params^:{{^id^:{component_id},^event^:^single_push^}}}}",
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+
+    return topic, payload
+
+
+def get_virtual_switch(component_key, component):
+    """Create configuration for Shelly virtual boolean switch entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:false}}}}",
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^Boolean.Set^,^params^:{{^id^:{component_id},^value^:true}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE_SWITCH,
+        KEY_STATE_OFF: VALUE_OFF,
+        KEY_STATE_ON: VALUE_ON,
+        KEY_AVAILABILITY: availability,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    return topic, payload
+
+
+def get_virtual_binary_sensor(component_key, component):
+    """Create configuration for Shelly virtual boolean binary sensor entity."""
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(
+        f"{disc_prefix}/binary_sensor/{device_id}-{entity}/config"
+    )
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE_BOOLEAN,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+
+    return topic, payload
+
+
+def get_virtual_number(component_key, component, mode):
+    """Create configuration for Shelly virtual number entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/number/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Number.Set^,^params^:{{^id^:{component_id},^value^:value}}}}|tojson}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_MIN: component[KEY_MIN],
+        KEY_MAX: component[KEY_MAX],
+        KEY_MODE: mode,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+    }
+
+    if step := get_virtual_component_step(component):
+        payload[KEY_STEP] = step
+    if unit := get_virtual_component_unit(component):
+        payload[KEY_UNIT] = unit
+
+    return topic, payload
+
+
+def get_virtual_select(component_key, component):
+    """Create configuration for Shelly virtual enum select entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/select/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Enum.Set^,^params^:{{^id^:{component_id},^value^:value}}}}|tojson}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_OPTIONS: component.get("options", []),
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+    }
+
+    return topic, payload
+
+
+def get_virtual_sensor(component_key, component, is_enum=False):
+    """Create configuration for Shelly virtual sensor entity."""
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+
+    if availability:
+        payload[KEY_AVAILABILITY] = availability
+    if is_enum:
+        payload[KEY_DEVICE_CLASS] = DEVICE_CLASS_ENUM
+        payload[KEY_OPTIONS] = component.get("options", [])
+    if unit := get_virtual_component_unit(component):
+        payload[KEY_UNIT] = unit
+
+    return topic, payload
+
+
+def get_virtual_component(component_key, component):
+    """Create configuration for supported Shelly virtual components."""
+    component_type, _ = get_virtual_component_key(component_key)
+    view = get_virtual_component_view(component)
+
+    if component_type == "boolean" and view == VIRTUAL_VIEW_TOGGLE:
+        return get_virtual_switch(component_key, component)
+    if component_type == "boolean" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_binary_sensor(component_key, component)
+    if component_type == "button" and view == VIRTUAL_VIEW_BUTTON:
+        return get_virtual_button(component_key, component)
+    if component_type == "enum" and view == VIRTUAL_VIEW_DROPDOWN:
+        return get_virtual_select(component_key, component)
+    if component_type == "enum" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component, is_enum=True)
+    if component_type == "number" and view == VIRTUAL_VIEW_SLIDER:
+        return get_virtual_number(component_key, component, "slider")
+    if component_type == "number" and view == VIRTUAL_VIEW_FIELD:
+        return get_virtual_number(component_key, component, "box")
+    if component_type == "number" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component)
+    if component_type == "text" and view == VIRTUAL_VIEW_LABEL:
+        return get_virtual_sensor(component_key, component)
+
+    return None, None
+
+
+def get_virtual_components(components):
+    """Create configuration for all supported Shelly virtual components."""
+    config = {}
+
+    for component_key, component in components.items():
+        if ":" not in component_key:
+            continue
+
+        component_type, _ = get_virtual_component_key(component_key)
+        if component_type not in VIRTUAL_COMPONENT_TYPES:
+            continue
+
+        topic, payload = get_virtual_component(component_key, component)
+        if topic and payload:
+            config[topic] = payload
+
+    return config
+
+
 def get_update(update, description):
     """Create configuration for Shelly update entity."""
     topic = encode_config_topic(f"{disc_prefix}/update/{device_id}-{update}/config")
@@ -5967,6 +6103,7 @@ device_id = data[ATTR_ID]  # noqa: F821
 if device_id is None:
     raise ValueError("id value None is not valid, check script configuration")
 
+mac_from_device_id = device_id.rsplit("-", 1)[-1]
 model = device_id.rsplit("-", 1)[0]
 if model not in SUPPORTED_MODELS:
     raise ValueError(
@@ -6023,10 +6160,11 @@ if qos not in (0, 1, 2):
     raise ValueError(f"QoS value {qos} is not valid, check script configuration")
 
 if "components" in device_config:
+    component_items = get_component_response_items(device_config["components"])
     components = {
         comp["key"]: {**comp["config"], **comp.get("attrs", {})}
-        for comp in device_config["components"]
-        if comp["key"].startswith(("blu", "bt", "mqtt"))
+        for comp in component_items
+        if "key" in comp
     }
 
     if "mqtt" not in components:
@@ -6072,6 +6210,7 @@ if "components" in device_config:
     via_device = format_mac(device_id.rsplit("-", 1)[-1])
 
     original_device_id = device_id
+    gateway_model = model
 
     for device, config in bthome_devices.items():
         btdevice_id = device.split(":")[-1]
@@ -6217,6 +6356,24 @@ if "components" in device_config:
                 number, description, thermostat_id=thermostat_id
             )
             config_data[topic] = payload
+
+    has_virtual_components = False
+    for component_key in components:
+        if ":" in component_key and component_key.split(":", 1)[0] in (
+            VIRTUAL_COMPONENT_TYPES
+        ):
+            has_virtual_components = True
+            break
+
+    if has_virtual_components:
+        sys_config = components["sys"]["device"]
+        mac = format_mac(mac_from_device_id).lower()
+        device_info = {
+            KEY_CONNECTIONS: [[KEY_MAC, mac]],
+            KEY_IDENTIFIERS: [mac],
+        }
+
+        config_data.update(get_virtual_components(components))
 
 else:
     if (
