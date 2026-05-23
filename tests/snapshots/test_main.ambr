@@ -8856,6 +8856,8 @@
         'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
       }),
     ]),
+    'cmd_t': '~rpc',
+    'cmd_tpl': '{{{"id":1,"src":"home-assistant","method":"Enum.Set","params":{"id":200,"value":value}}|tojson}}',
     'dev': dict({
       'cns': list([
         list([
@@ -8867,17 +8869,16 @@
         'aa:bb:cc:dd:ee:ff',
       ]),
     }),
-    'dev_cla': 'enum',
     'en': 'true',
-    'name': 'Enum Label',
+    'name': 'Enum Dropdown',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
       'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
     }),
     'ops': list([
-      'test_1',
-      'test_2',
+      'option_1',
+      'option_2',
     ]),
     'qos': 0,
     'stat_t': '~status/enum:200',
@@ -8887,7 +8888,7 @@
   })
 # ---
 # name: test_device[virtual_components][3-topic]
-  'homeassistant/sensor/shellyplugusg4-AABBCCDDEEFF-enum-200/config'
+  'homeassistant/select/shellyplugusg4-AABBCCDDEEFF-enum-200/config'
 # ---
 # name: test_device[virtual_components][4-payload]
   dict({

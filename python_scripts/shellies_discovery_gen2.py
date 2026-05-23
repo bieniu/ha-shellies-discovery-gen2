@@ -616,6 +616,7 @@ VALUE_TRIGGER = "trigger"
 
 VIRTUAL_COMPONENT_TYPES = ("boolean", "button", "enum", "number", "text")
 VIRTUAL_VIEW_BUTTON = "button"
+VIRTUAL_VIEW_DROPDOWN = "dropdown"
 VIRTUAL_VIEW_FIELD = "field"
 VIRTUAL_VIEW_LABEL = "label"
 VIRTUAL_VIEW_SLIDER = "slider"
@@ -5659,6 +5660,31 @@ def get_virtual_number(component_key, component, mode):
     return topic, payload
 
 
+def get_virtual_select(component_key, component):
+    """Create configuration for Shelly virtual enum select entity."""
+    _, component_id = get_virtual_component_key(component_key)
+    entity = get_virtual_component_entity(component_key)
+    topic = encode_config_topic(f"{disc_prefix}/select/{device_id}-{entity}/config")
+
+    payload = {
+        KEY_NAME: get_virtual_component_name(component_key, component),
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COMMAND_TEMPLATE: f"{{{{{{^id^:1,^src^:^{source_topic}^,^method^:^Enum.Set^,^params^:{{^id^:{component_id},^value^:value}}}}|tojson}}}}",
+        KEY_STATE_TOPIC: f"~status/{component_key}",
+        KEY_VALUE_TEMPLATE: TPL_VALUE,
+        KEY_OPTIONS: component.get("options", []),
+        KEY_ENABLED_BY_DEFAULT: "true",
+        KEY_UNIQUE_ID: f"{device_id}-{entity}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+        KEY_AVAILABILITY: availability,
+    }
+
+    return topic, payload
+
+
 def get_virtual_sensor(component_key, component, is_enum=False):
     """Create configuration for Shelly virtual sensor entity."""
     entity = get_virtual_component_entity(component_key)
@@ -5698,6 +5724,8 @@ def get_virtual_component(component_key, component):
         return get_virtual_binary_sensor(component_key, component)
     if component_type == "button" and view == VIRTUAL_VIEW_BUTTON:
         return get_virtual_button(component_key, component)
+    if component_type == "enum" and view == VIRTUAL_VIEW_DROPDOWN:
+        return get_virtual_select(component_key, component)
     if component_type == "enum" and view == VIRTUAL_VIEW_LABEL:
         return get_virtual_sensor(component_key, component, is_enum=True)
     if component_type == "number" and view == VIRTUAL_VIEW_SLIDER:

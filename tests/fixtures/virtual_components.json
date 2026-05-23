@@ -301,6 +301,38 @@
                             "utc_offset": 7200,
                             "webhook_rev": 0
                         }
+                    },
+                    {
+                        "config": {
+                            "default_value": "option_1",
+                            "id": 200,
+                            "meta": {
+                                "ui": {
+                                    "icon": "",
+                                    "images": {
+                                        "option_1": null,
+                                        "option_2": null
+                                    },
+                                    "titles": {
+                                        "option_1": "Option 1",
+                                        "option_2": null
+                                    },
+                                    "view": "dropdown"
+                                }
+                            },
+                            "name": "Enum Dropdown",
+                            "options": [
+                                "option_1",
+                                "option_2"
+                            ],
+                            "persisted": false
+                        },
+                        "key": "enum:200",
+                        "status": {
+                            "last_update_ts": 1779533454,
+                            "src": "rpc",
+                            "value": "option_1"
+                        }
                     }
                 ],
                 "offset": 0,

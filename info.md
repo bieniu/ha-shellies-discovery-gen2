@@ -139,6 +139,7 @@ Shellies Discovery supports the following virtual Shelly components:
 - `boolean` with mode `label`
 - `boolean` with mode `toggle`
 - `button`
+- `enum` with mode `dropdown`
 - `enum` with mode `label`
 - `number` with mode `label`
 - `number` with mode `slider`
