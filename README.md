@@ -235,7 +235,7 @@ python_script:
               device_topic: "{{ repeat.item }}"
 ```
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fbieniu%2Fha-shellies-discovery-gen2%2Frefs%2Fheads%2Fblueprints%2Fshellies_discovery_blueprints%2Fshellies_discovery_gen2.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fbieniu%2Fha-shellies-discovery-gen2%2Frefs%2Fheads%2Fblueprints%2Fshellies_discovery_blueprints%2Fshellies_announce_gen2.yaml)
 
 ### Shellies Discovery Gen2 automation
 
@@ -261,6 +261,8 @@ python_script:
         topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
         payload: "status_update"
 ```
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fbieniu%2Fha-shellies-discovery-gen2%2Frefs%2Fheads%2Fblueprints%2Fshellies_discovery_blueprints%2Fshellies_discovery_gen2.yaml)
 
 ### Shellies Components Gen2 script
 
@@ -329,7 +331,7 @@ shellies_components_gen2:
         payload: status_update
 ```
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fbieniu%2Fha-shellies-discovery-gen2%2Frefs%2Fheads%2Fblueprints%2Fshellies_discovery_blueprints%2Fshellies_discovery_gen2.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fraw.githubusercontent.com%2Fbieniu%2Fha-shellies-discovery-gen2%2Frefs%2Fheads%2Fblueprints%2Fshellies_discovery_blueprints%2Fshellies_components_gen2.yaml)
 
 [releases]: https://github.com/bieniu/ha-shellies-discovery-gen2/releases
 [releases-shield]: https://img.shields.io/github/release/bieniu/ha-shellies-discovery-gen2.svg?style=popout
