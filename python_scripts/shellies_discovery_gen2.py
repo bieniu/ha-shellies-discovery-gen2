@@ -4401,8 +4401,8 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_SWITCHES: {
-            SWITCH_ANTI_FREEZE: {},
-            SWITCH_CHILD_LOCK: {},
+            SWITCH_ANTI_FREEZE: {ATTR_ID: 200},
+            SWITCH_CHILD_LOCK: {ATTR_ID: 201},
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST1820},
         ATTR_UPDATES: {
@@ -4430,8 +4430,8 @@ SUPPORTED_MODELS = {
             SENSOR_WIFI_SIGNAL: DESCRIPTION_SLEEPING_SENSOR_WIFI_SIGNAL,
         },
         ATTR_SWITCHES: {
-            SWITCH_THERMOSTAT: {},
-            SWITCH_ANTI_FREEZE: {},
+            SWITCH_THERMOSTAT: {ATTR_ID: 201},
+            SWITCH_ANTI_FREEZE: {ATTR_ID: 200},
         },
         ATTR_THERMOSTATS: {0: DESCRIPTION_THERMOSTAT_ST802_B},
         ATTR_UPDATES: {
@@ -4819,6 +4819,9 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
 def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
+
+    if description.get(KEY_STATE_TOPIC) is None:
+        return topic, ""
 
     key = description.get(ATTR_KEY) or ATTR_SWITCH
 
@@ -5885,7 +5888,7 @@ def configure_device():
                 config[topic] = payload
 
     for switch, description in switches.items():
-        switch_id = description[ATTR_ID]
+        switch_id = description.get(ATTR_ID, 0)
         topic, payload = get_switch(switch_id, ATTR_SWITCH, switch, description)
         config[topic] = payload
 
