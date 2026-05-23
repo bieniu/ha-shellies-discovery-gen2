@@ -1,4 +1,784 @@
 # serializer version: 1
+# name: test_device[linkedgo_st1820][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20250114',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[linkedgo_st1820][0-topic]
+  'st1820-ccddeeff0011/rpc'
+# ---
+# name: test_device[linkedgo_st1820][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        
+        function sendDeviceStatus() {
+          try {
+            let installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("Shelly.GetStatus", {}, function (status) {
+              status.sys.installed_version = installedVersion;
+              MQTT.publish(topicPrefix + "/status/rpc", JSON.stringify(status));
+            });
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[linkedgo_st1820][1-topic]
+  'st1820-ccddeeff0011/rpc'
+# ---
+# name: test_device[linkedgo_st1820][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'st1820-ccddeeff0011-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][11-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-last_restart/config'
+# ---
+# name: test_device[linkedgo_st1820][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'st1820-ccddeeff0011-ssid',
+    'val_tpl': '{{value_json.ssid}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][12-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-ssid/config'
+# ---
+# name: test_device[linkedgo_st1820][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'st1820-ccddeeff0011-wifi_ip',
+    'val_tpl': '{{value_json.sta_ip}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][14-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-wifi_ip/config'
+# ---
+# name: test_device[linkedgo_st1820][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/wifi',
+    'uniq_id': 'st1820-ccddeeff0011-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.rssi}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][15-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-wifi_signal/config'
+# ---
+# name: test_device[linkedgo_st1820][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/cloud',
+    'uniq_id': 'st1820-ccddeeff0011-cloud',
+    'val_tpl': '{%if value_json.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][16-topic]
+  'homeassistant/binary_sensor/st1820-ccddeeff0011-cloud/config'
+# ---
+# name: test_device[linkedgo_st1820][17-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'dev_cla': 'update',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'json_attr_t': '~status/sys',
+    'json_attr_tpl': '{{value_json.available_updates.get("stable",{})|to_json}}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'st1820-ccddeeff0011-firmware',
+    'val_tpl': '{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][17-topic]
+  'homeassistant/binary_sensor/st1820-ccddeeff0011-firmware/config'
+# ---
+# name: test_device[linkedgo_st1820][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[linkedgo_st1820][2-topic]
+  'st1820-ccddeeff0011/rpc'
+# ---
+# name: test_device[linkedgo_st1820][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[linkedgo_st1820][3-topic]
+  'st1820-ccddeeff0011/rpc'
+# ---
+# name: test_device[linkedgo_st1820][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'curr_hum_t': '~status/number:200',
+    'curr_hum_tpl': '{{value_json.value}}',
+    'curr_temp_t': '~status/number:201',
+    'curr_temp_tpl': '{{value_json.value}}',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'max_temp': 40,
+    'min_temp': 15,
+    'mode_cmd_t': '~rpc',
+    'mode_cmd_tpl': '{%if value=="off"%}{%set output=false%}{%else%}{%set output=true%}{%endif%}{{{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":202,"value":output}}|tojson}}',
+    'mode_stat_t': '~status/boolean:202',
+    'mode_stat_tpl': '{%if value_json.value%}heat{%else%}off{%endif%}',
+    'modes': list([
+      'off',
+      'heat',
+    ]),
+    'name': 'Thermostat',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'temp_cmd_t': '~rpc',
+    'temp_cmd_tpl': '{{{"id":1,"src":"home-assistant","method":"Number.Set","params":{"id":202,"value":value}}|tojson}}',
+    'temp_stat_t': '~status/number:202',
+    'temp_stat_tpl': '{{value_json.value}}',
+    'temp_step': 0.5,
+    'uniq_id': 'st1820-ccddeeff0011-0',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][4-topic]
+  'homeassistant/climate/st1820-ccddeeff0011-0/config'
+# ---
+# name: test_device[linkedgo_st1820][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'cu': 'http://st1820-ccddeeff0011.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+      'mdl': 'LinkedGo Smart Thermostat ST1820',
+      'mdl_id': 'ST1820',
+      'mf': 'LinkedGo (Powered by Shelly)',
+      'name': 'LinkedGo Starlight Thermostat ST1820',
+      'sw': '20250318-152132/1.5.1-g01dd7ff',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'st1820-ccddeeff0011-restart',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820][7-topic]
+  'homeassistant/button/st1820-ccddeeff0011-restart/config'
+# ---
+# name: test_device[linkedgo_st1820_components][0-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Anti-freeze',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:200',
+    'uniq_id': 'st1820-ccddeeff0011-boolean-200',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][0-topic]
+  'homeassistant/switch/st1820-ccddeeff0011-boolean-200/config'
+# ---
+# name: test_device[linkedgo_st1820_components][1-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Child lock',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":201,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":201,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:201',
+    'uniq_id': 'st1820-ccddeeff0011-boolean-201',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][1-topic]
+  'homeassistant/switch/st1820-ccddeeff0011-boolean-201/config'
+# ---
+# name: test_device[linkedgo_st1820_components][2-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Enable thermostat',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":202,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":202,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:202',
+    'uniq_id': 'st1820-ccddeeff0011-boolean-202',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][2-topic]
+  'homeassistant/switch/st1820-ccddeeff0011-boolean-202/config'
+# ---
+# name: test_device[linkedgo_st1820_components][3-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Current humidity',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/number:200',
+    'uniq_id': 'st1820-ccddeeff0011-number-200',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][3-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-number-200/config'
+# ---
+# name: test_device[linkedgo_st1820_components][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Current temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/number:201',
+    'uniq_id': 'st1820-ccddeeff0011-number-201',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][4-topic]
+  'homeassistant/sensor/st1820-ccddeeff0011-number-201/config'
+# ---
+# name: test_device[linkedgo_st1820_components][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'cmd_tpl': '{{{"id":1,"src":"home-assistant","method":"Number.Set","params":{"id":202,"value":value}}|tojson}}',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'cc:dd:ee:ff:00:11',
+        ]),
+      ]),
+      'ids': list([
+        'cc:dd:ee:ff:00:11',
+      ]),
+    }),
+    'en': 'true',
+    'max': 40,
+    'min': 15,
+    'mode': 'slider',
+    'name': 'Target temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/number:202',
+    'step': 0.5,
+    'uniq_id': 'st1820-ccddeeff0011-number-202',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'st1820-ccddeeff0011/',
+  })
+# ---
+# name: test_device[linkedgo_st1820_components][5-topic]
+  'homeassistant/number/st1820-ccddeeff0011-number-202/config'
+# ---
 # name: test_device[shelly_1_gen4][0-payload]
   dict({
     'id': 1,
@@ -3807,58 +4587,6 @@
 # name: test_device[shelly_plug_m_gen3][3-topic]
   'shellyplugmg3-aabbccddeeff/rpc'
 # ---
-# name: test_device[shelly_plug_m_gen3][4-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'cmd_t': '~rpc',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shellyplugmg3-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Plug M Gen3',
-      'mdl_id': 'S3PL-30110EU',
-      'mf': 'Shelly',
-      'name': 'Shelly Plug M Gen3 [DDEEFF]',
-      'sw': '20260120-145242/1.7.4-gf9878b6',
-    }),
-    'name': 'Relay 0',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
-    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
-    'qos': 0,
-    'stat_off': 'off',
-    'stat_on': 'on',
-    'stat_t': '~status/switch:0',
-    'uniq_id': 'shellyplugmg3-aabbccddeeff-0',
-    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
-    '~': 'shellyplugmg3-aabbccddeeff/',
-  })
-# ---
-# name: test_device[shelly_plug_m_gen3][4-topic]
-  'homeassistant/switch/shellyplugmg3-aabbccddeeff-0/config'
-# ---
 # name: test_device[shelly_plug_m_gen3][7-payload]
   dict({
     'avty': list([
@@ -5845,58 +6573,6 @@
 # name: test_device[shelly_plus_1pm][31-topic]
   'homeassistant/binary_sensor/shellyplus1pm-aabbccddeeff-cloud/config'
 # ---
-# name: test_device[shelly_plus_1pm][4-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'cmd_t': '~rpc',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://shellyplus1pm-aabbccddeeff.local/',
-      'hw': 'gen2',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Plus 1PM',
-      'mdl_id': 'SNSW-001P16EU',
-      'mf': 'Shelly',
-      'name': 'Shelly Plus 1PM',
-      'sw': '20260120-145239/1.7.4-gf9878b6',
-    }),
-    'name': 'Office Light',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
-    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
-    'qos': 0,
-    'stat_off': 'off',
-    'stat_on': 'on',
-    'stat_t': '~status/switch:0',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-0',
-    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
-    '~': 'shellyplus1pm-aabbccddeeff/',
-  })
-# ---
-# name: test_device[shelly_plus_1pm][4-topic]
-  'homeassistant/switch/shellyplus1pm-aabbccddeeff-0/config'
-# ---
 # name: test_device[shelly_plus_1pm][7-payload]
   dict({
     'avty': list([
@@ -6000,54 +6676,6 @@
 # ---
 # name: test_device[shelly_plus_1pm][8-topic]
   'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-energy/config'
-# ---
-# name: test_device[shelly_wall_display_x1i][1-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-    ]),
-    'cmd_t': '~rpc',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://ShellyWallDisplay-AABBCCDDEEFF.local/',
-      'hw': 'gen2',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Wall Display',
-      'mdl_id': 'SAWD-xA1XX10EUx',
-      'mf': 'Shelly',
-      'name': 'Shelly Wall Display X1i',
-      'sw': '20260515-122917/2.6.1-4762e18a',
-    }),
-    'name': 'Relay 0',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
-    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
-    'qos': 0,
-    'stat_off': 'off',
-    'stat_on': 'on',
-    'stat_t': '~status/switch:0',
-    'uniq_id': 'shellywalldisplay-aabbccddeeff-0',
-    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
-    '~': 'ShellyWallDisplay-AABBCCDDEEFF/',
-  })
-# ---
-# name: test_device[shelly_wall_display_x1i][1-topic]
-  'homeassistant/switch/ShellyWallDisplay-AABBCCDDEEFF-0/config'
 # ---
 # name: test_device[shelly_wall_display_x1i][14-payload]
   dict({
