@@ -4820,7 +4820,7 @@ def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
 
-    if description.get(KEY_STATE_TOPIC) is None:
+    if description and description.get(KEY_STATE_TOPIC) is None:
         return topic, ""
 
     key = description.get(ATTR_KEY) or ATTR_SWITCH
@@ -5888,7 +5888,7 @@ def configure_device():
                 config[topic] = payload
 
     for switch, description in switches.items():
-        switch_id = description.get(ATTR_ID, 0)
+        switch_id = description[ATTR_ID]
         topic, payload = get_switch(switch_id, ATTR_SWITCH, switch, description)
         config[topic] = payload
 
