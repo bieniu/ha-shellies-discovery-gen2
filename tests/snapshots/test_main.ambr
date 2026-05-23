@@ -6897,160 +6897,6 @@
       'name': 'TopAC EVE01-11R AABBCCDDEEFF',
       'sw': '20250821-190155/g7a8da83',
     }),
-    'dev_cla': 'timestamp',
-    'en': 'true',
-    'ent_cat': 'diagnostic',
-    'name': 'Last restart',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_t': '~status/rpc',
-    'uniq_id': 'eve01-aabbccddeeff-last_restart',
-    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][10-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-last_restart/config'
-# ---
-# name: test_device[topac_eve01_11r][11-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
-    'dev_cla': 'current',
-    'en': 'false',
-    'name': 'Phase A current',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/object:200',
-    'sug_dsp_prc': 1,
-    'uniq_id': 'eve01-aabbccddeeff-phase_a_current',
-    'unit_of_meas': 'A',
-    'val_tpl': '{{value_json.value.phase_a.current}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][11-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-phase_a_current/config'
-# ---
-# name: test_device[topac_eve01_11r][12-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
-    'dev_cla': 'power',
-    'en': 'false',
-    'name': 'Phase A power',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/object:200',
-    'sug_dsp_prc': 1,
-    'uniq_id': 'eve01-aabbccddeeff-phase_a_power',
-    'unit_of_meas': 'W',
-    'val_tpl': '{{value_json.value.phase_a.power}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][12-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-phase_a_power/config'
-# ---
-# name: test_device[topac_eve01_11r][13-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
     'dev_cla': 'voltage',
     'en': 'false',
     'name': 'Phase A voltage',
@@ -7069,10 +6915,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][13-topic]
+# name: test_device[topac_eve01_11r][10-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_a_voltage/config'
 # ---
-# name: test_device[topac_eve01_11r][14-payload]
+# name: test_device[topac_eve01_11r][11-payload]
   dict({
     'avty': list([
       dict({
@@ -7121,10 +6967,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][14-topic]
+# name: test_device[topac_eve01_11r][11-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_b_current/config'
 # ---
-# name: test_device[topac_eve01_11r][15-payload]
+# name: test_device[topac_eve01_11r][12-payload]
   dict({
     'avty': list([
       dict({
@@ -7173,10 +7019,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][15-topic]
+# name: test_device[topac_eve01_11r][12-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_b_power/config'
 # ---
-# name: test_device[topac_eve01_11r][16-payload]
+# name: test_device[topac_eve01_11r][13-payload]
   dict({
     'avty': list([
       dict({
@@ -7225,10 +7071,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][16-topic]
+# name: test_device[topac_eve01_11r][13-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_b_voltage/config'
 # ---
-# name: test_device[topac_eve01_11r][17-payload]
+# name: test_device[topac_eve01_11r][14-payload]
   dict({
     'avty': list([
       dict({
@@ -7277,10 +7123,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][17-topic]
+# name: test_device[topac_eve01_11r][14-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_c_current/config'
 # ---
-# name: test_device[topac_eve01_11r][18-payload]
+# name: test_device[topac_eve01_11r][15-payload]
   dict({
     'avty': list([
       dict({
@@ -7329,10 +7175,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][18-topic]
+# name: test_device[topac_eve01_11r][15-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_c_power/config'
 # ---
-# name: test_device[topac_eve01_11r][19-payload]
+# name: test_device[topac_eve01_11r][16-payload]
   dict({
     'avty': list([
       dict({
@@ -7381,125 +7227,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][19-topic]
+# name: test_device[topac_eve01_11r][16-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-phase_c_voltage/config'
 # ---
-# name: test_device[topac_eve01_11r][2-payload]
-  dict({
-    'id': 1,
-    'method': 'Script.Start',
-    'params': dict({
-      'id': 1,
-    }),
-    'src': 'shellies_discovery_script',
-  })
-# ---
-# name: test_device[topac_eve01_11r][2-topic]
-  'eve01-aabbccddeeff/rpc'
-# ---
-# name: test_device[topac_eve01_11r][20-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
-    'en': 'true',
-    'icon': 'mdi:timer-outline',
-    'name': 'Session duration',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/number:202',
-    'uniq_id': 'eve01-aabbccddeeff-session_duration',
-    'unit_of_meas': 'min',
-    'val_tpl': '{{value_json.value}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][20-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-session_duration/config'
-# ---
-# name: test_device[topac_eve01_11r][21-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
-    'dev_cla': 'energy',
-    'en': 'true',
-    'name': 'Session energy',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/number:201',
-    'uniq_id': 'eve01-aabbccddeeff-session_energy',
-    'unit_of_meas': 'kWh',
-    'val_tpl': '{{value_json.value}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][21-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-session_energy/config'
-# ---
-# name: test_device[topac_eve01_11r][22-payload]
+# name: test_device[topac_eve01_11r][17-payload]
   dict({
     'avty': list([
       dict({
@@ -7546,10 +7277,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][22-topic]
+# name: test_device[topac_eve01_11r][17-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-ssid/config'
 # ---
-# name: test_device[topac_eve01_11r][23-payload]
+# name: test_device[topac_eve01_11r][18-payload]
   dict({
     'avty': list([
       dict({
@@ -7598,10 +7329,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][23-topic]
+# name: test_device[topac_eve01_11r][18-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-total_active_energy/config'
 # ---
-# name: test_device[topac_eve01_11r][24-payload]
+# name: test_device[topac_eve01_11r][19-payload]
   dict({
     'avty': list([
       dict({
@@ -7650,10 +7381,23 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][24-topic]
+# name: test_device[topac_eve01_11r][19-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-total_current/config'
 # ---
-# name: test_device[topac_eve01_11r][25-payload]
+# name: test_device[topac_eve01_11r][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[topac_eve01_11r][2-topic]
+  'eve01-aabbccddeeff/rpc'
+# ---
+# name: test_device[topac_eve01_11r][20-payload]
   dict({
     'avty': list([
       dict({
@@ -7702,10 +7446,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][25-topic]
+# name: test_device[topac_eve01_11r][20-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-total_power/config'
 # ---
-# name: test_device[topac_eve01_11r][26-payload]
+# name: test_device[topac_eve01_11r][21-payload]
   dict({
     'avty': list([
       dict({
@@ -7752,10 +7496,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][26-topic]
+# name: test_device[topac_eve01_11r][21-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-wifi_ip/config'
 # ---
-# name: test_device[topac_eve01_11r][27-payload]
+# name: test_device[topac_eve01_11r][22-payload]
   dict({
     'avty': list([
       dict({
@@ -7804,10 +7548,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][27-topic]
+# name: test_device[topac_eve01_11r][22-topic]
   'homeassistant/sensor/eve01-aabbccddeeff-wifi_signal/config'
 # ---
-# name: test_device[topac_eve01_11r][28-payload]
+# name: test_device[topac_eve01_11r][23-payload]
   dict({
     'avty': list([
       dict({
@@ -7854,7 +7598,7 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][28-topic]
+# name: test_device[topac_eve01_11r][23-topic]
   'homeassistant/binary_sensor/eve01-aabbccddeeff-cloud/config'
 # ---
 # name: test_device[topac_eve01_11r][3-payload]
@@ -7905,115 +7649,6 @@
       'name': 'TopAC EVE01-11R AABBCCDDEEFF',
       'sw': '20250821-190155/g7a8da83',
     }),
-    'icon': 'mdi:ev-station',
-    'name': 'Charging',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":false}}',
-    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":true}}',
-    'qos': 0,
-    'stat_off': 'off',
-    'stat_on': 'on',
-    'stat_t': '~status/boolean:200',
-    'uniq_id': 'eve01-aabbccddeeff-200',
-    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][4-topic]
-  'homeassistant/switch/eve01-aabbccddeeff-200/config'
-# ---
-# name: test_device[topac_eve01_11r][5-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'cmd_t': '~rpc',
-    'cmd_tpl': '{{{"id":1,"src":"home-assistant","method":"Number.Set","params":{"id":200,"value":value}}|tojson}}',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
-    'en': 'true',
-    'icon': 'mdi:current-ac',
-    'max': 16,
-    'min': 6,
-    'mode': 'slider',
-    'name': 'Current limit',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_t': '~status/number:200',
-    'step': 1,
-    'uniq_id': 'eve01-aabbccddeeff-current_limit',
-    'unit_of_meas': 'A',
-    'val_tpl': '{{value_json.value}}',
-    '~': 'eve01-aabbccddeeff/',
-  })
-# ---
-# name: test_device[topac_eve01_11r][5-topic]
-  'homeassistant/number/eve01-aabbccddeeff-current_limit/config'
-# ---
-# name: test_device[topac_eve01_11r][6-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-      dict({
-        't': '~status/rpc',
-        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
-      }),
-    ]),
-    'cmd_t': '~rpc',
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://eve01-aabbccddeeff.local/',
-      'hw': 'gen3',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'TopAC EVE01-11R',
-      'mdl_id': 'S3XT-0S',
-      'mf': 'TopAC (Powered by Shelly)',
-      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
-      'sw': '20250821-190155/g7a8da83',
-    }),
     'dev_cla': 'restart',
     'en': 'true',
     'ent_cat': 'config',
@@ -8029,10 +7664,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][6-topic]
+# name: test_device[topac_eve01_11r][4-topic]
   'homeassistant/button/eve01-aabbccddeeff-restart/config'
 # ---
-# name: test_device[topac_eve01_11r][7-payload]
+# name: test_device[topac_eve01_11r][5-payload]
   dict({
     'avty': list([
       dict({
@@ -8086,10 +7721,10 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][7-topic]
+# name: test_device[topac_eve01_11r][5-topic]
   'homeassistant/update/eve01-aabbccddeeff-firmware/config'
 # ---
-# name: test_device[topac_eve01_11r][8-payload]
+# name: test_device[topac_eve01_11r][6-payload]
   dict({
     'avty': list([
       dict({
@@ -8143,8 +7778,110 @@
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
-# name: test_device[topac_eve01_11r][8-topic]
+# name: test_device[topac_eve01_11r][6-topic]
   'homeassistant/update/eve01-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[topac_eve01_11r][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://eve01-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'TopAC EVE01-11R',
+      'mdl_id': 'S3XT-0S',
+      'mf': 'TopAC (Powered by Shelly)',
+      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
+      'sw': '20250821-190155/g7a8da83',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'eve01-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'eve01-aabbccddeeff/',
+  })
+# ---
+# name: test_device[topac_eve01_11r][7-topic]
+  'homeassistant/sensor/eve01-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[topac_eve01_11r][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://eve01-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'TopAC EVE01-11R',
+      'mdl_id': 'S3XT-0S',
+      'mf': 'TopAC (Powered by Shelly)',
+      'name': 'TopAC EVE01-11R AABBCCDDEEFF',
+      'sw': '20250821-190155/g7a8da83',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Phase A current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/object:200',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'eve01-aabbccddeeff-phase_a_current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.value.phase_a.current}}',
+    '~': 'eve01-aabbccddeeff/',
+  })
+# ---
+# name: test_device[topac_eve01_11r][8-topic]
+  'homeassistant/sensor/eve01-aabbccddeeff-phase_a_current/config'
 # ---
 # name: test_device[topac_eve01_11r][9-payload]
   dict({
@@ -8177,34 +7914,26 @@
       'name': 'TopAC EVE01-11R AABBCCDDEEFF',
       'sw': '20250821-190155/g7a8da83',
     }),
-    'dev_cla': 'enum',
-    'en': 'true',
-    'icon': 'mdi:ev-station',
-    'name': 'Status',
+    'dev_cla': 'power',
+    'en': 'false',
+    'name': 'Phase A power',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
       'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
     }),
-    'ops': list([
-      'charger_free',
-      'charger_insert',
-      'charger_free_fault',
-      'charger_wait',
-      'charger_charging',
-      'charger_pause',
-      'charger_end',
-      'charger_fault',
-    ]),
     'qos': 0,
-    'stat_t': '~status/enum:200',
-    'uniq_id': 'eve01-aabbccddeeff-charger_state',
-    'val_tpl': '{{value_json.value}}',
+    'stat_cla': 'measurement',
+    'stat_t': '~status/object:200',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'eve01-aabbccddeeff-phase_a_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.value.phase_a.power}}',
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
 # name: test_device[topac_eve01_11r][9-topic]
-  'homeassistant/sensor/eve01-aabbccddeeff-charger_state/config'
+  'homeassistant/sensor/eve01-aabbccddeeff-phase_a_power/config'
 # ---
 # name: test_device[virtual_components][0-payload]
   dict({
