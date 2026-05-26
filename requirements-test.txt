@@ -1,7 +1,7 @@
-prek==0.4.0
+prek==0.4.1
 pytest==9.0.3
 pytest-cov==7.1.0
 pytest-error-for-skips==2.0.2
 pytest-timeout==2.4.0
-ruff==0.15.13
+ruff==0.15.14
 syrupy==5.2.0
