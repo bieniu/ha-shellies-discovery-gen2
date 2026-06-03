@@ -7629,7 +7629,7 @@
       'sw': '20260120-145239/1.7.4-gf9878b6',
     }),
     'dev_cla': 'running',
-    'en': 'true',
+    'en': 'false',
     'ent_cat': 'diagnostic',
     'name': 'Script 1',
     'o': dict({
@@ -7681,7 +7681,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Used',
+    'name': 'Script 1 memory used',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -7785,7 +7785,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Peak',
+    'name': 'Script 1 memory peak',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -7837,7 +7837,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Free',
+    'name': 'Script 1 memory free',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -7887,7 +7887,7 @@
       'sw': '20260120-145239/1.7.4-gf9878b6',
     }),
     'dev_cla': 'running',
-    'en': 'true',
+    'en': 'false',
     'ent_cat': 'diagnostic',
     'name': 'Script 2',
     'o': dict({
@@ -7939,7 +7939,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 2 Memory Used',
+    'name': 'Script 2 memory used',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -7991,7 +7991,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 2 Memory Peak',
+    'name': 'Script 2 memory peak',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -8043,7 +8043,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 2 Memory Free',
+    'name': 'Script 2 memory free',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -9012,7 +9012,7 @@
       'sw': '20260515-122917/2.6.1-4762e18a',
     }),
     'dev_cla': 'running',
-    'en': 'true',
+    'en': 'false',
     'ent_cat': 'diagnostic',
     'name': 'Script 1',
     'o': dict({
@@ -9060,7 +9060,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Used',
+    'name': 'Script 1 memory used',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -9108,7 +9108,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Peak',
+    'name': 'Script 1 memory peak',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',
@@ -9156,7 +9156,7 @@
     'en': 'false',
     'ent_cat': 'diagnostic',
     'icon': 'mdi:memory',
-    'name': 'Script 1 Memory Free',
+    'name': 'Script 1 memory free',
     'o': dict({
       'name': 'Shellies Discovery Gen2',
       'sw': '0.0.0',

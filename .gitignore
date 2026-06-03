@@ -140,3 +140,4 @@ blueprints
 *.yaml
 custom_components
 .ha_run.lock
+ADD_SCRIPTS.md
