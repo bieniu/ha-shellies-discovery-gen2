@@ -141,3 +141,4 @@ blueprints
 custom_components
 .ha_run.lock
 ADD_SCRIPTS.md
+.DS_Store
