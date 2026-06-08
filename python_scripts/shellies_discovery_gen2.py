@@ -1529,7 +1529,6 @@ DESCRIPTION_SENSOR_SCRIPT_RUNNING = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_RUNNING,
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
-    KEY_NAME: "Script {id}",
     KEY_STATE_TOPIC: TOPIC_SCRIPT,
     KEY_VALUE_TEMPLATE: TPL_SCRIPT_RUNNING,
 }
@@ -1537,7 +1536,7 @@ DESCRIPTION_SENSOR_SCRIPT_MEM_USED = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_ICON: "mdi:memory",
-    KEY_NAME: "Script {id} memory used",
+    KEY_NAME: "memory used",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SCRIPT,
     KEY_UNIT: UNIT_BYTES,
@@ -1547,7 +1546,7 @@ DESCRIPTION_SENSOR_SCRIPT_MEM_PEAK = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_ICON: "mdi:memory",
-    KEY_NAME: "Script {id} memory peak",
+    KEY_NAME: "memory peak",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SCRIPT,
     KEY_UNIT: UNIT_BYTES,
@@ -1557,7 +1556,7 @@ DESCRIPTION_SENSOR_SCRIPT_MEM_FREE = {
     KEY_ENABLED_BY_DEFAULT: False,
     KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
     KEY_ICON: "mdi:memory",
-    KEY_NAME: "Script {id} memory free",
+    KEY_NAME: "memory free",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_SCRIPT,
     KEY_UNIT: UNIT_BYTES,
@@ -5201,8 +5200,11 @@ def get_sensor(
             KEY_NAME
         ].format(input=input_id).replace("'", "_")
     elif script_id is not None:
+        script_name = (
+            device_config[f"script:{script_id}"][ATTR_NAME] or f"Script {script_id}"
+        ).replace("'", "_")
         unique_id = f"{device_id}-script-{script_id}-{sensor}".lower()
-        sensor_name = description[KEY_NAME].format(id=script_id)
+        sensor_name = f"{script_name} {description[KEY_NAME]}"
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
@@ -5332,7 +5334,9 @@ def get_binary_sensor(
         ).replace("'", "_")
     if script_id is not None:
         unique_id = f"{device_id}-script-{script_id}-{sensor}".lower()
-        sensor_name = description[KEY_NAME].format(id=script_id)
+        sensor_name = (
+            device_config[f"script:{script_id}"][ATTR_NAME] or f"Script {script_id}"
+        ).replace("'", "_")
     elif entity_id is not None:
         unique_id = f"{device_id}-{entity_id}-{sensor}".lower()
         sensor_name = (
