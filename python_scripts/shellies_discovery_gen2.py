@@ -86,6 +86,7 @@ DEVICE_CLASS_POWER = "power"
 DEVICE_CLASS_POWER_FACTOR = "power_factor"
 DEVICE_CLASS_PROBLEM = "problem"
 DEVICE_CLASS_RESTART = "restart"
+DEVICE_CLASS_RUNNING = "running"
 DEVICE_CLASS_SIGNAL_STRENGTH = "signal_strength"
 DEVICE_CLASS_SMOKE = "smoke"
 DEVICE_CLASS_TEMPERATURE = "temperature"
@@ -384,6 +385,11 @@ SENSOR_VOLTAGE = "voltage"
 SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
+SENSOR_SCRIPT_RUNNING = "running"
+SENSOR_SCRIPT_MEM_USED = "mem_used"
+SENSOR_SCRIPT_MEM_PEAK = "mem_peak"
+SENSOR_SCRIPT_MEM_FREE = "mem_free"
+
 SWITCH_ANTI_FREEZE = "anti_freeze"
 SWITCH_THERMOSTAT = "thermostat"
 SWITCH_CHILD_LOCK = "child_lock"
@@ -468,6 +474,7 @@ TOPIC_STATUS_SMOKE = "~status/smoke:0"
 TOPIC_STATUS_SYS = "~status/sys"
 TOPIC_STATUS_WIFI = "~status/wifi"
 TOPIC_SWITCH_RELAY = "~status/switch:{id}"
+TOPIC_SCRIPT = "~status/script:{id}"
 TOPIC_TEMPERATURE = "~status/temperature:{id}"
 TOPIC_THERMOSTAT = "~status/thermostat:{id}"
 TOPIC_VOLTMETER = "~status/voltmeter:{id}"
@@ -550,6 +557,10 @@ TPL_RELAY_OVERVOLTAGE = (
     "{%if ^overvoltage^ in value_json.get(^errors^,[])%}ON{%else%}OFF{%endif%}"
 )
 TPL_RELAY_TEMPERATURE = "{{{{value_json[^switch:{relay}^].temperature.tC}}}}"
+TPL_SCRIPT_RUNNING = "{%if value_json.running%}ON{%else%}OFF{%endif%}"
+TPL_SCRIPT_MEM_USED = "{{value_json.mem_used}}"
+TPL_SCRIPT_MEM_PEAK = "{{value_json.mem_peak}}"
+TPL_SCRIPT_MEM_FREE = "{{value_json.mem_free}}"
 TPL_SET_BLU_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:value|round(1)}}}}}}|tojson}}}}"
 TPL_SET_BLU_THERMOSTAT_MODE = "{{%set target=4 if value==^off^ else 21%}}{{{{{{^id^:1,^src^:^{source}^,^method^:^BluTRV.Call^,^params^:{{^id^:{thermostat},^method^:^TRV.SetTarget^,^params^:{{^id^:0,^target_C^:target}}}}}}|to_json}}}}"
 TPL_SET_TARGET_TEMPERATURE = "{{{{{{^id^:1,^src^:^{source}^,^method^:^Thermostat.SetConfig^,^params^:{{^config^:{{^id^:{thermostat},^target_C^:value}}}}}}|tojson}}}}"
@@ -597,6 +608,7 @@ TRIGGER_BUTTON_TRIPLE_PRESS = "button_triple_press"
 TRIGGER_BUTTON_UP = "button_up"
 
 UNIT_AMPERE = "A"
+UNIT_BYTES = "B"
 UNIT_CELSIUS = "°C"
 UNIT_DBM = "dBm"
 UNIT_HERTZ = "Hz"
@@ -1512,6 +1524,43 @@ DESCRIPTION_SENSOR_WIFI_SIGNAL = {
     KEY_STATE_TOPIC: TOPIC_STATUS_RPC,
     KEY_UNIT: UNIT_DBM,
     KEY_VALUE_TEMPLATE: TPL_WIFI_RSSI,
+}
+DESCRIPTION_SENSOR_SCRIPT_RUNNING = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_RUNNING,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_STATE_TOPIC: TOPIC_SCRIPT,
+    KEY_VALUE_TEMPLATE: TPL_SCRIPT_RUNNING,
+}
+DESCRIPTION_SENSOR_SCRIPT_MEM_USED = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ICON: "mdi:memory",
+    KEY_NAME: "memory used",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_SCRIPT,
+    KEY_UNIT: UNIT_BYTES,
+    KEY_VALUE_TEMPLATE: TPL_SCRIPT_MEM_USED,
+}
+DESCRIPTION_SENSOR_SCRIPT_MEM_PEAK = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ICON: "mdi:memory",
+    KEY_NAME: "memory peak",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_SCRIPT,
+    KEY_UNIT: UNIT_BYTES,
+    KEY_VALUE_TEMPLATE: TPL_SCRIPT_MEM_PEAK,
+}
+DESCRIPTION_SENSOR_SCRIPT_MEM_FREE = {
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_ICON: "mdi:memory",
+    KEY_NAME: "memory free",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_SCRIPT,
+    KEY_UNIT: UNIT_BYTES,
+    KEY_VALUE_TEMPLATE: TPL_SCRIPT_MEM_FREE,
 }
 DESCRIPTION_SENSOR_BTH_DEV_SIGNAL_STRENGTH = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_SIGNAL_STRENGTH,
@@ -5032,6 +5081,7 @@ def get_sensor(
     input_id=None,
     thermostat_id=None,
     bt_id=None,
+    script_id=None,
 ):
     """Create configuration for Shelly sensor entity."""
     if emeter_id is not None and emeter_phase is not None:
@@ -5069,6 +5119,10 @@ def get_sensor(
     elif bt_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-{bt_id}-{sensor}/config"
+        )
+    elif script_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-script-{script_id}-{sensor}/config"
         )
     else:
         topic = encode_config_topic(f"{disc_prefix}/sensor/{device_id}-{sensor}/config")
@@ -5145,6 +5199,16 @@ def get_sensor(
         sensor_name = device_config[f"input:{input_id}"][ATTR_NAME] or description[
             KEY_NAME
         ].format(input=input_id).replace("'", "_")
+    elif script_id is not None:
+        unique_id = f"{device_id}-script-{script_id}-{sensor}".lower()
+        script_name = (
+            device_config[f"script:{script_id}"][ATTR_NAME] or f"Script {script_id}"
+        ).replace("'", "_")
+        sensor_name = (
+            f"{script_name} {description[KEY_NAME]}"
+            if description.get(KEY_NAME)
+            else script_name
+        )
     else:
         unique_id = f"{device_id}-{sensor}".lower()
         sensor_name = description[KEY_NAME]
@@ -5199,6 +5263,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=thermostat_id)
     elif bt_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
+    elif script_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=script_id)
     else:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC]
 
@@ -5231,9 +5297,14 @@ def get_binary_sensor(
     profile=None,
     bt_id=None,
     thermostat_id=None,
+    script_id=None,
 ):
     """Create configuration for Shelly binary sensor entity."""
-    if entity_id is not None:
+    if script_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/binary_sensor/{device_id}-script-{script_id}-{sensor}/config"
+        )
+    elif entity_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/binary_sensor/{device_id}-{entity_id}-{sensor}/config"
         )
@@ -5265,7 +5336,12 @@ def get_binary_sensor(
             device_config[f"switch:{entity_id}"].get(ATTR_NAME, {})
             or f"Relay {entity_id}"
         ).replace("'", "_")
-    if entity_id is not None:
+    if script_id is not None:
+        unique_id = f"{device_id}-script-{script_id}-{sensor}".lower()
+        sensor_name = (
+            device_config[f"script:{script_id}"][ATTR_NAME] or f"Script {script_id}"
+        ).replace("'", "_")
+    elif entity_id is not None:
         unique_id = f"{device_id}-{entity_id}-{sensor}".lower()
         sensor_name = (
             f"{name} {description[KEY_NAME]}" if description.get(KEY_NAME) else name
@@ -5300,7 +5376,9 @@ def get_binary_sensor(
     if expire_after:
         payload[KEY_EXPIRE_AFTER] = expire_after
 
-    if entity_id is not None:
+    if script_id is not None:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=script_id)
+    elif entity_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=entity_id)
     elif bt_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=bt_id)
@@ -6014,6 +6092,25 @@ def configure_device():
                 DESCRIPTION_EXTERNAL_SENSOR_VOLTMETER,
                 sensor_id=sensor_id,
             )
+            config[topic] = payload
+
+    for script_id in get_component_ids("script", device_config):
+        topic, payload = get_binary_sensor(
+            SENSOR_SCRIPT_RUNNING,
+            DESCRIPTION_SENSOR_SCRIPT_RUNNING,
+            script_id=script_id,
+        )
+        config[topic] = payload
+
+        if model == MODEL_WALL_DISPLAY:
+            continue
+
+        for sensor, description in (
+            (SENSOR_SCRIPT_MEM_USED, DESCRIPTION_SENSOR_SCRIPT_MEM_USED),
+            (SENSOR_SCRIPT_MEM_PEAK, DESCRIPTION_SENSOR_SCRIPT_MEM_PEAK),
+            (SENSOR_SCRIPT_MEM_FREE, DESCRIPTION_SENSOR_SCRIPT_MEM_FREE),
+        ):
+            topic, payload = get_sensor(sensor, description, script_id=script_id)
             config[topic] = payload
 
     return config
