@@ -386,9 +386,9 @@ SENSOR_WIFI_IP = "wifi_ip"
 SENSOR_WIFI_SIGNAL = "wifi_signal"
 
 SENSOR_SCRIPT_RUNNING = "running"
-SENSOR_SCRIPT_MEM_USED = "script_mem_used"
-SENSOR_SCRIPT_MEM_PEAK = "script_mem_peak"
-SENSOR_SCRIPT_MEM_FREE = "script_mem_free"
+SENSOR_SCRIPT_MEM_USED = "mem_used"
+SENSOR_SCRIPT_MEM_PEAK = "mem_peak"
+SENSOR_SCRIPT_MEM_FREE = "mem_free"
 
 SWITCH_ANTI_FREEZE = "anti_freeze"
 SWITCH_THERMOSTAT = "thermostat"
@@ -6102,13 +6102,14 @@ def configure_device():
         )
         config[topic] = payload
 
-        for sensor, description in (
-            (SENSOR_SCRIPT_MEM_USED, DESCRIPTION_SENSOR_SCRIPT_MEM_USED),
-            (SENSOR_SCRIPT_MEM_PEAK, DESCRIPTION_SENSOR_SCRIPT_MEM_PEAK),
-            (SENSOR_SCRIPT_MEM_FREE, DESCRIPTION_SENSOR_SCRIPT_MEM_FREE),
-        ):
-            topic, payload = get_sensor(sensor, description, script_id=script_id)
-            config[topic] = payload
+        if model != MODEL_WALL_DISPLAY:
+            for sensor, description in (
+                (SENSOR_SCRIPT_MEM_USED, DESCRIPTION_SENSOR_SCRIPT_MEM_USED),
+                (SENSOR_SCRIPT_MEM_PEAK, DESCRIPTION_SENSOR_SCRIPT_MEM_PEAK),
+                (SENSOR_SCRIPT_MEM_FREE, DESCRIPTION_SENSOR_SCRIPT_MEM_FREE),
+            ):
+                topic, payload = get_sensor(sensor, description, script_id=script_id)
+                config[topic] = payload
 
     return config
 

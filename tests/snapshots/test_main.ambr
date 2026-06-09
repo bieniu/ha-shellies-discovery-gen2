@@ -7690,14 +7690,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:1',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-script_mem_used',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-mem_used',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_used}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][29-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-script_mem_used/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-mem_used/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][3-payload]
   dict({
@@ -7794,14 +7794,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:1',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-script_mem_peak',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-mem_peak',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_peak}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][30-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-script_mem_peak/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-mem_peak/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][31-payload]
   dict({
@@ -7846,14 +7846,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:1',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-script_mem_free',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-1-mem_free',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_free}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][31-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-script_mem_free/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-1-mem_free/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][32-payload]
   dict({
@@ -7948,14 +7948,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:2',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-script_mem_used',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-mem_used',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_used}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][33-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-script_mem_used/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-mem_used/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][34-payload]
   dict({
@@ -8000,14 +8000,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:2',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-script_mem_peak',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-mem_peak',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_peak}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][34-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-script_mem_peak/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-mem_peak/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][35-payload]
   dict({
@@ -8052,14 +8052,14 @@
     'qos': 0,
     'stat_cla': 'measurement',
     'stat_t': '~status/script:2',
-    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-script_mem_free',
+    'uniq_id': 'shellyplus1pm-aabbccddeeff-script-2-mem_free',
     'unit_of_meas': 'B',
     'val_tpl': '{{value_json.mem_free}}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
 # name: test_device[shelly_plus_1pm_scripts][35-topic]
-  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-script_mem_free/config'
+  'homeassistant/sensor/shellyplus1pm-aabbccddeeff-script-2-mem_free/config'
 # ---
 # name: test_device[shelly_plus_1pm_scripts][4-payload]
   dict({
@@ -9029,150 +9029,6 @@
 # ---
 # name: test_device[shelly_wall_display_x1i][27-topic]
   'homeassistant/binary_sensor/ShellyWallDisplay-AABBCCDDEEFF-script-1-running/config'
-# ---
-# name: test_device[shelly_wall_display_x1i][28-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://ShellyWallDisplay-AABBCCDDEEFF.local/',
-      'hw': 'gen2',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Wall Display',
-      'mdl_id': 'SAWD-xA1XX10EUx',
-      'mf': 'Shelly',
-      'name': 'Shelly Wall Display X1i',
-      'sw': '20260515-122917/2.6.1-4762e18a',
-    }),
-    'en': 'false',
-    'ent_cat': 'diagnostic',
-    'icon': 'mdi:memory',
-    'name': 'shellies_discovery_gen2_script_20250114 memory used',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/script:1',
-    'uniq_id': 'shellywalldisplay-aabbccddeeff-script-1-script_mem_used',
-    'unit_of_meas': 'B',
-    'val_tpl': '{{value_json.mem_used}}',
-    '~': 'ShellyWallDisplay-AABBCCDDEEFF/',
-  })
-# ---
-# name: test_device[shelly_wall_display_x1i][28-topic]
-  'homeassistant/sensor/ShellyWallDisplay-AABBCCDDEEFF-script-1-script_mem_used/config'
-# ---
-# name: test_device[shelly_wall_display_x1i][29-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://ShellyWallDisplay-AABBCCDDEEFF.local/',
-      'hw': 'gen2',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Wall Display',
-      'mdl_id': 'SAWD-xA1XX10EUx',
-      'mf': 'Shelly',
-      'name': 'Shelly Wall Display X1i',
-      'sw': '20260515-122917/2.6.1-4762e18a',
-    }),
-    'en': 'false',
-    'ent_cat': 'diagnostic',
-    'icon': 'mdi:memory',
-    'name': 'shellies_discovery_gen2_script_20250114 memory peak',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/script:1',
-    'uniq_id': 'shellywalldisplay-aabbccddeeff-script-1-script_mem_peak',
-    'unit_of_meas': 'B',
-    'val_tpl': '{{value_json.mem_peak}}',
-    '~': 'ShellyWallDisplay-AABBCCDDEEFF/',
-  })
-# ---
-# name: test_device[shelly_wall_display_x1i][29-topic]
-  'homeassistant/sensor/ShellyWallDisplay-AABBCCDDEEFF-script-1-script_mem_peak/config'
-# ---
-# name: test_device[shelly_wall_display_x1i][30-payload]
-  dict({
-    'avty': list([
-      dict({
-        'pl_avail': 'true',
-        'pl_not_avail': 'false',
-        't': '~online',
-      }),
-    ]),
-    'dev': dict({
-      'cns': list([
-        list([
-          'mac',
-          'aa:bb:cc:dd:ee:ff',
-        ]),
-      ]),
-      'cu': 'http://ShellyWallDisplay-AABBCCDDEEFF.local/',
-      'hw': 'gen2',
-      'ids': list([
-        'aa:bb:cc:dd:ee:ff',
-      ]),
-      'mdl': 'Shelly Wall Display',
-      'mdl_id': 'SAWD-xA1XX10EUx',
-      'mf': 'Shelly',
-      'name': 'Shelly Wall Display X1i',
-      'sw': '20260515-122917/2.6.1-4762e18a',
-    }),
-    'en': 'false',
-    'ent_cat': 'diagnostic',
-    'icon': 'mdi:memory',
-    'name': 'shellies_discovery_gen2_script_20250114 memory free',
-    'o': dict({
-      'name': 'Shellies Discovery Gen2',
-      'sw': '0.0.0',
-      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
-    }),
-    'qos': 0,
-    'stat_cla': 'measurement',
-    'stat_t': '~status/script:1',
-    'uniq_id': 'shellywalldisplay-aabbccddeeff-script-1-script_mem_free',
-    'unit_of_meas': 'B',
-    'val_tpl': '{{value_json.mem_free}}',
-    '~': 'ShellyWallDisplay-AABBCCDDEEFF/',
-  })
-# ---
-# name: test_device[shelly_wall_display_x1i][30-topic]
-  'homeassistant/sensor/ShellyWallDisplay-AABBCCDDEEFF-script-1-script_mem_free/config'
 # ---
 # name: test_device[shelly_wall_display_x1i][4-payload]
   dict({
