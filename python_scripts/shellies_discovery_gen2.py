@@ -6095,15 +6095,15 @@ def configure_device():
             config[topic] = payload
 
     for script_id in get_component_ids("script", device_config):
-        if model == MODEL_WALL_DISPLAY:
-            continue
-
         topic, payload = get_binary_sensor(
             SENSOR_SCRIPT_RUNNING,
             DESCRIPTION_SENSOR_SCRIPT_RUNNING,
             script_id=script_id,
         )
         config[topic] = payload
+
+        if model == MODEL_WALL_DISPLAY:
+            continue
 
         for sensor, description in (
             (SENSOR_SCRIPT_MEM_USED, DESCRIPTION_SENSOR_SCRIPT_MEM_USED),
