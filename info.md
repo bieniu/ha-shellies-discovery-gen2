@@ -83,6 +83,7 @@ You need to manually add the `shellies_announce_gen2`, `shellies_discovery_gen2`
 - Shelly EM Gen3
 - Shelly H&T Gen3
 - Shelly i4 Gen3
+- Shelly Multicolor Bulb Gen3
 - Shelly Outdoor Plug S Gen3
 - Shelly Plug M Gen3
 - Shelly Plug PM Gen3
