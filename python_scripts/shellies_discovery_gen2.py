@@ -5134,7 +5134,7 @@ def get_rgbcct_light(rgbcct_id: int):
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}",
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}",
         KEY_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "state_value_template": f"{{%if value_json.output%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}{{%endif%}}",
+        "state_value_template": f"{{%if value_json.output%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}{{%endif%}}",
         "brightness_command_topic": TOPIC_RPC,
         "brightness_command_template": f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^brightness^:{{{{value}}}}}}}}",
         "brightness_state_topic": TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
