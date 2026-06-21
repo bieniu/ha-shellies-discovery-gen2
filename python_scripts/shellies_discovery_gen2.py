@@ -151,8 +151,20 @@ KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_BLUE_TEMPLATE = "b_tpl"
 KEY_GREEN_TEMPLATE = "g_tpl"
 KEY_RED_TEMPLATE = "r_tpl"
+KEY_BRIGHTNESS_COMMAND_TOPIC = "bri_cmd_t"
+KEY_BRIGHTNESS_COMMAND_TEMPLATE = "bri_cmd_tpl"
+KEY_BRIGHTNESS_SCALE = "bri_scl"
+KEY_BRIGHTNESS_STATE_TOPIC = "bri_stat_t"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
+KEY_BRIGHTNESS_VALUE_TEMPLATE = "bri_val_tpl"
+KEY_COLOR_MODE_STATE_TOPIC = "clrm_stat_t"
+KEY_COLOR_MODE_VALUE_TEMPLATE = "clrm_val_tpl"
+KEY_COLOR_TEMP_COMMAND_TOPIC = "clr_temp_cmd_t"
+KEY_COLOR_TEMP_COMMAND_TEMPLATE = "clr_temp_cmd_tpl"
+KEY_COLOR_TEMP_KELVIN = "clr_temp_k"
+KEY_COLOR_TEMP_STATE_TOPIC = "clr_temp_stat_t"
 KEY_COLOR_TEMP_TEMPLATE = "clr_temp_tpl"
+KEY_COLOR_TEMP_VALUE_TEMPLATE = "clr_temp_val_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TEMPLATE = "cmd_tpl"
@@ -196,9 +208,15 @@ KEY_PAYLOAD_PRESS = "pl_prs"
 KEY_PAYLOAD_STOP = "pl_stop"
 KEY_POSITION_TEMPLATE = "pos_tpl"
 KEY_POSITION_TOPIC = "pos_t"
+KEY_MAX_KELVIN = "max_k"
+KEY_MIN_KELVIN = "min_k"
 KEY_REPORTS_POSITION = "pos"
 KEY_QOS = "qos"
 KEY_RELEASE_URL = "rel_u"
+KEY_RGB_COMMAND_TOPIC = "rgb_cmd_t"
+KEY_RGB_COMMAND_TEMPLATE = "rgb_cmd_tpl"
+KEY_RGB_STATE_TOPIC = "rgb_stat_t"
+KEY_RGB_VALUE_TEMPLATE = "rgb_val_tpl"
 KEY_SCHEMA = "schema"
 KEY_SET_POSITION_TEMPLATE = "set_pos_tpl"
 KEY_SET_POSITION_TOPIC = "set_pos_t"
@@ -5134,25 +5152,25 @@ def get_rgbcct_light(rgbcct_id: int):
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}",
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}",
         KEY_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "state_value_template": f"{{%if value_json.output%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}{{%endif%}}",
-        "brightness_command_topic": TOPIC_RPC,
-        "brightness_command_template": f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^brightness^:{{{{value}}}}}}}}",
-        "brightness_state_topic": TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "brightness_value_template": "{{ value_json.brightness }}",
-        "brightness_scale": 100,
-        "color_temp_command_topic": TOPIC_RPC,
-        "color_temp_command_template": f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^cct^,^ct^:{{{{value}}}}}}}}",
-        "color_temp_state_topic": TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "color_temp_value_template": "{{ value_json.ct }}",
-        "color_temp_kelvin": "true",
-        "max_kelvin": max_ct,
-        "min_kelvin": min_ct,
-        "rgb_command_topic": TOPIC_RPC,
-        "rgb_command_template": f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^rgb^,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}]}}}}",
-        "rgb_state_topic": TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "rgb_value_template": "{{ value_json.rgb | join(^,^) }}",
-        "color_mode_state_topic": TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
-        "color_mode_value_template": "{%if value_json.mode == ^cct^%}color_temp{%else%}rgb{%endif%}",
+        KEY_STATE_VALUE_TEMPLATE: f"{{%if value_json.output%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}{{%endif%}}",
+        KEY_BRIGHTNESS_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_BRIGHTNESS_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^brightness^:{{{{value}}}}}}}}",
+        KEY_BRIGHTNESS_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_BRIGHTNESS_VALUE_TEMPLATE: "{{ value_json.brightness }}",
+        KEY_BRIGHTNESS_SCALE: 100,
+        KEY_COLOR_TEMP_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COLOR_TEMP_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^cct^,^ct^:{{{{value}}}}}}}}",
+        KEY_COLOR_TEMP_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_COLOR_TEMP_VALUE_TEMPLATE: "{{ value_json.ct }}",
+        KEY_COLOR_TEMP_KELVIN: "true",
+        KEY_MAX_KELVIN: max_ct,
+        KEY_MIN_KELVIN: min_ct,
+        KEY_RGB_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_RGB_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^rgb^,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}]}}}}",
+        KEY_RGB_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_RGB_VALUE_TEMPLATE: "{{ value_json.rgb | join(^,^) }}",
+        KEY_COLOR_MODE_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_COLOR_MODE_VALUE_TEMPLATE: "{%if value_json.mode == ^cct^%}color_temp{%else%}rgb{%endif%}",
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-rgbcct-{rgbcct_id}".lower(),
         KEY_QOS: qos,
