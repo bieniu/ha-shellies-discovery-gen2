@@ -40,6 +40,8 @@ ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
 ATTR_RGB = "rgb"
+ATTR_RGBCCT = "rgbcct"
+ATTR_RGBCCT_SENSORS = "rgbcct_sensors"
 ATTR_RGB_SENSORS = "rgb_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
@@ -149,8 +151,20 @@ KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_BLUE_TEMPLATE = "b_tpl"
 KEY_GREEN_TEMPLATE = "g_tpl"
 KEY_RED_TEMPLATE = "r_tpl"
+KEY_BRIGHTNESS_COMMAND_TOPIC = "bri_cmd_t"
+KEY_BRIGHTNESS_COMMAND_TEMPLATE = "bri_cmd_tpl"
+KEY_BRIGHTNESS_SCALE = "bri_scl"
+KEY_BRIGHTNESS_STATE_TOPIC = "bri_stat_t"
 KEY_BRIGHTNESS_TEMPLATE = "bri_tpl"
+KEY_BRIGHTNESS_VALUE_TEMPLATE = "bri_val_tpl"
+KEY_COLOR_MODE_STATE_TOPIC = "clrm_stat_t"
+KEY_COLOR_MODE_VALUE_TEMPLATE = "clrm_val_tpl"
+KEY_COLOR_TEMP_COMMAND_TOPIC = "clr_temp_cmd_t"
+KEY_COLOR_TEMP_COMMAND_TEMPLATE = "clr_temp_cmd_tpl"
+KEY_COLOR_TEMP_KELVIN = "clr_temp_k"
+KEY_COLOR_TEMP_STATE_TOPIC = "clr_temp_stat_t"
 KEY_COLOR_TEMP_TEMPLATE = "clr_temp_tpl"
+KEY_COLOR_TEMP_VALUE_TEMPLATE = "clr_temp_val_tpl"
 KEY_COMMAND_OFF_TEMPLATE = "cmd_off_tpl"
 KEY_COMMAND_ON_TEMPLATE = "cmd_on_tpl"
 KEY_COMMAND_TEMPLATE = "cmd_tpl"
@@ -194,9 +208,15 @@ KEY_PAYLOAD_PRESS = "pl_prs"
 KEY_PAYLOAD_STOP = "pl_stop"
 KEY_POSITION_TEMPLATE = "pos_tpl"
 KEY_POSITION_TOPIC = "pos_t"
+KEY_MAX_KELVIN = "max_k"
+KEY_MIN_KELVIN = "min_k"
 KEY_REPORTS_POSITION = "pos"
 KEY_QOS = "qos"
 KEY_RELEASE_URL = "rel_u"
+KEY_RGB_COMMAND_TOPIC = "rgb_cmd_t"
+KEY_RGB_COMMAND_TEMPLATE = "rgb_cmd_tpl"
+KEY_RGB_STATE_TOPIC = "rgb_stat_t"
+KEY_RGB_VALUE_TEMPLATE = "rgb_val_tpl"
 KEY_SCHEMA = "schema"
 KEY_SET_POSITION_TEMPLATE = "set_pos_tpl"
 KEY_SET_POSITION_TOPIC = "set_pos_t"
@@ -274,6 +294,7 @@ MODEL_3EM_63_G3 = "shelly3em63g3"
 MODEL_AZ_PLUG = "shellyazplug"
 MODEL_BLU_GATEWAY_G3 = "shellyblugwg3"
 MODEL_DUO_BULB_G3 = "shellyduobulbg3"
+MODEL_MULTICOLOR_BULB_G3 = "shellycolorblbg3"
 MODEL_EM_G3 = "shellyemg3"
 MODEL_HT_G3 = "shellyhtg3"
 MODEL_I4_G3 = "shellyi4g3"
@@ -468,6 +489,7 @@ TOPIC_STATUS_FLOOD = "~status/flood:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
 TOPIC_STATUS_CCT = "~status/cct:{id}"
 TOPIC_STATUS_RGB = "~status/rgb:{id}"
+TOPIC_STATUS_RGBCCT = "~status/rgbcct:{id}"
 TOPIC_STATUS_PRESENCE = "~status/presence"
 TOPIC_STATUS_RPC = "~status/rpc"
 TOPIC_STATUS_SMOKE = "~status/smoke:0"
@@ -1002,6 +1024,26 @@ DESCRIPTION_SENSOR_RGB_ENERGY = {
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_RGBCCT_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBCCT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
+DESCRIPTION_SENSOR_RGBCCT_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBCCT,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
 }
 DESCRIPTION_SENSOR_ENERGY_PM = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
@@ -4301,6 +4343,27 @@ SUPPORTED_MODELS = {
         },
         ATTR_MIN_FIRMWARE_DATE: 20240816,
     },
+    MODEL_MULTICOLOR_BULB_G3: {
+        ATTR_NAME: "Shelly Multicolor Bulb Gen3",
+        ATTR_MODEL_ID: "S3BL-C010007AEU",
+        ATTR_GEN: 3,
+        ATTR_BINARY_SENSORS: {SENSOR_CLOUD: DESCRIPTION_SENSOR_CLOUD},
+        ATTR_RGBCCT_SENSORS: {
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_RGBCCT_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_RGBCCT_POWER,
+        },
+        ATTR_SENSORS: {
+            SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
+            SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
+            SENSOR_WIFI_IP: DESCRIPTION_SENSOR_WIFI_IP,
+            SENSOR_WIFI_SIGNAL: DESCRIPTION_SENSOR_WIFI_SIGNAL,
+        },
+        ATTR_UPDATES: {
+            UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
+            UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
+        },
+        ATTR_MIN_FIRMWARE_DATE: 20251024,
+    },
     MODEL_DUO_BULB_G3: {
         ATTR_NAME: "Shelly Duo Bulb Gen3",
         ATTR_MODEL_ID: "S3BL-D010009AEU",
@@ -5066,6 +5129,58 @@ def get_rgb_light(rgb_id: int):
     return topic, payload
 
 
+def get_rgbcct_light(rgbcct_id: int):
+    """Create configuration for Shelly RGBCCT light entity."""
+    topic = encode_config_topic(
+        f"{disc_prefix}/light/{device_id}-rgbcct-{rgbcct_id}/config"
+    )
+
+    light_name = (
+        device_config[f"rgbcct:{rgbcct_id}"][ATTR_NAME] or f"RGBCCT light {rgbcct_id}"
+    ).replace("'", "_")
+
+    min_ct = 2700
+    max_ct = 6500
+    if "ct_range" in device_config[f"rgbcct:{rgbcct_id}"]:
+        min_ct = device_config[f"rgbcct:{rgbcct_id}"]["ct_range"][0]
+        max_ct = device_config[f"rgbcct:{rgbcct_id}"]["ct_range"][1]
+
+    payload = {
+        KEY_SCHEMA: "basic",
+        KEY_NAME: light_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}",
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}",
+        KEY_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_STATE_VALUE_TEMPLATE: f"{{%if value_json.output%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true}}}}{{%else%}}{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:false}}}}{{%endif%}}",
+        KEY_BRIGHTNESS_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_BRIGHTNESS_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^brightness^:{{{{value}}}}}}}}",
+        KEY_BRIGHTNESS_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_BRIGHTNESS_VALUE_TEMPLATE: "{{ value_json.brightness }}",
+        KEY_BRIGHTNESS_SCALE: 100,
+        KEY_COLOR_TEMP_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_COLOR_TEMP_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^cct^,^ct^:{{{{value}}}}}}}}",
+        KEY_COLOR_TEMP_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_COLOR_TEMP_VALUE_TEMPLATE: "{{ value_json.ct }}",
+        KEY_COLOR_TEMP_KELVIN: "true",
+        KEY_MAX_KELVIN: max_ct,
+        KEY_MIN_KELVIN: min_ct,
+        KEY_RGB_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_RGB_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBCCT.Set^,^params^:{{^id^:{rgbcct_id},^on^:true,^mode^:^rgb^,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}]}}}}",
+        KEY_RGB_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_RGB_VALUE_TEMPLATE: "{{ value_json.rgb | join(^,^) }}",
+        KEY_COLOR_MODE_STATE_TOPIC: TOPIC_STATUS_RGBCCT.format(id=rgbcct_id),
+        KEY_COLOR_MODE_VALUE_TEMPLATE: "{%if value_json.mode == ^cct^%}color_temp{%else%}rgb{%endif%}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-rgbcct-{rgbcct_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic,
+    }
+    return topic, payload
+
+
 def get_sensor(
     sensor,
     description,
@@ -5074,6 +5189,7 @@ def get_sensor(
     light_id=None,
     rgb_id=None,
     cct_id=None,
+    rgbcct_id=None,
     cover_id=None,
     emeter_id=None,
     emeter_phase=None,
@@ -5111,6 +5227,10 @@ def get_sensor(
     elif cct_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-cct-{cct_id}-{sensor}/config"
+        )
+    elif rgbcct_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-rgbcct-{rgbcct_id}-{sensor}/config"
         )
     elif sensor_id is not None:
         topic = encode_config_topic(
@@ -5180,6 +5300,13 @@ def get_sensor(
         ).replace("'", "_")
         unique_id = f"{device_id}-cct-{cct_id}-{sensor}".lower()
         sensor_name = f"{cct_name} {description[KEY_NAME]}"
+    elif rgbcct_id is not None:
+        rgbcct_name = (
+            device_config[f"rgbcct:{rgbcct_id}"].get(ATTR_NAME, {})
+            or f"RGBCCT light {rgbcct_id}"
+        ).replace("'", "_")
+        unique_id = f"{device_id}-rgbcct-{rgbcct_id}-{sensor}".lower()
+        sensor_name = f"{rgbcct_name} {description[KEY_NAME]}"
     elif emeter_id is not None and emeter_phase is not None:
         unique_id = f"{device_id}-{emeter_id}-{emeter_phase}-{sensor}".lower()
         sensor_name = description[KEY_NAME].format(phase=emeter_phase.upper())
@@ -5253,6 +5380,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgb_id)
     elif cct_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=cct_id)
+    elif rgbcct_id is not None and description[KEY_STATE_TOPIC]:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgbcct_id)
     elif emeter_id is not None:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=emeter_id)
     elif sensor_id is not None:
@@ -5936,6 +6065,16 @@ def configure_device():
             )
             config[topic] = payload
 
+    for rgbcct_id in range(rgbcct_lights):
+        topic, payload = get_rgbcct_light(rgbcct_id)
+        config[topic] = payload
+
+        for sensor, description in rgbcct_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, rgbcct_id=rgbcct_id, profile=profile
+            )
+            config[topic] = payload
+
     for emeter_id in range(emeters):
         if emeter_phases:
             for phase in emeter_phases:
@@ -6573,6 +6712,9 @@ else:
 
     rgb_lights = get_component_number(ATTR_RGB, device_config)
     rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
+
+    rgbcct_lights = get_component_number(ATTR_RGBCCT, device_config)
+    rgbcct_sensors = SUPPORTED_MODELS[model].get(ATTR_RGBCCT_SENSORS, {})
 
     buttons = SUPPORTED_MODELS[model].get(ATTR_BUTTONS, {})
     numbers = SUPPORTED_MODELS[model].get(ATTR_NUMBERS, {})
