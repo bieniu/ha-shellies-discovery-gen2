@@ -420,21 +420,31 @@ UPDATE_FIRMWARE_BETA = "firmware_beta"
 
 SCRIPT_CODE = """let topicPrefix = null;
 let updateTimer = null;
+let installedVersion = null;
+let statusTopic = null;
 
-function sendDeviceStatus() {
+function onStatusReceived(result, error_code) {
   try {
-    let installedVersion = Shelly.getDeviceInfo().ver;
-    Shelly.call(^Shelly.GetStatus^, {}, function (status) {
-      status.sys.installed_version = installedVersion;
-      MQTT.publish(topicPrefix + ^/status/rpc^, JSON.stringify(status));
-    });
+    if (error_code !== 0 || !result) {
+      return;
+    }
+    result.sys.installed_version = installedVersion;
+    MQTT.publish(statusTopic, JSON.stringify(result));
   } catch (e) {
     console.log(^sendDeviceStatus has failed: ^, e);
   }
 }
 
+function sendDeviceStatus() {
+  if (!MQTT.isConnected()) {
+    return;
+  }
+  Shelly.call(^Shelly.GetStatus^, {}, onStatusReceived);
+}
+
 function onMQTTConfigReceived(config) {
   topicPrefix = config.topic_prefix;
+  statusTopic = topicPrefix + ^/status/rpc^;
   console.log(^Using topic prefix: ^, topicPrefix);
 
   if (!updateTimer) {
@@ -445,6 +455,7 @@ function onMQTTConfigReceived(config) {
 function initScript() {
   console.log(^Starting shellies_discovery_gen2_script^);
   try {
+    installedVersion = Shelly.getDeviceInfo().ver;
     Shelly.call(^MQTT.GetConfig^, {}, onMQTTConfigReceived);
   } catch (e) {
     console.log(^initScript has failed: ^, e);
@@ -453,7 +464,7 @@ function initScript() {
 
 initScript();
 """
-SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20250114"
+SCRIPT_CURRENT_NAME = "shellies_discovery_gen2_script_20260621"
 SCRIPT_OLD_NAMES = [
     "Send Device Status",
     "send_device_status",
@@ -461,6 +472,7 @@ SCRIPT_OLD_NAMES = [
     "shellies_discovery_gen2_script_20221116",
     "shellies_discovery_gen2_script_20240216",
     "shellies_discovery_gen2_script_20241123",
+    "shellies_discovery_gen2_script_20250114",
 ]
 
 STATE_CLASS_MEASUREMENT = "measurement"

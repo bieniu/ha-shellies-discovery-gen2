@@ -1,19 +1,45 @@
-let topic_prefix = null;
-let installed_version = null;
+let topicPrefix = null;
+let updateTimer = null;
+let installedVersion = null;
+let statusTopic = null;
 
-Shelly.call("MQTT.GetConfig", {}, function (config) {
-    topic_prefix = config.topic_prefix;
-});
+function onStatusReceived(result, error_code) {
+  try {
+    if (error_code !== 0 || !result) {
+      return;
+    }
+    result.sys.installed_version = installedVersion;
+    MQTT.publish(statusTopic, JSON.stringify(result));
+  } catch (e) {
+    console.log("sendDeviceStatus has failed: ", e);
+  }
+}
 
-function SendDeviceStatus() {
-    let _device_info = Shelly.getDeviceInfo();
-    installed_version = _device_info.ver;
-    Shelly.call("Shelly.GetStatus", {}, function (status) {
-        status.sys.installed_version = installed_version;
-        MQTT.publish(topic_prefix + "/status/rpc", JSON.stringify(status));
-    });
-};
+function sendDeviceStatus() {
+  if (!MQTT.isConnected()) {
+    return;
+  }
+  Shelly.call("Shelly.GetStatus", {}, onStatusReceived);
+}
 
+function onMQTTConfigReceived(config) {
+  topicPrefix = config.topic_prefix;
+  statusTopic = topicPrefix + "/status/rpc";
+  console.log("Using topic prefix: ", topicPrefix);
 
-MQTT.setConnectHandler(SendDeviceStatus);
-let UpdateTimer = Timer.set(30000, true, SendDeviceStatus);
+  if (!updateTimer) {
+    updateTimer = Timer.set(30000, true, sendDeviceStatus);
+  }
+}
+
+function initScript() {
+  console.log("Starting shellies_discovery_gen2_script");
+  try {
+    installedVersion = Shelly.getDeviceInfo().ver;
+    Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+  } catch (e) {
+    console.log("initScript has failed: ", e);
+  }
+}
+
+initScript();
