@@ -4075,7 +4075,7 @@
     'rgb_value_template': '{{ value_json.rgb | join(",") }}',
     'schema': 'basic',
     'stat_t': '~status/rgbcct:0',
-    'state_value_template': '{%if value_json.output%}{"id":1,"src":"home-assistant","method":"RGBCCT.Set","params":{"id":0,"on":true}{%else%}{"id":1,"src":"home-assistant","method":"RGBCCT.Set","params":{"id":0,"on":false}{%endif%}',
+    'state_value_template': '{%if value_json.output%}{"id":1,"src":"home-assistant","method":"RGBCCT.Set","params":{"id":0,"on":true}}{%else%}{"id":1,"src":"home-assistant","method":"RGBCCT.Set","params":{"id":0,"on":false}}{%endif%}',
     'uniq_id': 'shellycolorblbg3-aabbccddeeff-rgbcct-0',
     '~': 'shellycolorblbg3-aabbccddeeff/',
   })
