@@ -138,8 +138,6 @@ KEY_MAX_HUMIDITY = "max_hum"
 KEY_MODES = "modes"
 KEY_MODE_STATE_TOPIC = "mode_stat_t"
 KEY_ACTION_TOPIC = "act_t"
-KEY_MAX_MIREDS = "max_mirs"
-KEY_MIN_MIREDS = "min_mirs"
 KEY_MODE_COMMAND_TOPIC = "mode_cmd_t"
 KEY_MODE_COMMAND_TEMPLATE = "mode_cmd_tpl"
 KEY_MODE_STATE_TEMPLATE = "mode_stat_tpl"
@@ -188,6 +186,8 @@ KEY_LATEST_VERSION_TEMPLATE = "l_ver_tpl"
 KEY_LATEST_VERSION_TOPIC = "l_ver_t"
 KEY_MAC = "mac"
 KEY_MANUFACTURER = "mf"
+KEY_MAX_KELVIN = "max_k"
+KEY_MIN_KELVIN = "min_k"
 KEY_MAX = "max"
 KEY_MIN = "min"
 KEY_MODE = "mode"
@@ -5095,13 +5095,14 @@ def get_cct_light(cct_id: int):
         KEY_NAME: light_name,
         KEY_COMMAND_TOPIC: TOPIC_RPC,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^CCT.Set^,^params^:{{^id^:{cct_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^CCT.Set^,^params^:{{^id^:{cct_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if color_temp is defined%}},^ct^:{{{{(1000000/color_temp)|round}}}}{{%endif%}}}}}}",
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^CCT.Set^,^params^:{{^id^:{cct_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if color_temp is defined%}},^ct^:{{{{color_temp}}}}{{%endif%}}}}}}",
         KEY_STATE_TOPIC: TOPIC_STATUS_CCT.format(id=cct_id),
         KEY_STATE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
         KEY_BRIGHTNESS_TEMPLATE: "{{value_json.brightness|float|multiply(2.55)|round}}",
-        KEY_COLOR_TEMP_TEMPLATE: "{{(1000000/value_json.ct)|round}}",
-        KEY_MAX_MIREDS: round(1000000 / min_ct),
-        KEY_MIN_MIREDS: round(1000000 / max_ct),
+        KEY_COLOR_TEMP_TEMPLATE: "{{value_json.ct}}",
+        KEY_MAX_KELVIN: max_ct,
+        KEY_MIN_KELVIN: min_ct,
+        KEY_COLOR_TEMP_KELVIN: str(True).lower(),
         KEY_AVAILABILITY: availability,
         KEY_UNIQUE_ID: f"{device_id}-cct-{cct_id}".lower(),
         KEY_QOS: qos,
