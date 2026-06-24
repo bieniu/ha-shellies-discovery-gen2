@@ -4127,6 +4127,110 @@
 # name: test_device[shelly_multicolor_bulb_gen3][4-topic]
   'homeassistant/light/shellycolorblbg3-aabbccddeeff-rgbcct-0/config'
 # ---
+# name: test_device[shelly_multicolor_bulb_gen3][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '90:70:69:48:e2:50',
+        ]),
+      ]),
+      'cu': 'http://shellycolorblbg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '90:70:69:48:e2:50',
+      ]),
+      'mdl': 'Shelly Multicolor Bulb Gen3',
+      'mdl_id': 'S3BL-C010007AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Multicolor Bulb Gen3 90706948E250',
+      'sw': '20260224-132014/g78cbf04',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'RGBCCT light 0 Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/rgbcct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellycolorblbg3-aabbccddeeff-rgbcct-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellycolorblbg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][5-topic]
+  'homeassistant/sensor/shellycolorblbg3-aabbccddeeff-rgbcct-0-energy/config'
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '90:70:69:48:e2:50',
+        ]),
+      ]),
+      'cu': 'http://shellycolorblbg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '90:70:69:48:e2:50',
+      ]),
+      'mdl': 'Shelly Multicolor Bulb Gen3',
+      'mdl_id': 'S3BL-C010007AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Multicolor Bulb Gen3 90706948E250',
+      'sw': '20260224-132014/g78cbf04',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'RGBCCT light 0 Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbcct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellycolorblbg3-aabbccddeeff-rgbcct-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellycolorblbg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][6-topic]
+  'homeassistant/sensor/shellycolorblbg3-aabbccddeeff-rgbcct-0-power/config'
+# ---
 # name: test_device[shelly_multicolor_bulb_gen3][7-payload]
   dict({
     'avty': list([
