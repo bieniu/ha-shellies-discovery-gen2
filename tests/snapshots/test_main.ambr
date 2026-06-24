@@ -3287,6 +3287,738 @@
 # name: test_device[shelly_blu_rc_button_4_zb][9-topic]
   'homeassistant/device_automation/shellyplugusg4-aabbccddeeff-112233445566-200-1/double_push/config'
 # ---
+# name: test_device[shelly_duo_bulb_gen3][0-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'bri_tpl': '{{value_json.brightness|float|multiply(2.55)|round}}',
+    'clr_temp_k': 'true',
+    'clr_temp_tpl': '{{value_json.ct}}',
+    'cmd_off_tpl': '{"id":1,"src":"home-assistant","method":"CCT.Set","params":{"id":0,"on":false}{%if transition is defined%},"transition_duration":{{max(transition|int,1)}}{%endif%}}',
+    'cmd_on_tpl': '{"id":1,"src":"home-assistant","method":"CCT.Set","params":{"id":0,"on":true{%if transition is defined%},"transition_duration":{{max(transition|int,1)}}{%endif%}{%if brightness is defined%},"brightness":{{brightness|float|multiply(0.3922)|round}}{%endif%}{%if color_temp is defined%},"ct":{{color_temp}}{%endif%}}}',
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'max_k': 6500,
+    'min_k': 2700,
+    'name': 'Office Light',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'schema': 'template',
+    'stat_t': '~status/cct:0',
+    'stat_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    'uniq_id': 'shellyduobulbg3-112233445566-cct-0',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][0-topic]
+  'homeassistant/light/shellyduobulbg3-112233445566-cct-0/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][1-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Office Light Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/cct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyduobulbg3-112233445566-cct-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][1-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-cct-0-energy/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'running',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'shellies_discovery_gen2_script_20260621',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/script:1',
+    'uniq_id': 'shellyduobulbg3-112233445566-script-1-running',
+    'val_tpl': '{%if value_json.running%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][10-topic]
+  'homeassistant/binary_sensor/shellyduobulbg3-112233445566-script-1-running/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:memory',
+    'name': 'shellies_discovery_gen2_script_20260621 memory used',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/script:1',
+    'uniq_id': 'shellyduobulbg3-112233445566-script-1-mem_used',
+    'unit_of_meas': 'B',
+    'val_tpl': '{{value_json.mem_used}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][11-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-script-1-mem_used/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:memory',
+    'name': 'shellies_discovery_gen2_script_20260621 memory peak',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/script:1',
+    'uniq_id': 'shellyduobulbg3-112233445566-script-1-mem_peak',
+    'unit_of_meas': 'B',
+    'val_tpl': '{{value_json.mem_peak}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][12-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-script-1-mem_peak/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:memory',
+    'name': 'shellies_discovery_gen2_script_20260621 memory free',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/script:1',
+    'uniq_id': 'shellyduobulbg3-112233445566-script-1-mem_free',
+    'unit_of_meas': 'B',
+    'val_tpl': '{{value_json.mem_free}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][13-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-script-1-mem_free/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][2-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Office Light Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/cct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyduobulbg3-112233445566-cct-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][2-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-cct-0-power/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][3-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Duo Bulb Gen3 [112233445566] Firmware',
+    'uniq_id': 'shellyduobulbg3-112233445566-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][3-topic]
+  'homeassistant/update/shellyduobulbg3-112233445566-firmware/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Duo Bulb Gen3 [112233445566] Firmware',
+    'uniq_id': 'shellyduobulbg3-112233445566-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][4-topic]
+  'homeassistant/update/shellyduobulbg3-112233445566-firmware_beta/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyduobulbg3-112233445566-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][5-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-last_restart/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyduobulbg3-112233445566-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][6-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-ssid/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyduobulbg3-112233445566-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][7-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-wifi_ip/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyduobulbg3-112233445566-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][8-topic]
+  'homeassistant/sensor/shellyduobulbg3-112233445566-wifi_signal/config'
+# ---
+# name: test_device[shelly_duo_bulb_gen3][9-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '11:22:33:44:55:66',
+        ]),
+      ]),
+      'cu': 'http://shellyduobulbg3-112233445566.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '11:22:33:44:55:66',
+      ]),
+      'mdl': 'Shelly Duo Bulb Gen3',
+      'mdl_id': 'S3BL-D010009AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Duo Bulb Gen3 [112233445566]',
+      'sw': '20260423-102510/2.0.0-beta1-g8c7700a',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyduobulbg3-112233445566-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyduobulbg3-112233445566/',
+  })
+# ---
+# name: test_device[shelly_duo_bulb_gen3][9-topic]
+  'homeassistant/binary_sensor/shellyduobulbg3-112233445566-cloud/config'
+# ---
 # name: test_device[shelly_flood_s_gen4][0-payload]
   dict({
     'id': 1,
@@ -4126,6 +4858,110 @@
 # ---
 # name: test_device[shelly_multicolor_bulb_gen3][4-topic]
   'homeassistant/light/shellycolorblbg3-aabbccddeeff-rgbcct-0/config'
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '90:70:69:48:e2:50',
+        ]),
+      ]),
+      'cu': 'http://shellycolorblbg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '90:70:69:48:e2:50',
+      ]),
+      'mdl': 'Shelly Multicolor Bulb Gen3',
+      'mdl_id': 'S3BL-C010007AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Multicolor Bulb Gen3 90706948E250',
+      'sw': '20260224-132014/g78cbf04',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'RGBCCT light 0 Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/rgbcct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellycolorblbg3-aabbccddeeff-rgbcct-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellycolorblbg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][5-topic]
+  'homeassistant/sensor/shellycolorblbg3-aabbccddeeff-rgbcct-0-energy/config'
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          '90:70:69:48:e2:50',
+        ]),
+      ]),
+      'cu': 'http://shellycolorblbg3-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        '90:70:69:48:e2:50',
+      ]),
+      'mdl': 'Shelly Multicolor Bulb Gen3',
+      'mdl_id': 'S3BL-C010007AEU',
+      'mf': 'Shelly',
+      'name': 'Shelly Multicolor Bulb Gen3 90706948E250',
+      'sw': '20260224-132014/g78cbf04',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'RGBCCT light 0 Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbcct:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellycolorblbg3-aabbccddeeff-rgbcct-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellycolorblbg3-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_multicolor_bulb_gen3][6-topic]
+  'homeassistant/sensor/shellycolorblbg3-aabbccddeeff-rgbcct-0-power/config'
 # ---
 # name: test_device[shelly_multicolor_bulb_gen3][7-payload]
   dict({

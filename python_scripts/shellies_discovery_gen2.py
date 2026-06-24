@@ -6063,9 +6063,7 @@ def configure_device():
         config[topic] = payload
 
         for sensor, description in cct_sensors.items():
-            topic, payload = get_sensor(
-                sensor, description, cct_id=cct_id, profile=profile
-            )
+            topic, payload = get_sensor(sensor, description, cct_id=cct_id)
             config[topic] = payload
 
     for rgb_id in range(rgb_lights):
@@ -6083,9 +6081,7 @@ def configure_device():
         config[topic] = payload
 
         for sensor, description in rgbcct_sensors.items():
-            topic, payload = get_sensor(
-                sensor, description, rgbcct_id=rgbcct_id, profile=profile
-            )
+            topic, payload = get_sensor(sensor, description, rgbcct_id=rgbcct_id)
             config[topic] = payload
 
     for emeter_id in range(emeters):
