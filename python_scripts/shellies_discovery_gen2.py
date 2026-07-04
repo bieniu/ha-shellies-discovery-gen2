@@ -40,9 +40,11 @@ ATTR_RELAY_BINARY_SENSORS = "relay_binary_sensors"
 ATTR_RELAY_SENSORS = "relay_sensors"
 ATTR_RELAYS = "relays"
 ATTR_RGB = "rgb"
+ATTR_RGBW = "rgbw"
 ATTR_RGBCCT = "rgbcct"
 ATTR_RGBCCT_SENSORS = "rgbcct_sensors"
 ATTR_RGB_SENSORS = "rgb_sensors"
+ATTR_RGBW_SENSORS = "rgbw_sensors"
 ATTR_SENSORS = "sensors"
 ATTR_SWITCH = "switch"
 ATTR_SWITCHES = "switches"
@@ -149,6 +151,7 @@ KEY_AVAILABILITY_TOPIC = "avty_t"
 KEY_BLUE_TEMPLATE = "b_tpl"
 KEY_GREEN_TEMPLATE = "g_tpl"
 KEY_RED_TEMPLATE = "r_tpl"
+KEY_WHITE_TEMPLATE = "w_tpl"
 KEY_BRIGHTNESS_COMMAND_TOPIC = "bri_cmd_t"
 KEY_BRIGHTNESS_COMMAND_TEMPLATE = "bri_cmd_tpl"
 KEY_BRIGHTNESS_SCALE = "bri_scl"
@@ -217,6 +220,10 @@ KEY_RGB_COMMAND_TOPIC = "rgb_cmd_t"
 KEY_RGB_COMMAND_TEMPLATE = "rgb_cmd_tpl"
 KEY_RGB_STATE_TOPIC = "rgb_stat_t"
 KEY_RGB_VALUE_TEMPLATE = "rgb_val_tpl"
+KEY_RGBW_COMMAND_TOPIC = "rgbw_cmd_t"
+KEY_RGBW_COMMAND_TEMPLATE = "rgbw_cmd_tpl"
+KEY_RGBW_STATE_TOPIC = "rgbw_stat_t"
+KEY_RGBW_VALUE_TEMPLATE = "rgbw_val_tpl"
 KEY_SCHEMA = "schema"
 KEY_SET_POSITION_TEMPLATE = "set_pos_tpl"
 KEY_SET_POSITION_TOPIC = "set_pos_t"
@@ -501,6 +508,7 @@ TOPIC_STATUS_FLOOD = "~status/flood:0"
 TOPIC_STATUS_PM1 = "~status/pm1:0"
 TOPIC_STATUS_CCT = "~status/cct:{id}"
 TOPIC_STATUS_RGB = "~status/rgb:{id}"
+TOPIC_STATUS_RGBW = "~status/rgbw:{id}"
 TOPIC_STATUS_RGBCCT = "~status/rgbcct:{id}"
 TOPIC_STATUS_PRESENCE = "~status/presence"
 TOPIC_STATUS_RPC = "~status/rpc"
@@ -887,6 +895,16 @@ DESCRIPTION_SENSOR_RGB_CURRENT = {
     KEY_UNIT: UNIT_AMPERE,
     KEY_VALUE_TEMPLATE: TPL_CURRENT,
 }
+DESCRIPTION_SENSOR_RGBW_CURRENT = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Current",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBW,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_AMPERE,
+    KEY_VALUE_TEMPLATE: TPL_CURRENT,
+}
 DESCRIPTION_SENSOR_EMETER_CURRENT = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_CURRENT,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -1037,6 +1055,16 @@ DESCRIPTION_SENSOR_RGB_ENERGY = {
     KEY_UNIT: UNIT_WATTH,
     KEY_VALUE_TEMPLATE: TPL_ENERGY,
 }
+DESCRIPTION_SENSOR_RGBW_ENERGY = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Energy",
+    KEY_STATE_CLASS: STATE_CLASS_TOTAL_INCREASING,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBW,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATTH,
+    KEY_VALUE_TEMPLATE: TPL_ENERGY,
+}
 DESCRIPTION_SENSOR_RGBCCT_ENERGY = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_ENERGY,
     KEY_ENABLED_BY_DEFAULT: True,
@@ -1176,6 +1204,16 @@ DESCRIPTION_SENSOR_RGB_POWER = {
     KEY_NAME: "Power",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_WATT,
+    KEY_VALUE_TEMPLATE: TPL_POWER,
+}
+DESCRIPTION_SENSOR_RGBW_POWER = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_POWER,
+    KEY_ENABLED_BY_DEFAULT: True,
+    KEY_NAME: "Power",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBW,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_WATT,
     KEY_VALUE_TEMPLATE: TPL_POWER,
@@ -1408,6 +1446,17 @@ DESCRIPTION_SENSOR_RGB_TEMPERATURE = {
     KEY_UNIT: UNIT_CELSIUS,
     KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
 }
+DESCRIPTION_SENSOR_RGBW_TEMPERATURE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_ENTITY_CATEGORY: ENTITY_CATEGORY_DIAGNOSTIC,
+    KEY_NAME: "Temperature",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBW,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_CELSIUS,
+    KEY_VALUE_TEMPLATE: TPL_TEMPERATURE,
+}
 DESCRIPTION_SENSOR_RELAY_TEMPERATURE_STATUS = {
     KEY_DEVICE_CLASS: DEVICE_CLASS_TEMPERATURE,
     KEY_ENABLED_BY_DEFAULT: False,
@@ -1477,6 +1526,16 @@ DESCRIPTION_SENSOR_RGB_VOLTAGE = {
     KEY_NAME: "Voltage",
     KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
     KEY_STATE_TOPIC: TOPIC_STATUS_RGB,
+    KEY_SUGGESTED_DISPLAY_PRECISION: 1,
+    KEY_UNIT: UNIT_VOLT,
+    KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
+}
+DESCRIPTION_SENSOR_RGBW_VOLTAGE = {
+    KEY_DEVICE_CLASS: DEVICE_CLASS_VOLTAGE,
+    KEY_ENABLED_BY_DEFAULT: False,
+    KEY_NAME: "Voltage",
+    KEY_STATE_CLASS: STATE_CLASS_MEASUREMENT,
+    KEY_STATE_TOPIC: TOPIC_STATUS_RGBW,
     KEY_SUGGESTED_DISPLAY_PRECISION: 1,
     KEY_UNIT: UNIT_VOLT,
     KEY_VALUE_TEMPLATE: TPL_VOLTAGE,
@@ -3549,6 +3608,13 @@ SUPPORTED_MODELS = {
             SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RGB_TEMPERATURE,
             SENSOR_VOLTAGE: DESCRIPTION_SENSOR_RGB_VOLTAGE,
         },
+        ATTR_RGBW_SENSORS: {
+            SENSOR_CURRENT: DESCRIPTION_SENSOR_RGBW_CURRENT,
+            SENSOR_ENERGY: DESCRIPTION_SENSOR_RGBW_ENERGY,
+            SENSOR_POWER: DESCRIPTION_SENSOR_RGBW_POWER,
+            SENSOR_TEMPERATURE: DESCRIPTION_SENSOR_RGBW_TEMPERATURE,
+            SENSOR_VOLTAGE: DESCRIPTION_SENSOR_RGBW_VOLTAGE,
+        },
         ATTR_SENSORS: {
             SENSOR_LAST_RESTART: DESCRIPTION_SENSOR_LAST_RESTART,
             SENSOR_SSID: DESCRIPTION_SENSOR_SSID,
@@ -5137,7 +5203,46 @@ def get_rgb_light(rgb_id: int):
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_ORIGIN: origin_info,
+        KEY_DEFAULT_TOPIC: default_topic
+    }
+    return topic, payload
+
+def get_rgbw_light(rgbw_id: int):
+    """Create configuration for Shelly RGBW light entity."""
+    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-rgbw-{rgbw_id}/config")
+
+    light_name = (
+        device_config[f"rgbw:{rgbw_id}"][ATTR_NAME] or f"RGBW light {rgbw_id}"
+    ).replace("'", "_")
+    payload = {
+        KEY_SCHEMA: "basic",
+        KEY_NAME: light_name,
+        KEY_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true}}}}",
+        KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:false}}}}",
+        KEY_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
+        KEY_STATE_VALUE_TEMPLATE: "{%if value_json.output%}on{%else%}off{%endif%}",
+        KEY_RGBW_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_RGBW_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}],^white^:{{{{white}}}}}}}}",
+        KEY_RGBW_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
+        KEY_RGBW_VALUE_TEMPLATE: "{{value_json.rgb[0]}},{{value_json.rgb[1]}},{{value_json.rgb[2]}},{{value_json.white}}",
+        KEY_BRIGHTNESS_COMMAND_TOPIC: TOPIC_RPC,
+        KEY_BRIGHTNESS_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^brightness^:{{{{value}}}}}}}}",
+        KEY_BRIGHTNESS_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
+        KEY_BRIGHTNESS_VALUE_TEMPLATE: "{{value_json.brightness}}",
+        KEY_BRIGHTNESS_SCALE: 100,
+        # KEY_RGB_COMMAND_TOPIC: TOPIC_RPC,
+        # KEY_RGB_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}]}}}}",
+        # KEY_RGB_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
+        # KEY_RGB_VALUE_TEMPLATE: "{{ value_json.rgb | join(^,^) }}",
+        KEY_AVAILABILITY: availability,
+        KEY_UNIQUE_ID: f"{device_id}-rgbw-{rgbw_id}".lower(),
+        KEY_QOS: qos,
+        KEY_DEVICE: device_info,
+        KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
+        # KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
+        # KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if white is defined%}},^white^:{{{{white}}}}{{%endif%}}{{%if blue is defined and green is defined and red is defined%}},^rgb^:{{{{[red,green,blue]}}}}{{%elif blue is defined and green is defined%}},^rgb^:{{{{[0,green,blue]}}}}{{%elif red is defined and green is defined%}},^rgb^:{{{{[red,green,0]}}}}{{%elif blue is defined and red is defined%}},^rgb^:{{{{[red,0,blue]}}}}{{%elif blue is defined%}},^rgb^:{{{{[0,0,blue]}}}}{{%elif green is defined%}},^rgb^:{{{{[0,green,0]}}}}{{%elif red is defined%}},^rgb^:{{{{[red,0,0]}}}}{{%endif%}}}}}}"
     }
     return topic, payload
 
@@ -5201,6 +5306,7 @@ def get_sensor(
     relay_id=None,
     light_id=None,
     rgb_id=None,
+    rgbw_id=None,
     cct_id=None,
     rgbcct_id=None,
     cover_id=None,
@@ -5236,6 +5342,10 @@ def get_sensor(
     elif rgb_id is not None:
         topic = encode_config_topic(
             f"{disc_prefix}/sensor/{device_id}-rgb-{rgb_id}-{sensor}/config"
+        )
+    elif rgbw_id is not None:
+        topic = encode_config_topic(
+            f"{disc_prefix}/sensor/{device_id}-rgbw-{rgbw_id}-{sensor}/config"
         )
     elif cct_id is not None:
         topic = encode_config_topic(
@@ -5276,6 +5386,9 @@ def get_sensor(
     if profile == ATTR_RGB and rgb_id is None:
         return topic, ""
 
+    if profile == ATTR_RGBW and rgbw_id is None:
+        return topic, ""
+
     if profile == ATTR_COVER and cover_id is None:
         return topic, ""
 
@@ -5307,6 +5420,12 @@ def get_sensor(
         ).replace("'", "_")
         unique_id = f"{device_id}-rgb-{rgb_id}-{sensor}".lower()
         sensor_name = f"{rgb_name} {description[KEY_NAME]}"
+    elif rgbw_id is not None:
+        rgbw_name = (
+            device_config[f"rgbw:{rgbw_id}"].get(ATTR_NAME, {}) or f"RGBW light {rgbw_id}"
+        ).replace("'", "_")
+        unique_id = f"{device_id}-rgbw-{rgbw_id}-{sensor}".lower()
+        sensor_name = f"{rgbw_name} {description[KEY_NAME]}"
     elif cct_id is not None:
         cct_name = (
             device_config[f"cct:{cct_id}"].get(ATTR_NAME, {}) or f"CCT light {cct_id}"
@@ -5391,6 +5510,8 @@ def get_sensor(
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=light_id)
     elif rgb_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgb_id)
+    elif rgbw_id is not None and description[KEY_STATE_TOPIC]:
+        payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=rgbw_id)
     elif cct_id is not None and description[KEY_STATE_TOPIC]:
         payload[KEY_STATE_TOPIC] = description[KEY_STATE_TOPIC].format(id=cct_id)
     elif rgbcct_id is not None and description[KEY_STATE_TOPIC]:
@@ -6076,6 +6197,16 @@ def configure_device():
             )
             config[topic] = payload
 
+    for rgbw_id in range(rgbw_lights):
+        topic, payload = get_rgbw_light(rgbw_id)
+        config[topic] = payload
+
+        for sensor, description in rgbw_sensors.items():
+            topic, payload = get_sensor(
+                sensor, description, rgbw_id=rgbw_id, profile=profile
+            )
+            config[topic] = payload
+
     for rgbcct_id in range(rgbcct_lights):
         topic, payload = get_rgbcct_light(rgbcct_id)
         config[topic] = payload
@@ -6722,6 +6853,9 @@ else:
     rgb_lights = get_component_number(ATTR_RGB, device_config)
     rgb_sensors = SUPPORTED_MODELS[model].get(ATTR_RGB_SENSORS, {})
 
+    rgbw_lights = get_component_number(ATTR_RGBW, device_config)
+    rgbw_sensors = SUPPORTED_MODELS[model].get(ATTR_RGBW_SENSORS, {})
+
     rgbcct_lights = get_component_number(ATTR_RGBCCT, device_config)
     rgbcct_sensors = SUPPORTED_MODELS[model].get(ATTR_RGBCCT_SENSORS, {})
 
@@ -6739,7 +6873,8 @@ else:
     valves = SUPPORTED_MODELS[model].get(ATTR_VALVES, {})
 
     config_data = configure_device()
-
+logger.info("Reached end of script")
 if config_data:
     for config_topic, config_payload in config_data.items():
+        logger.warning(f"Publishing on {config_topic}: {config_payload}")
         mqtt_publish(config_topic, config_payload)
