@@ -6869,8 +6869,7 @@ else:
     valves = SUPPORTED_MODELS[model].get(ATTR_VALVES, {})
 
     config_data = configure_device()
-logger.info("Reached end of script")
+
 if config_data:
     for config_topic, config_payload in config_data.items():
-        logger.warning(f"Publishing on {config_topic}: {config_payload}")
         mqtt_publish(config_topic, config_payload)
