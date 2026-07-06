@@ -5203,13 +5203,16 @@ def get_rgb_light(rgb_id: int):
         KEY_QOS: qos,
         KEY_DEVICE: device_info,
         KEY_ORIGIN: origin_info,
-        KEY_DEFAULT_TOPIC: default_topic
+        KEY_DEFAULT_TOPIC: default_topic,
     }
     return topic, payload
 
+
 def get_rgbw_light(rgbw_id: int):
     """Create configuration for Shelly RGBW light entity."""
-    topic = encode_config_topic(f"{disc_prefix}/light/{device_id}-rgbw-{rgbw_id}/config")
+    topic = encode_config_topic(
+        f"{disc_prefix}/light/{device_id}-rgbw-{rgbw_id}/config"
+    )
 
     light_name = (
         device_config[f"rgbw:{rgbw_id}"][ATTR_NAME] or f"RGBW light {rgbw_id}"
@@ -5221,7 +5224,7 @@ def get_rgbw_light(rgbw_id: int):
         KEY_PAYLOAD_ON: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true}}}}",
         KEY_PAYLOAD_OFF: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:false}}}}",
         KEY_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
-        KEY_STATE_VALUE_TEMPLATE: f"{{{{^{{\\^id\\^:1,\\^src\\^:\\^{source_topic}\\^,\\^method\\^:\\^RGBW.Set\\^,\\^params\\^:{{\\^id\\^:{rgbw_id},\\^on\\^:true}}}}^ if value_json.output else ^{{\\^id\\^:1,\\^src\\^:\\^{source_topic}\\^,\\^method\\^:\\^RGBW.Set\\^,\\^params\\^:{{\\^id\\^:{rgbw_id},\\^on\\^:false}}}}^ }}}}",  
+        KEY_STATE_VALUE_TEMPLATE: f"{{{{^{{\\^id\\^:1,\\^src\\^:\\^{source_topic}\\^,\\^method\\^:\\^RGBW.Set\\^,\\^params\\^:{{\\^id\\^:{rgbw_id},\\^on\\^:true}}}}^ if value_json.output else ^{{\\^id\\^:1,\\^src\\^:\\^{source_topic}\\^,\\^method\\^:\\^RGBW.Set\\^,\\^params\\^:{{\\^id\\^:{rgbw_id},\\^on\\^:false}}}}^ }}}}",
         KEY_RGBW_COMMAND_TOPIC: TOPIC_RPC,
         KEY_RGBW_COMMAND_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true,^rgb^:[{{{{red}}}},{{{{green}}}},{{{{blue}}}}],^white^:{{{{white}}}}}}}}",
         KEY_RGBW_STATE_TOPIC: TOPIC_STATUS_RGBW.format(id=rgbw_id),
@@ -5238,7 +5241,7 @@ def get_rgbw_light(rgbw_id: int):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
         KEY_COMMAND_OFF_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:false}}{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}}}",
-        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if white is defined%}},^white^:{{{{white}}}}{{%endif%}}{{%if blue is defined and green is defined and red is defined%}},^rgb^:{{{{[red,green,blue]}}}}{{%elif blue is defined and green is defined%}},^rgb^:{{{{[0,green,blue]}}}}{{%elif red is defined and green is defined%}},^rgb^:{{{{[red,green,0]}}}}{{%elif blue is defined and red is defined%}},^rgb^:{{{{[red,0,blue]}}}}{{%elif blue is defined%}},^rgb^:{{{{[0,0,blue]}}}}{{%elif green is defined%}},^rgb^:{{{{[0,green,0]}}}}{{%elif red is defined%}},^rgb^:{{{{[red,0,0]}}}}{{%endif%}}}}}}"
+        KEY_COMMAND_ON_TEMPLATE: f"{{^id^:1,^src^:^{source_topic}^,^method^:^RGBW.Set^,^params^:{{^id^:{rgbw_id},^on^:true{{%if transition is defined%}},^transition_duration^:{{{{max(transition|int,{MIN_LIGHT_TRANSITION})}}}}{{%endif%}}{{%if brightness is defined%}},^brightness^:{{{{brightness|float|multiply(0.3922)|round}}}}{{%endif%}}{{%if white is defined%}},^white^:{{{{white}}}}{{%endif%}}{{%if blue is defined and green is defined and red is defined%}},^rgb^:{{{{[red,green,blue]}}}}{{%elif blue is defined and green is defined%}},^rgb^:{{{{[0,green,blue]}}}}{{%elif red is defined and green is defined%}},^rgb^:{{{{[red,green,0]}}}}{{%elif blue is defined and red is defined%}},^rgb^:{{{{[red,0,blue]}}}}{{%elif blue is defined%}},^rgb^:{{{{[0,0,blue]}}}}{{%elif green is defined%}},^rgb^:{{{{[0,green,0]}}}}{{%elif red is defined%}},^rgb^:{{{{[red,0,0]}}}}{{%endif%}}}}}}",
     }
     return topic, payload
 
@@ -5418,7 +5421,8 @@ def get_sensor(
         sensor_name = f"{rgb_name} {description[KEY_NAME]}"
     elif rgbw_id is not None:
         rgbw_name = (
-            device_config[f"rgbw:{rgbw_id}"].get(ATTR_NAME, {}) or f"RGBW light {rgbw_id}"
+            device_config[f"rgbw:{rgbw_id}"].get(ATTR_NAME, {})
+            or f"RGBW light {rgbw_id}"
         ).replace("'", "_")
         unique_id = f"{device_id}-rgbw-{rgbw_id}-{sensor}".lower()
         sensor_name = f"{rgbw_name} {description[KEY_NAME]}"

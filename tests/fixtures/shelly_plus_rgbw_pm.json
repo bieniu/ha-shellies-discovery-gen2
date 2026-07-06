@@ -1,0 +1,137 @@
+{
+    "id": "shellyplusrgbwpm-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": false
+            }
+        },
+        "cloud": {
+            "connected": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "input:0": {
+            "id": 0,
+            "state": null,
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "input:1": {
+            "id": 1,
+            "state": null,
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "input:2": {
+            "id": 2,
+            "state": null,
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "input:3": {
+            "id": 3,
+            "state": null,
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "mqtt": {
+            "enable": false,
+            "server": null,
+            "client_id": "shellyplusrgbwpm-aabbccddeeff",
+            "user": null,
+            "ssl_ca": null,
+            "topic_prefix": "shellyplusrgbwpm-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": false,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "plusrgbwpm": {
+            "hf_mode": true
+        },
+        "rgbw:0": {
+            "id": 0,
+            "name": null,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60,
+            "auto_off": false,
+            "auto_off_delay": 60,
+            "transition_duration": 3,
+            "min_brightness_on_toggle": 3,
+            "night_mode": {
+                "enable": false,
+                "brightness": 50,
+                "rgb": [
+                    255,
+                    255,
+                    255
+                ],
+                "white": 128,
+                "active_between": []
+            },
+            "button_fade_rate": 3,
+            "button_presets": {
+                "button_doublepush": {
+                    "brightness": 100,
+                    "rgb": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "white": 255
+                }
+            },
+            "in_mode": "dim",
+            "current_limit": 10
+        },
+        "sys": {
+            "device": {
+                "name": null,
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20260311-095900/1.7.5-g9979d16",
+                "discoverable": true,
+                "eco_mode": false,
+                "profile": "rgbw",
+                "addon_type": null
+            },
+            "location": {
+                "tz": null,
+                "lat": null,
+                "lon": null
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "time.cloudflare.com"
+            },
+            "cfg_rev": 26
+        }
+    }
+}
