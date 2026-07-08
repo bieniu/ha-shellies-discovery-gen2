@@ -148,8 +148,6 @@ def test_mqtt_prefix_with_space() -> None:
         ),
     ):
         run_script(logger=logger, data=data)
-
-
 @pytest.mark.parametrize(
     "device_fixture",
     [
@@ -163,6 +161,8 @@ def test_mqtt_prefix_with_space() -> None:
         "shelly_multicolor_bulb_gen3",
         "shelly_plus_1pm",
         "shelly_plus_1pm_scripts",
+        "shelly_pro_3em",
+        "shelly_power_strip_gen4",
         "shelly_wall_display_x1i",
         "shelly_duo_bulb_gen3",
         "topac_eve01_11r",

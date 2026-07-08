@@ -1,0 +1,113 @@
+{
+  "id": "shellypro3em-aabbccddeeff",
+  "device_config": {
+    "ble": {
+      "enable": false,
+      "rpc": {
+        "enable": true
+      }
+    },
+    "bthome": {},
+    "cloud": {
+      "enable": false,
+      "server": "iot.shelly.cloud:6012/jrpc"
+    },
+    "em:0": {
+      "blink_mode_selector": "active_energy",
+      "ct_type": "120A",
+      "id": 0,
+      "monitor_phase_sequence": false,
+      "name": null,
+      "phase_selector": "all",
+      "reverse": {}
+    },
+    "emdata:0": {},
+    "eth": {
+      "enable": false,
+      "gw": null,
+      "ip": null,
+      "ipv4mode": "dhcp",
+      "nameserver": null,
+      "netmask": null,
+      "server_mode": false
+    },
+    "modbus": {
+      "enable": true
+    },
+    "mqtt": {
+      "client_id": "shellypro3em-aabbccddeeff",
+      "enable": false,
+      "enable_control": true,
+      "enable_rpc": true,
+      "rpc_ntf": true,
+      "server": "mqtt.test.server",
+      "ssl_ca": null,
+      "status_ntf": true,
+      "topic_prefix": "shellypro3em-aabbccddeeff",
+      "use_client_cert": false,
+      "user": "iot"
+    },
+    "sys": {
+      "cfg_rev": 50,
+      "debug": {
+        "file_level": null,
+        "level": 2,
+        "mqtt": {
+          "enable": false
+        },
+        "udp": {
+          "addr": null
+        },
+        "websocket": {
+          "enable": false
+        }
+      },
+      "device": {
+        "addon_type": null,
+        "discoverable": true,
+        "eco_mode": false,
+        "fw_id": "20250804-110717/1.6.1-g8dbd358",
+        "mac": "AABBCCDDEEFF",
+        "name": "Test Name",
+        "profile": "triphase",
+        "sys_btn_toggle": true
+      },
+      "location": {
+        "lat": 22.55775,
+        "lon": 54.94637,
+        "tz": "Europe/Warsaw"
+      },
+      "rpc_udp": {
+        "dst_addr": null,
+        "listen_port": null
+      },
+      "sntp": {
+        "server": "sntp.test.server"
+      },
+      "ui_data": {}
+    },
+    "temperature:0": {
+      "id": 0,
+      "name": null,
+      "offset_C": 0.0,
+      "report_thr_C": 5.0
+    },
+    "wifi": {
+      "sta": {
+        "ssid": "Wifi-Network-Name",
+        "is_open": false,
+        "enable": true,
+        "ipv4mode": "dhcp",
+        "ip": null,
+        "netmask": null,
+        "gw": null,
+        "nameserver": null
+      }
+    },
+    "ws": {
+      "enable": false,
+      "server": null,
+      "ssl_ca": "ca.pem"
+    }
+  }
+}
