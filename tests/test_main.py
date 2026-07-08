@@ -148,6 +148,8 @@ def test_mqtt_prefix_with_space() -> None:
         ),
     ):
         run_script(logger=logger, data=data)
+
+
 @pytest.mark.parametrize(
     "device_fixture",
     [
