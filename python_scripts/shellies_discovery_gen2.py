@@ -4162,7 +4162,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
-        ATTR_USE_SUBDEVICES: True
+        ATTR_USE_SUBDEVICES: True,
     },
     MODEL_PRO_3EM_3CT63: {
         ATTR_NAME: "Shelly Pro 3EM-3CT63",
@@ -4199,7 +4199,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE: DESCRIPTION_UPDATE_FIRMWARE,
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
-        ATTR_MIN_FIRMWARE_DATE: 20241011
+        ATTR_MIN_FIRMWARE_DATE: 20241011,
     },
     MODEL_3EM_63_G3: {
         ATTR_NAME: "Shelly 3EM-63 G3",
@@ -5008,6 +5008,7 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
 
     return topic, payload
 
+
 def get_subdevice_info(subdevice_id, subdevice_name):
     """Create device_info for a subdevice."""
     device_info_subdevice = device_info.copy()
@@ -5506,8 +5507,12 @@ def get_sensor(
             payload[KEY_NAME] = description[KEY_NAME]
             payload[KEY_DEVICE] = get_subdevice_info(relay_id, switch_name)
         elif emeter_id is not None and emeter_phase is not None:
-            payload[KEY_NAME] = sensor_name[sensor_name.index(emeter_phase.upper()) + 2:].capitalize()
-            payload[KEY_DEVICE] = get_subdevice_info(emeter_id, f"Phase {emeter_phase.upper()}")
+            payload[KEY_NAME] = sensor_name[
+                sensor_name.index(emeter_phase.upper()) + 2 :
+            ].capitalize()
+            payload[KEY_DEVICE] = get_subdevice_info(
+                emeter_id, f"Phase {emeter_phase.upper()}"
+            )
 
     if availability:
         payload[KEY_AVAILABILITY] = availability
@@ -5660,7 +5665,10 @@ def get_binary_sensor(
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
-    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False) and entity_id is not None:
+    if (
+        SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False)
+        and entity_id is not None
+    ):
         payload[KEY_NAME] = description[KEY_NAME]
         payload[KEY_DEVICE] = get_subdevice_info(entity_id, name)
 
