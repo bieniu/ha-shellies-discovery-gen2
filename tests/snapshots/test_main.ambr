@@ -9889,6 +9889,1048 @@
 # name: test_device[shelly_plus_1pm_scripts][9-topic]
   'homeassistant/sensor/shellyplus1pm-aabbccddeeff-0-current/config'
 # ---
+# name: test_device[shelly_plus_rgbw_pm][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20260621',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][0-topic]
+  'shellyplusrgbwpm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        let installedVersion = null;
+        let statusTopic = null;
+        
+        function onStatusReceived(result, error_code) {
+          try {
+            if (error_code !== 0 || !result) {
+              return;
+            }
+            result.sys.installed_version = installedVersion;
+            MQTT.publish(statusTopic, JSON.stringify(result));
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function sendDeviceStatus() {
+          if (!MQTT.isConnected()) {
+            return;
+          }
+          Shelly.call("Shelly.GetStatus", {}, onStatusReceived);
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          statusTopic = topicPrefix + "/status/rpc";
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][1-topic]
+  'shellyplusrgbwpm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+    ]),
+    'name': 'Button 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-0',
+    'val_tpl': '{%if value_json.params.events.0.id==0%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][10-topic]
+  'homeassistant/event/shellyplusrgbwpm-aabbccddeeff-input-0/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+    ]),
+    'name': 'Button 1',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-1',
+    'val_tpl': '{%if value_json.params.events.0.id==1%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][11-topic]
+  'homeassistant/event/shellyplusrgbwpm-aabbccddeeff-input-1/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+    ]),
+    'name': 'Button 2',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-2',
+    'val_tpl': '{%if value_json.params.events.0.id==2%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][12-topic]
+  'homeassistant/event/shellyplusrgbwpm-aabbccddeeff-input-2/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'button',
+    'evt_typ': list([
+    ]),
+    'name': 'Button 3',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~events/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-3',
+    'val_tpl': '{%if value_json.params.events.0.id==3%}{{{"event_type":value_json.params.events.0.event}|to_json}}{%endif%}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][13-topic]
+  'homeassistant/event/shellyplusrgbwpm-aabbccddeeff-input-3/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-restart',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][14-topic]
+  'homeassistant/button/shellyplusrgbwpm-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plus RGBW PM AABBCCDDEEFF Firmware',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][15-topic]
+  'homeassistant/update/shellyplusrgbwpm-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Shelly Plus RGBW PM AABBCCDDEEFF Firmware',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][16-topic]
+  'homeassistant/update/shellyplusrgbwpm-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][17-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][17-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][18-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][18-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][19-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][19-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][2-topic]
+  'shellyplusrgbwpm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][20-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][20-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][21-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][21-topic]
+  'homeassistant/binary_sensor/shellyplusrgbwpm-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][3-topic]
+  'shellyplusrgbwpm-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'bri_cmd_t': '~rpc',
+    'bri_cmd_tpl': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"brightness":{{value}}}}',
+    'bri_scl': 100,
+    'bri_stat_t': '~status/rgbw:0',
+    'bri_val_tpl': '{{value_json.brightness}}',
+    'cmd_off_tpl': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"on":false}{%if transition is defined%},"transition_duration":{{max(transition|int,1)}}{%endif%}}',
+    'cmd_on_tpl': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"on":true{%if transition is defined%},"transition_duration":{{max(transition|int,1)}}{%endif%}{%if brightness is defined%},"brightness":{{brightness|float|multiply(0.3922)|round}}{%endif%}{%if white is defined%},"white":{{white}}{%endif%}{%if blue is defined and green is defined and red is defined%},"rgb":{{[red,green,blue]}}{%elif blue is defined and green is defined%},"rgb":{{[0,green,blue]}}{%elif red is defined and green is defined%},"rgb":{{[red,green,0]}}{%elif blue is defined and red is defined%},"rgb":{{[red,0,blue]}}{%elif blue is defined%},"rgb":{{[0,0,blue]}}{%elif green is defined%},"rgb":{{[0,green,0]}}{%elif red is defined%},"rgb":{{[red,0,0]}}{%endif%}}}',
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'name': 'RGBW light 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"on":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"on":true}}',
+    'qos': 0,
+    'rgbw_cmd_t': '~rpc',
+    'rgbw_cmd_tpl': '{"id":1,"src":"home-assistant","method":"RGBW.Set","params":{"id":0,"on":true,"rgb":[{{red}},{{green}},{{blue}}],"white":{{white}}}}',
+    'rgbw_stat_t': '~status/rgbw:0',
+    'rgbw_val_tpl': '{{value_json.rgb[0]}},{{value_json.rgb[1]}},{{value_json.rgb[2]}},{{value_json.white}}',
+    'schema': 'basic',
+    'stat_t': '~status/rgbw:0',
+    'stat_val_tpl': '{{"{\\"id\\":1,\\"src\\":\\"home-assistant\\",\\"method\\":\\"RGBW.Set\\",\\"params\\":{\\"id\\":0,\\"on\\":true}}" if value_json.output else "{\\"id\\":1,\\"src\\":\\"home-assistant\\",\\"method\\":\\"RGBW.Set\\",\\"params\\":{\\"id\\":0,\\"on\\":false}}" }}',
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][4-topic]
+  'homeassistant/light/shellyplusrgbwpm-aabbccddeeff-rgbw-0/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'RGBW light 0 Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbw:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][5-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-current/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'RGBW light 0 Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/rgbw:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][6-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-energy/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'RGBW light 0 Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbw:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][7-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-power/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'RGBW light 0 Temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbw:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0-temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.temperature.tC}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][8-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-temperature/config'
+# ---
+# name: test_device[shelly_plus_rgbw_pm][9-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellyplusrgbwpm-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Plus RGBW PM',
+      'mdl_id': 'SNDC-0D4P10WW',
+      'mf': 'Shelly',
+      'name': 'Shelly Plus RGBW PM AABBCCDDEEFF',
+      'sw': '20260311-095900/1.7.5-g9979d16',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'RGBW light 0 Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rgbw:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-rgbw-0-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellyplusrgbwpm-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_plus_rgbw_pm][9-topic]
+  'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-voltage/config'
+# ---
 # name: test_device[shelly_wall_display_x1i][0-payload]
   dict({
     'id': 1,

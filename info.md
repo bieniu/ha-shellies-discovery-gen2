@@ -43,7 +43,7 @@ You need to manually add the `shellies_announce_gen2`, `shellies_discovery_gen2`
 - Shelly Plus Plug UK
 - Shelly Plus Plug US
 - Shelly Plus PM Mini
-- Shelly Plus RGBW PM (RGBW profile is not supported)
+- Shelly Plus RGBW PM
 - Shelly Plus Smoke
 - Shelly Plus Uni
 - Shelly Plus Wall Dimmer

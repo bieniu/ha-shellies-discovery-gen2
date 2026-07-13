@@ -169,6 +169,7 @@ def test_mqtt_prefix_with_space() -> None:
         "virtual_components",
         "linkedgo_st1820",
         "linkedgo_st1820_components",
+        "shelly_plus_rgbw_pm",
     ],
 )
 def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
