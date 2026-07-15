@@ -2313,6 +2313,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241029,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_EM_MINI_G4: {
         ATTR_NAME: "Shelly EM Mini Gen4",
@@ -3099,6 +3100,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2L_G3: {
         ATTR_NAME: "Shelly 2L Gen3",
@@ -3129,6 +3131,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20250319,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2PM_G3: {
         ATTR_NAME: "Shelly 2PM Gen3",
@@ -3180,6 +3183,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240712,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2PM_G4: {
         ATTR_NAME: "Shelly 2PM Gen4",
@@ -3231,6 +3235,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241028,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PLUS_HT: {
         ATTR_BATTERY_POWERED: True,
@@ -3587,6 +3592,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PLUS_RGBW_PM: {
         ATTR_NAME: "Shelly Plus RGBW PM",
@@ -3907,6 +3913,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
@@ -3958,6 +3965,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3: {
         ATTR_NAME: "Shelly Pro 3",
@@ -3990,6 +3998,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_DIMMER_1PM: {
         ATTR_NAME: "Shelly Pro Dimmer 1PM",
@@ -4125,6 +4134,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM: {
         ATTR_NAME: "Shelly Pro 3EM",
@@ -4200,6 +4210,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241011,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_3EM_63_G3: {
         ATTR_NAME: "Shelly 3EM-63 G3",
@@ -4237,6 +4248,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20250520,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_3CT63_MONOPHASE: {
         ATTR_NAME: "Shelly Pro 3EM-3CT63",
@@ -4274,6 +4286,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241011,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_400: {
         ATTR_NAME: "Shelly Pro 3EM-400",
@@ -4311,6 +4324,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_MONOPHASE: {
         ATTR_NAME: "Shelly Pro 3EM",
@@ -4341,6 +4355,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
@@ -4383,6 +4398,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_RGBWW_PM: {
         ATTR_NAME: "Shelly Pro RGBWW PM",
@@ -4531,6 +4547,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240520,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_FLOOD_G4: {
         ATTR_BATTERY_POWERED: True,
@@ -5016,7 +5033,6 @@ def get_subdevice_info(subdevice_id, subdevice_name):
     device_info_subdevice[KEY_IDENTIFIERS] = f"{mac}-{subdevice_id}".lower()
     device_info_subdevice[KEY_NAME] = subdevice_name
     del device_info_subdevice[KEY_CONNECTIONS]
-    del device_info_subdevice[KEY_CONFIGURATION_URL]
     return device_info_subdevice
 
 
@@ -5103,6 +5119,10 @@ def get_relay_light(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        payload[KEY_DEVICE] = get_subdevice_info(relay_id, relay_name)
+
     return topic, payload
 
 
@@ -5129,6 +5149,10 @@ def get_relay_fan(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        payload[KEY_DEVICE] = get_subdevice_info(relay_id, relay_name)
+
     return topic, payload
 
 
