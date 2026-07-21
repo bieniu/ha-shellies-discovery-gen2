@@ -10931,6 +10931,4477 @@
 # name: test_device[shelly_plus_rgbw_pm][9-topic]
   'homeassistant/sensor/shellyplusrgbwpm-aabbccddeeff-rgbw-0-voltage/config'
 # ---
+# name: test_device[shelly_power_strip_gen4][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20260621',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][0-topic]
+  'shellypstripg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_power_strip_gen4][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        let installedVersion = null;
+        let statusTopic = null;
+        
+        function onStatusReceived(result, error_code) {
+          try {
+            if (error_code !== 0 || !result) {
+              return;
+            }
+            result.sys.installed_version = installedVersion;
+            MQTT.publish(statusTopic, JSON.stringify(result));
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function sendDeviceStatus() {
+          if (!MQTT.isConnected()) {
+            return;
+          }
+          Shelly.call("Shelly.GetStatus", {}, onStatusReceived);
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          statusTopic = topicPrefix + "/status/rpc";
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][1-topic]
+  'shellypstripg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_power_strip_gen4][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][10-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-power/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-power_factor',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.pf*100}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][11-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-power_factor/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][12-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-returned_energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][13-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-voltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overpower',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-overpower',
+    'val_tpl': '{%if "overpower" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][14-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-0-overpower/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][15-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-0-overtemp/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overvoltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-overvoltage',
+    'val_tpl': '{%if "overvoltage" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][16-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-0-overvoltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][17-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'name': 'Switch 1 name',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":1,"on":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":1,"on":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1',
+    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][17-topic]
+  'homeassistant/switch/shellypstripg4-aabbccddeeff-1/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][2-topic]
+  'shellypstripg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_power_strip_gen4][20-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][20-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-current/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][21-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][21-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][22-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][22-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-frequency/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][23-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][23-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-power/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][24-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-power_factor',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.pf*100}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][24-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-power_factor/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][25-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][25-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-returned_energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][26-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][26-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-1-voltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][27-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overpower',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-overpower',
+    'val_tpl': '{%if "overpower" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][27-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-1-overpower/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][28-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][28-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-1-overtemp/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][29-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 1 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overvoltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:1',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-1-overvoltage',
+    'val_tpl': '{%if "overvoltage" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][29-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-1-overvoltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][3-topic]
+  'shellypstripg4-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_power_strip_gen4][31-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_off_tpl': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":2,"on":false}}',
+    'cmd_on_tpl': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":2,"on":true}}',
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'name': 'Relay 2',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'schema': 'template',
+    'stat_t': '~status/switch:2',
+    'stat_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][31-topic]
+  'homeassistant/light/shellypstripg4-aabbccddeeff-2/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][33-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][33-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-current/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][34-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][34-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][35-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:2',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][35-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-frequency/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][36-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][36-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-power/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][37-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:2',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-power_factor',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.pf*100}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][37-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-power_factor/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][38-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][38-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-returned_energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][39-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][39-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-2-voltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'name': 'Relay 0',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":0,"on":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0',
+    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][4-topic]
+  'homeassistant/switch/shellypstripg4-aabbccddeeff-0/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][40-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overpower',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:2',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-overpower',
+    'val_tpl': '{%if "overpower" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][40-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-2-overpower/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][41-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:2',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][41-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-2-overtemp/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][42-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 2',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overvoltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:2',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-2-overvoltage',
+    'val_tpl': '{%if "overvoltage" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][42-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-2-overvoltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][43-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'name': 'Switch 3 name',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":3,"on":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Switch.Set","params":{"id":3,"on":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3',
+    'val_tpl': '{%if value_json.output%}on{%else%}off{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][43-topic]
+  'homeassistant/switch/shellypstripg4-aabbccddeeff-3/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][46-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:3',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][46-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-current/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][47-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:3',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][47-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][48-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][48-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-frequency/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][49-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:3',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.apower}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][49-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-power/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][50-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-power_factor',
+    'unit_of_meas': '%',
+    'val_tpl': '{{value_json.pf*100}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][50-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-power_factor/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][51-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'false',
+    'name': 'Returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:3',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.ret_aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][51-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-returned_energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][52-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:3',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][52-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-3-voltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][53-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overpower',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-overpower',
+    'val_tpl': '{%if "overpower" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][53-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-3-overpower/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][54-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Overtemperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-overtemp',
+    'val_tpl': '{%if "overtemp" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][54-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-3-overtemp/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][55-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Switch 3 name',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'problem',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Overvoltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/switch:3',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-3-overvoltage',
+    'val_tpl': '{%if "overvoltage" in value_json.get("errors",[])%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][55-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-3-overvoltage/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][56-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-restart',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][56-topic]
+  'homeassistant/button/shellypstripg4-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][57-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][57-topic]
+  'homeassistant/update/shellypstripg4-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][58-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][58-topic]
+  'homeassistant/update/shellypstripg4-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][59-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][59-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][60-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][60-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][61-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][61-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][62-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][62-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][63-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-114929/gc6a6e5c',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][63-topic]
+  'homeassistant/binary_sensor/shellypstripg4-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][7-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-current/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/switch:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.aenergy.total}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][8-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-energy/config'
+# ---
+# name: test_device[shelly_power_strip_gen4][9-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypstripg4-aabbccddeeff.local/',
+      'hw': 'gen4',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Power Strip Gen4',
+      'mdl_id': 'S4PL-00416EU',
+      'mf': 'Shelly',
+      'name': 'Relay 0',
+      'sw': '20250804-114929/gc6a6e5c',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/switch:0',
+    'uniq_id': 'shellypstripg4-aabbccddeeff-0-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypstripg4-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_power_strip_gen4][9-topic]
+  'homeassistant/sensor/shellypstripg4-aabbccddeeff-0-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20260621',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em][0-topic]
+  'shellypro3em-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        let installedVersion = null;
+        let statusTopic = null;
+        
+        function onStatusReceived(result, error_code) {
+          try {
+            if (error_code !== 0 || !result) {
+              return;
+            }
+            result.sys.installed_version = installedVersion;
+            MQTT.publish(statusTopic, JSON.stringify(result));
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function sendDeviceStatus() {
+          if (!MQTT.isConnected()) {
+            return;
+          }
+          Shelly.call("Shelly.GetStatus", {}, onStatusReceived);
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          statusTopic = topicPrefix + "/status/rpc";
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em][1-topic]
+  'shellypro3em-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.a_voltage}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][10-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.a_freq}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][11-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.b_act_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][12-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'Apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.b_aprt_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][13-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.b_current}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][14-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-current/config'
+# ---
+# name: test_device[shelly_pro_3em][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-power_factor',
+    'val_tpl': '{{value_json.b_pf}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][15-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.b_total_act_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][16-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][17-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.b_total_act_ret_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][17-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-total_active_returned_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][18-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.b_voltage}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][18-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em][19-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase B',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-b-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.b_freq}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][19-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-b-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em][2-topic]
+  'shellypro3em-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em][20-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.c_act_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][20-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em][21-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'Apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.c_aprt_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][21-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em][22-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.c_current}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][22-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-current/config'
+# ---
+# name: test_device[shelly_pro_3em][23-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-power_factor',
+    'val_tpl': '{{value_json.c_pf}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][23-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em][24-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.c_total_act_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][24-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][25-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.c_total_act_ret_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][25-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-total_active_returned_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][26-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'Voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.c_voltage}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][26-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em][27-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase C',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'Frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-c-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.c_freq}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][27-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-c-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em][28-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellypro3em-aabbccddeeff-restart',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][28-topic]
+  'homeassistant/button/shellypro3em-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_pro_3em][29-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypro3em-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][29-topic]
+  'homeassistant/update/shellypro3em-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_pro_3em][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em][3-topic]
+  'shellypro3em-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em][30-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypro3em-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][30-topic]
+  'homeassistant/update/shellypro3em-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_pro_3em][31-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'Ethernet IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-eth_ip',
+    'val_tpl': '{{value_json.eth.ip}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][31-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-eth_ip/config'
+# ---
+# name: test_device[shelly_pro_3em][32-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][32-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_pro_3em][33-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][33-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_pro_3em][34-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][34-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_pro_3em][35-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.wifi.rssi}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][35-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_pro_3em][36-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'N current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-n_current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.n_current}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][36-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-n_current/config'
+# ---
+# name: test_device[shelly_pro_3em][37-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Device temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-device_temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json["temperature:0"].tC}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][37-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-device_temperature/config'
+# ---
+# name: test_device[shelly_pro_3em][38-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Total current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-total_current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.total_current}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][38-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-total_current/config'
+# ---
+# name: test_device[shelly_pro_3em][39-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Total active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-total_active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.total_act_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][39-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-total_active_power/config'
+# ---
+# name: test_device[shelly_pro_3em][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'Active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.a_act_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][4-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em][40-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'Total apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-total_apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.total_aprt_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][40-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-total_apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em][41-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][41-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][42-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_ret}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][42-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-total_active_returned_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][43-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][43-topic]
+  'homeassistant/binary_sensor/shellypro3em-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_pro_3em][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'Apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.a_aprt_power}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][5-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'Current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.a_current}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][6-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-current/config'
+# ---
+# name: test_device[shelly_pro_3em][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'Power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em:0',
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-power_factor',
+    'val_tpl': '{{value_json.a_pf}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][7-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.a_total_act_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][8-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em][9-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cu': 'http://shellypro3em-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'mdl': 'Shelly Pro 3EM',
+      'mdl_id': 'SPEM-003CEBEU',
+      'mf': 'Shelly',
+      'name': 'Phase A',
+      'sw': '20250804-110717/1.6.1-g8dbd358',
+      'via_device': 'aa:bb:cc:dd:ee:ff',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'Total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/emdata:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em-aabbccddeeff-0-a-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.a_total_act_ret_energy}}',
+    '~': 'shellypro3em-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em][9-topic]
+  'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-total_active_returned_energy/config'
+# ---
 # name: test_device[shelly_wall_display_x1i][0-payload]
   dict({
     'id': 1,

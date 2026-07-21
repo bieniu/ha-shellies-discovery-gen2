@@ -55,6 +55,7 @@ ATTR_HUMIDITY_MIN = "humidity_min"
 ATTR_TEMPERATURE_STEP = "temperature_step"
 ATTR_THERMOSTATS = "thermostats"
 ATTR_UPDATES = "updates"
+ATTR_USE_SUBDEVICES = "use_subdevices"
 ATTR_VALVES = "valves"
 ATTR_WAKEUP_PERIOD = "wakeup_period"
 
@@ -2312,6 +2313,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241029,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_EM_MINI_G4: {
         ATTR_NAME: "Shelly EM Mini Gen4",
@@ -3098,6 +3100,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2L_G3: {
         ATTR_NAME: "Shelly 2L Gen3",
@@ -3128,6 +3131,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20250319,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2PM_G3: {
         ATTR_NAME: "Shelly 2PM Gen3",
@@ -3179,6 +3183,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240712,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_2PM_G4: {
         ATTR_NAME: "Shelly 2PM Gen4",
@@ -3230,6 +3235,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241028,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PLUS_HT: {
         ATTR_BATTERY_POWERED: True,
@@ -3586,6 +3592,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PLUS_RGBW_PM: {
         ATTR_NAME: "Shelly Plus RGBW PM",
@@ -3743,6 +3750,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20250804,
+        ATTR_USE_SUBDEVICES: True,
     },
     MODEL_PLUG_US_G4: {
         ATTR_NAME: "Shelly Plug US Gen4",
@@ -3905,6 +3913,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_2PM: {
         ATTR_NAME: "Shelly Pro 2PM",
@@ -3956,6 +3965,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3: {
         ATTR_NAME: "Shelly Pro 3",
@@ -3988,6 +3998,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_DIMMER_1PM: {
         ATTR_NAME: "Shelly Pro Dimmer 1PM",
@@ -4123,6 +4134,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM: {
         ATTR_NAME: "Shelly Pro 3EM",
@@ -4160,6 +4172,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True,
     },
     MODEL_PRO_3EM_3CT63: {
         ATTR_NAME: "Shelly Pro 3EM-3CT63",
@@ -4197,6 +4210,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241011,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_3EM_63_G3: {
         ATTR_NAME: "Shelly 3EM-63 G3",
@@ -4234,6 +4248,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20250520,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_3CT63_MONOPHASE: {
         ATTR_NAME: "Shelly Pro 3EM-3CT63",
@@ -4271,6 +4286,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20241011,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_400: {
         ATTR_NAME: "Shelly Pro 3EM-400",
@@ -4308,6 +4324,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_3EM_MONOPHASE: {
         ATTR_NAME: "Shelly Pro 3EM",
@@ -4338,6 +4355,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20231219,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_4PM: {
         ATTR_NAME: "Shelly Pro 4PM",
@@ -4380,6 +4398,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20230803,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_PRO_RGBWW_PM: {
         ATTR_NAME: "Shelly Pro RGBWW PM",
@@ -4528,6 +4547,7 @@ SUPPORTED_MODELS = {
             UPDATE_FIRMWARE_BETA: DESCRIPTION_UPDATE_FIRMWARE_BETA,
         },
         ATTR_MIN_FIRMWARE_DATE: 20240520,
+        ATTR_USE_SUBDEVICES: True
     },
     MODEL_FLOOD_G4: {
         ATTR_BATTERY_POWERED: True,
@@ -5006,6 +5026,16 @@ def get_blu_climate(thermostat_id: str, description) -> tuple:
     return topic, payload
 
 
+def get_subdevice_info(subdevice_id, subdevice_name):
+    """Create device_info for a subdevice."""
+    device_info_subdevice = device_info.copy()
+    device_info_subdevice[KEY_VIA_DEVICE] = mac
+    device_info_subdevice[KEY_IDENTIFIERS] = f"{mac}-{subdevice_id}".lower()
+    device_info_subdevice[KEY_NAME] = subdevice_name
+    del device_info_subdevice[KEY_CONNECTIONS]
+    return device_info_subdevice
+
+
 def get_switch(relay_id, relay_type, profile, description={}):
     """Create configuration for Shelly switch entity."""
     topic = encode_config_topic(f"{disc_prefix}/switch/{device_id}-{relay_id}/config")
@@ -5052,6 +5082,9 @@ def get_switch(relay_id, relay_type, profile, description={}):
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        payload[KEY_DEVICE] = get_subdevice_info(relay_id, relay_name)
+
     if entity_category := description.get(KEY_ENTITY_CATEGORY):
         payload[KEY_ENTITY_CATEGORY] = entity_category
 
@@ -5086,6 +5119,10 @@ def get_relay_light(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        payload[KEY_DEVICE] = get_subdevice_info(relay_id, relay_name)
+
     return topic, payload
 
 
@@ -5112,6 +5149,10 @@ def get_relay_fan(relay_id, relay_type, profile):
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        payload[KEY_DEVICE] = get_subdevice_info(relay_id, relay_name)
+
     return topic, payload
 
 
@@ -5481,6 +5522,22 @@ def get_sensor(
         KEY_DEFAULT_TOPIC: default_topic,
     }
 
+    if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
+        if relay_id is not None:
+            switch_name = (
+                device_config[f"switch:{relay_id}"].get(ATTR_NAME, {})
+                or f"Relay {relay_id}"
+            ).replace("'", "_")
+            payload[KEY_NAME] = description[KEY_NAME]
+            payload[KEY_DEVICE] = get_subdevice_info(relay_id, switch_name)
+        elif emeter_id is not None and emeter_phase is not None:
+            payload[KEY_NAME] = sensor_name[
+                sensor_name.index(emeter_phase.upper()) + 2 :
+            ].capitalize()
+            payload[KEY_DEVICE] = get_subdevice_info(
+                emeter_id, f"Phase {emeter_phase.upper()}"
+            )
+
     if availability:
         payload[KEY_AVAILABILITY] = availability
 
@@ -5631,6 +5688,13 @@ def get_binary_sensor(
         KEY_ORIGIN: origin_info,
         KEY_DEFAULT_TOPIC: default_topic,
     }
+
+    if (
+        SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False)
+        and entity_id is not None
+    ):
+        payload[KEY_NAME] = description[KEY_NAME]
+        payload[KEY_DEVICE] = get_subdevice_info(entity_id, name)
 
     if availability:
         payload[KEY_AVAILABILITY] = availability
