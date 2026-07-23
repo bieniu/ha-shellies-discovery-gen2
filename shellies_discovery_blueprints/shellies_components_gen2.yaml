@@ -1,0 +1,87 @@
+blueprint:
+  name: Shellies Components Gen2
+  description: >
+    Fetches all components from a Shelly Gen2/Gen3/Gen4 device using paginated
+    `Shelly.GetComponents` RPC calls and triggers MQTT discovery via the
+    `shellies_discovery_gen2` python script.
+
+    This script is called by the `shellies_announce_gen2` automation for each device,
+    but can also be called manually when a device is in setup mode (e.g. battery-powered
+    devices like Plus H&T).
+
+    **Fields:**
+    - `device_topic` – MQTT topic prefix for the device (required).
+    - `discovery_prefix` – MQTT discovery prefix (optional, default: `homeassistant`).
+
+    **Requirements:**
+    - MQTT integration must be configured.
+    - The `shellies_discovery_gen2` python script must be installed.
+  domain: script
+  author: bieniu
+  homeassistant:
+    min_version: "2024.9.0"
+
+mode: queued
+max: 50
+
+fields:
+  device_topic:
+    description: MQTT topic prefix for the device, e.g. shellies/shelly-1-gen4-abc123
+    required: true
+    selector:
+      text:
+  discovery_prefix:
+    description: MQTT discovery prefix
+    default: homeassistant
+    selector:
+      text:
+
+sequence:
+  - variables:
+      src: "shellies_discovery/{{ device_topic.split('/') | last }}"
+      response_topic: "shellies_discovery/{{ device_topic.split('/') | last }}/rpc"
+      all_pages: []
+      offset: 0
+      total: 1
+      device_id: "{{ device_topic.split('/') | last }}"
+  - repeat:
+      while:
+        - condition: template
+          value_template: "{{ offset < total }}"
+      sequence:
+        - action: mqtt.publish
+          data:
+            topic: "{{ device_topic }}/rpc"
+            payload: "{{ {'id': 1, 'src': src, 'method': 'Shelly.GetComponents', 'params': {'include': ['config'], 'offset': offset}} | to_json }}"
+        - wait_for_trigger:
+            - trigger: mqtt
+              topic: "{{ response_topic }}"
+          timeout: "00:00:30"
+        - if:
+            - condition: template
+              value_template: "{{ wait.trigger is none }}"
+          then:
+            - stop: "Timeout waiting for Shelly.GetComponents from {{ device_topic }}"
+        - variables:
+            page: "{{ wait.trigger.payload_json.result }}"
+            device_id: "{{ wait.trigger.payload_json.src }}"
+        - variables:
+            all_pages: "{{ all_pages + [page] }}"
+            offset: "{{ page.offset + (page.components | length) }}"
+            total: "{{ page.total }}"
+  - action: python_script.shellies_discovery_gen2
+    data:
+      id: "{{ device_id }}"
+      device_config:
+        components: "{{ all_pages }}"
+      discovery_prefix: "{{ discovery_prefix | default('homeassistant') }}"
+  - variables:
+      all_components: "{{ all_pages | map(attribute='components') | list | flatten }}"
+  - variables:
+      mqtt_comp: "{{ all_components | selectattr('key', 'equalto', 'mqtt') | list | first | default(none) }}"
+  - condition: template
+    value_template: "{{ mqtt_comp is not none }}"
+  - action: mqtt.publish
+    data:
+      topic: "{{ mqtt_comp.config.topic_prefix }}/command"
+      payload: status_update

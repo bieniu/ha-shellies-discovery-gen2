@@ -1,0 +1,60 @@
+blueprint:
+  name: Shellies Announce Gen2
+  description: >
+    Sends `Shelly.GetConfig` and fetches all components for a list of Shelly Gen2/Gen3/Gen4
+    devices when Home Assistant starts, which triggers MQTT discovery.
+
+    Add the MQTT topic prefixes (device IDs) of all your Shelly devices to the `device_ids`
+    input as a YAML list.
+
+    **Example:**
+    ```yaml
+    - shellyplus2pm-485519a1ff8c
+    - custom-prefix/shelly-kitchen
+    ```
+
+    **Requirements:**
+    - MQTT integration must be configured.
+    - The `shellies_components_gen2` script must be installed (also available as a blueprint).
+    - Each device must have MQTT enabled with **RPC status notifications** and
+      **Generic status update** options turned on.
+  domain: automation
+  author: bieniu
+  homeassistant:
+    min_version: "2024.9.0"
+  input:
+    device_ids:
+      name: Device IDs (MQTT topic prefixes)
+      description: >
+        List of MQTT topic prefixes for your Shelly devices. Enter as a YAML list,
+        one entry per device.
+      selector:
+        object:
+    discovery_prefix:
+      name: Discovery prefix
+      description: MQTT discovery prefix. Change only if you use a custom discovery prefix.
+      default: homeassistant
+      selector:
+        text:
+
+variables:
+  device_ids: !input device_ids
+  discovery_prefix: !input discovery_prefix
+  get_config_payload: "{{ {'id': 1, 'src': 'shellies_discovery', 'method': 'Shelly.GetConfig'} | to_json }}"
+
+triggers:
+  - trigger: homeassistant
+    event: start
+
+actions:
+  - repeat:
+      for_each: "{{ device_ids }}"
+      sequence:
+        - action: mqtt.publish
+          data:
+            topic: "{{ repeat.item }}/rpc"
+            payload: "{{ get_config_payload }}"
+        - action: script.shellies_components_gen2
+          data:
+            device_topic: "{{ repeat.item }}"
+            discovery_prefix: "{{ discovery_prefix }}"

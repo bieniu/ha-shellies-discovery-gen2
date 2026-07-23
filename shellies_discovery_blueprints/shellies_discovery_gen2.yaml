@@ -1,0 +1,46 @@
+blueprint:
+  name: Shellies Discovery Gen2
+  description: >
+    Handles MQTT discovery for Shelly Gen2/Gen3/Gen4 devices.
+
+    This automation listens on the `shellies_discovery/rpc` MQTT topic and calls the
+    `shellies_discovery_gen2` python script to publish Home Assistant MQTT discovery
+    messages for the device.
+
+    **Requirements:**
+    - MQTT integration must be configured.
+    - The `shellies_discovery_gen2` python script must be installed.
+    - The `shellies_announce_gen2` automation must also be configured to initiate discovery.
+  domain: automation
+  author: bieniu
+  homeassistant:
+    min_version: "2024.9.0"
+  input:
+    discovery_prefix:
+      name: Discovery prefix
+      description: MQTT discovery prefix. Change only if you use a custom discovery prefix.
+      default: homeassistant
+      selector:
+        text:
+
+mode: queued
+max: 50
+
+triggers:
+  - trigger: mqtt
+    topic: shellies_discovery/rpc
+
+actions:
+  - condition: template
+    value_template: "{{ 'components' not in (trigger.payload_json.result | default({})) }}"
+  - action: python_script.shellies_discovery_gen2
+    data:
+      id: "{{ trigger.payload_json.src }}"
+      device_config: "{{ trigger.payload_json.result }}"
+      discovery_prefix: !input discovery_prefix
+  - condition: template
+    value_template: "{{ 'mqtt' in trigger.payload_json.result }}"
+  - action: mqtt.publish
+    data:
+      topic: "{{ trigger.payload_json.result.mqtt.topic_prefix }}/command"
+      payload: "status_update"
