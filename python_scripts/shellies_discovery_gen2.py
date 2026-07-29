@@ -5525,7 +5525,7 @@ def get_sensor(
     if SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False):
         if relay_id is not None:
             switch_name = (
-                device_config[f"switch:{relay_id}"].get(ATTR_NAME, {})
+                device_config.get(f"switch:{relay_id}", {}).get(ATTR_NAME, {})
                 or f"Relay {relay_id}"
             ).replace("'", "_")
             payload[KEY_NAME] = description[KEY_NAME]
