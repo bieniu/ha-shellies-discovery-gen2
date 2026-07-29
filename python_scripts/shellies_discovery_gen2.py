@@ -5030,7 +5030,7 @@ def get_subdevice_info(subdevice_id, subdevice_name):
     """Create device_info for a subdevice."""
     device_info_subdevice = device_info.copy()
     device_info_subdevice[KEY_VIA_DEVICE] = mac
-    device_info_subdevice[KEY_IDENTIFIERS] = f"{mac}-{subdevice_id}".lower()
+    device_info_subdevice[KEY_IDENTIFIERS] = [f"{mac}-{subdevice_id}".lower()]
     device_info_subdevice[KEY_NAME] = subdevice_name
     del device_info_subdevice[KEY_CONNECTIONS]
     return device_info_subdevice
