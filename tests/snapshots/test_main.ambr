@@ -11021,7 +11021,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11066,7 +11068,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11110,7 +11114,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11155,7 +11161,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11200,7 +11208,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11243,7 +11253,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11286,7 +11298,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11330,7 +11344,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11387,7 +11403,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11432,7 +11450,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11477,7 +11497,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11521,7 +11543,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11566,7 +11590,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11610,7 +11636,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11655,7 +11683,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11700,7 +11730,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11743,7 +11775,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11786,7 +11820,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-1',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-1',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11848,7 +11884,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11889,7 +11927,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11934,7 +11974,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -11979,7 +12021,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12023,7 +12067,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12068,7 +12114,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12112,7 +12160,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12157,7 +12207,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12203,7 +12255,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12247,7 +12301,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12290,7 +12346,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12333,7 +12391,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-2',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12377,7 +12437,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12421,7 +12483,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12466,7 +12530,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12511,7 +12577,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12555,7 +12623,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12600,7 +12670,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12644,7 +12716,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12689,7 +12763,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12734,7 +12810,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12777,7 +12855,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -12820,7 +12900,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-3',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -13279,7 +13361,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -13324,7 +13408,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -13369,7 +13455,9 @@
     'dev': dict({
       'cu': 'http://shellypstripg4-aabbccddeeff.local/',
       'hw': 'gen4',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Power Strip Gen4',
       'mdl_id': 'S4PL-00416EU',
       'mf': 'Shelly',
@@ -13487,7 +13575,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13532,7 +13622,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13576,7 +13668,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13621,7 +13715,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13666,7 +13762,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13711,7 +13809,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13754,7 +13854,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13799,7 +13901,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13844,7 +13948,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13889,7 +13995,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13946,7 +14054,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -13991,7 +14101,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14036,7 +14148,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14081,7 +14195,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14124,7 +14240,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14169,7 +14287,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14214,7 +14334,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14259,7 +14381,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -14944,7 +15068,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -15195,7 +15321,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -15240,7 +15368,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -15285,7 +15415,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -15328,7 +15460,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
@@ -15373,7 +15507,9 @@
     'dev': dict({
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
-      'ids': 'aa:bb:cc:dd:ee:ff-0',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff-0',
+      ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
       'mf': 'Shelly',
