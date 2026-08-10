@@ -301,7 +301,7 @@ shellies_components_gen2:
         id: "{{ device_id }}"
         device_config:
           components: "{{ all_pages }}"
-        discovery_prefix: "{{ discovery_prefix }}"
+        discovery_prefix: "{{ discovery_prefix | default('homeassistant') }}"
     - variables:
         all_components: "{{ all_pages | map(attribute='components') | list | flatten }}"
     - variables:
