@@ -6520,7 +6520,7 @@ else:
         )
     expire_after = None
 
-disc_prefix = data.get(CONF_DISCOVERY_PREFIX, DEFAULT_DISC_PREFIX)  # noqa: F821
+disc_prefix = data.get(CONF_DISCOVERY_PREFIX) or DEFAULT_DISC_PREFIX  # noqa: F821
 
 script_prefix = data.get(CONF_SCRIPT_PREFIX, None)  # noqa: F821
 if script_prefix and (script_prefix[-1] == "/" or " " in script_prefix):
