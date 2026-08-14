@@ -5535,7 +5535,7 @@ def get_sensor(
                 sensor_name.index(emeter_phase.upper()) + 2 :
             ].capitalize()
             payload[KEY_DEVICE] = get_subdevice_info(
-                emeter_id, f"Phase {emeter_phase.upper()}"
+                f"{emeter_id}-{emeter_phase}", f"Phase {emeter_phase.upper()}"
             )
 
     if availability:

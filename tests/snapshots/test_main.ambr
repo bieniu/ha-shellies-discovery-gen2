@@ -13576,7 +13576,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13623,7 +13623,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13669,7 +13669,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13716,7 +13716,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13763,7 +13763,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13810,7 +13810,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13855,7 +13855,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13902,7 +13902,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13949,7 +13949,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -13996,7 +13996,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-b',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14055,7 +14055,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14102,7 +14102,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14149,7 +14149,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14196,7 +14196,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14241,7 +14241,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14288,7 +14288,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14335,7 +14335,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -14382,7 +14382,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-c',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15069,7 +15069,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15322,7 +15322,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15369,7 +15369,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15416,7 +15416,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15461,7 +15461,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
@@ -15508,7 +15508,7 @@
       'cu': 'http://shellypro3em-aabbccddeeff.local/',
       'hw': 'gen2',
       'ids': list([
-        'aa:bb:cc:dd:ee:ff-0',
+        'aa:bb:cc:dd:ee:ff-0-a',
       ]),
       'mdl': 'Shelly Pro 3EM',
       'mdl_id': 'SPEM-003CEBEU',
