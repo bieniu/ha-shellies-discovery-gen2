@@ -6425,27 +6425,20 @@ def install_script(script_id, device_topic, script_topic):
 
 def current_script_installed():
     """Return True if the current version of the script is installed."""
-    script_id = 1
-
-    while True:
+    for script_id in range(1, 100):
         if f"script:{script_id}" in device_config:
-            if device_config[f"script:{script_id}"][ATTR_NAME] == SCRIPT_CURRENT_NAME:
+            script_name = device_config[f"script:{script_id}"][ATTR_NAME]
+            if script_name == SCRIPT_CURRENT_NAME:
                 return True
-        else:
-            return False
-
-        script_id = script_id + 1
+    return False
 
 
 def get_script_id():
-    """Return the script ID."""
-    script_id = 1
-
-    while True:
-        if f"script:{script_id}" in device_config:
-            script_id = script_id + 1
-        else:
+    """Return the first available script ID."""
+    for script_id in range(1, 100):
+        if f"script:{script_id}" not in device_config:
             return script_id
+    raise ValueError("No available script ID found")
 
 
 def remove_old_script_versions(device_topic, script_topic):
