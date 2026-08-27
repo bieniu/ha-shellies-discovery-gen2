@@ -5693,8 +5693,11 @@ def get_binary_sensor(
         SUPPORTED_MODELS[model].get(ATTR_USE_SUBDEVICES, False)
         and entity_id is not None
     ):
-        payload[KEY_NAME] = description[KEY_NAME]
-        payload[KEY_DEVICE] = get_subdevice_info(entity_id, name)
+        if is_input:
+            payload[KEY_DEVICE] = get_subdevice_info(entity_id, name)
+        else:
+            payload[KEY_NAME] = description[KEY_NAME]
+            payload[KEY_DEVICE] = get_subdevice_info(entity_id, name)
 
     if availability:
         payload[KEY_AVAILABILITY] = availability
