@@ -1,0 +1,181 @@
+{
+    "id": "shellypro4pm-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "enable": false,
+            "rpc": {
+                "enable": true
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "eth": {
+            "enable": false,
+            "gw": null,
+            "ip": null,
+            "ipv4mode": "dhcp",
+            "nameserver": null,
+            "netmask": null,
+            "server_mode": false
+        },
+        "input:0": {
+            "id": 0,
+            "name": "My Input 0",
+            "type": "switch",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "input:1": {
+            "id": 1,
+            "name": null,
+            "type": "switch",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "input:2": {
+            "id": 2,
+            "name": "Btn",
+            "type": "button",
+            "enable": true,
+            "invert": false,
+            "factory_reset": true
+        },
+        "modbus": {
+            "enable": true
+        },
+        "mqtt": {
+            "client_id": "shellypro4pm-aabbccddeeff",
+            "enable": false,
+            "enable_control": true,
+            "enable_rpc": true,
+            "rpc_ntf": true,
+            "server": "mqtt.test.server",
+            "ssl_ca": null,
+            "status_ntf": true,
+            "topic_prefix": "shellypro4pm-aabbccddeeff",
+            "use_client_cert": false,
+            "user": "iot"
+        },
+        "sys": {
+            "cfg_rev": 50,
+            "debug": {
+                "file_level": null,
+                "level": 2,
+                "mqtt": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                },
+                "websocket": {
+                    "enable": false
+                }
+            },
+            "device": {
+                "addon_type": null,
+                "discoverable": true,
+                "eco_mode": false,
+                "fw_id": "20250804-110717/1.6.1-g8dbd358",
+                "mac": "AABBCCDDEEFF",
+                "name": "Test Name",
+                "profile": "default",
+                "sys_btn_toggle": true
+            },
+            "location": {
+                "lat": 22.55775,
+                "lon": 54.94637,
+                "tz": "Europe/Warsaw"
+            },
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "sntp.test.server"
+            },
+            "ui_data": {}
+        },
+        "switch:0": {
+            "id": 0,
+            "name": "Relay 0",
+            "in_mode": "detached",
+            "in_locked": false,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60.0,
+            "auto_off": false,
+            "auto_off_delay": 60.0,
+            "power_limit": 4480,
+            "voltage_limit": 280,
+            "current_limit": 16.0,
+            "autorecover_voltage_errors": false
+        },
+        "switch:1": {
+            "id": 1,
+            "name": "Relay 1",
+            "in_mode": "detached",
+            "in_locked": false,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60.0,
+            "auto_off": false,
+            "auto_off_delay": 60.0,
+            "power_limit": 4480,
+            "voltage_limit": 280,
+            "current_limit": 16.0,
+            "autorecover_voltage_errors": false
+        },
+        "switch:2": {
+            "id": 2,
+            "name": "Relay 2",
+            "in_mode": "detached",
+            "in_locked": false,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60.0,
+            "auto_off": false,
+            "auto_off_delay": 60.0,
+            "power_limit": 4480,
+            "voltage_limit": 280,
+            "current_limit": 16.0,
+            "autorecover_voltage_errors": false
+        },
+        "switch:3": {
+            "id": 3,
+            "name": "Relay 3",
+            "in_mode": "detached",
+            "in_locked": false,
+            "initial_state": "on",
+            "auto_on": false,
+            "auto_on_delay": 60.0,
+            "auto_off": false,
+            "auto_off_delay": 60.0,
+            "power_limit": 4480,
+            "voltage_limit": 280,
+            "current_limit": 16.0,
+            "autorecover_voltage_errors": false
+        },
+        "wifi": {
+            "sta": {
+                "ssid": "Wifi-Network-Name",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}
