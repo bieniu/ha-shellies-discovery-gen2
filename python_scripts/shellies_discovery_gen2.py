@@ -4761,13 +4761,13 @@ def get_consumption_type(consumption_list, relay_id):
     return ATTR_SWITCH
 
 
-def mqtt_publish(topic, payload):
+def mqtt_publish(topic, payload, retain=True):
     """Publish data to MQTT broker."""
     payload_str = str(payload).replace("'", '"').replace("^", '\\"')
     service_data = {
         "topic": topic,
         "payload": payload_str,
-        "retain": True,
+        "retain": retain,
         "qos": 0,
     }
     logger.debug("Sending to MQTT broker: %s %s", topic, payload_str)  # noqa: F821
@@ -6471,23 +6471,23 @@ def install_script(script_id, device_topic, script_topic):
         "method": "Script.Create",
         "params": {ATTR_NAME: SCRIPT_CURRENT_NAME},
     }
-    mqtt_publish(device_topic, payload)
+    mqtt_publish(device_topic, payload, retain=False)
     payload = {
         "id": 1,
         "src": script_topic,
         "method": "Script.PutCode",
         "params": {"id": script_id, "code": SCRIPT_CODE},
     }
-    mqtt_publish(device_topic, payload)
+    mqtt_publish(device_topic, payload, retain=False)
     payload = {
         "id": 1,
         "src": script_topic,
         "method": "Script.Start",
         "params": {"id": script_id},
     }
-    mqtt_publish(device_topic, payload)
+    mqtt_publish(device_topic, payload, retain=False)
     payload = f"{{'id':1,'src':'{script_topic}','method':'Script.SetConfig','params':{{'id':{script_id},'config':{{'enable':true}}}}}}"
-    mqtt_publish(device_topic, payload)
+    mqtt_publish(device_topic, payload, retain=False)
 
 
 def current_script_installed():
@@ -6523,14 +6523,14 @@ def remove_old_script_versions(device_topic, script_topic):
                     "method": "Script.Stop",
                     "params": {"id": script_id},
                 }
-                mqtt_publish(device_topic, payload)
+                mqtt_publish(device_topic, payload, retain=False)
                 payload = {
                     "id": 1,
                     "src": script_topic,
                     "method": "Script.Delete",
                     "params": {"id": script_id},
                 }
-                mqtt_publish(device_topic, payload)
+                mqtt_publish(device_topic, payload, retain=False)
 
 
 logger.info("Shellies Discovery Gen2 version: %s", VERSION)  # noqa: F821
