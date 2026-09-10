@@ -1428,7 +1428,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shelly1g4-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shelly1g4-aabbccddeeff/',
   })
 # ---
@@ -3962,7 +3962,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyduobulbg3-112233445566-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyduobulbg3-112233445566/',
   })
 # ---
@@ -4704,7 +4704,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellycolorblbg3-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellycolorblbg3-aabbccddeeff/',
   })
 # ---
@@ -5932,7 +5932,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyplugmg3-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyplugmg3-aabbccddeeff/',
   })
 # ---
@@ -6587,7 +6587,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyplugpmg3-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyplugpmg3-aabbccddeeff/',
   })
 # ---
@@ -8008,7 +8008,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyplus1pm-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
@@ -9290,7 +9290,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyplus1pm-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyplus1pm-aabbccddeeff/',
   })
 # ---
@@ -10535,7 +10535,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellyplusrgbwpm-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellyplusrgbwpm-aabbccddeeff/',
   })
 # ---
@@ -13288,7 +13288,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellypstripg4-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellypstripg4-aabbccddeeff/',
   })
 # ---
@@ -14836,7 +14836,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellypro3em-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellypro3em-aabbccddeeff/',
   })
 # ---
@@ -18378,7 +18378,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'shellypro4pm-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'shellypro4pm-aabbccddeeff/',
   })
 # ---
@@ -20210,7 +20210,7 @@
     'stat_t': '~status/rpc',
     'uniq_id': 'eve01-aabbccddeeff-wifi_signal',
     'unit_of_meas': 'dBm',
-    'val_tpl': '{{value_json.wifi.rssi}}',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
     '~': 'eve01-aabbccddeeff/',
   })
 # ---
