@@ -632,7 +632,9 @@ TPL_HVAC_MODE = (
 TPL_VOLTAGE = "{{value_json.voltage}}"
 TPL_WIFI_IP = "{{value_json.wifi.sta_ip}}"
 TPL_WIFI_IP_INDEPENDENT = "{{value_json.sta_ip}}"
-TPL_WIFI_RSSI = "{{value_json.wifi.rssi}}"
+TPL_WIFI_RSSI = (
+    "{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}"
+)
 TPL_WIFI_SSID = "{{value_json.wifi.ssid}}"
 TPL_WIFI_SSID_INDEPENDENT = "{{value_json.ssid}}"
 TPL_RSSI = "{{value_json.rssi}}"
