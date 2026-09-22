@@ -1,0 +1,165 @@
+{
+    "id": "shellypro3em63-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "rpc": {
+                "enable": false
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": true,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "em1:0": {
+            "id": 0,
+            "name": null,
+            "reverse": false,
+            "ct_type": "3x63A",
+            "alarms": {
+                "voltage": [
+                    null,
+                    null
+                ],
+                "current": [
+                    null,
+                    null
+                ],
+                "power": [
+                    null,
+                    null
+                ]
+            }
+        },
+        "em1:1": {
+            "id": 1,
+            "name": null,
+            "reverse": false,
+            "ct_type": "3x63A",
+            "alarms": {
+                "voltage": [
+                    null,
+                    null
+                ],
+                "current": [
+                    null,
+                    null
+                ],
+                "power": [
+                    null,
+                    null
+                ]
+            }
+        },
+        "em1:2": {
+            "id": 2,
+            "name": null,
+            "reverse": false,
+            "ct_type": "3x63A",
+            "alarms": {
+                "voltage": [
+                    null,
+                    null
+                ],
+                "current": [
+                    null,
+                    null
+                ],
+                "power": [
+                    null,
+                    null
+                ]
+            }
+        },
+        "em1data:0": {},
+        "em1data:1": {},
+        "em1data:2": {},
+        "eth": {
+            "enable": true,
+            "server_mode": false,
+            "ipv4mode": "dhcp",
+            "ip": null,
+            "netmask": null,
+            "gw": null,
+            "nameserver": null
+        },
+        "modbus": {
+            "enable": true
+        },
+        "mqtt": {
+            "enable": true,
+            "server": "mqtt.test.server",
+            "client_id": "shellypro3em63-aabbccddeeff",
+            "user": "iot",
+            "ssl_ca": null,
+            "topic_prefix": "shellypro3em63-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "sys": {
+            "device": {
+                "name": "Test Name",
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20260710-101221/2.0.0-g87fbfa4",
+                "discoverable": true,
+                "eco_mode": false,
+                "profile": "monophase",
+                "addon_type": null,
+                "sys_btn_toggle": true
+            },
+            "location": {
+                "tz": "Europe/Warsaw",
+                "lat": 22.55775,
+                "lon": 54.94637
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {},
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "sntp.test.server"
+            },
+            "cfg_rev": 27
+        },
+        "temperature:0": {
+            "id": 0,
+            "name": null,
+            "report_thr_C": 5.0,
+            "offset_C": 0.0
+        },
+        "wifi": {
+            "sta": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}
