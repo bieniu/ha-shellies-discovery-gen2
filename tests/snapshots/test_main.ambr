@@ -15538,6 +15538,1867 @@
 # name: test_device[shelly_pro_3em][9-topic]
   'homeassistant/sensor/shellypro3em-aabbccddeeff-0-a-total_active_returned_energy/config'
 # ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][0-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Create',
+    'params': dict({
+      'name': 'shellies_discovery_gen2_script_20260621',
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][0-topic]
+  'shellypro3em63-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][1-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.PutCode',
+    'params': dict({
+      'code': '''
+        let topicPrefix = null;
+        let updateTimer = null;
+        let installedVersion = null;
+        let statusTopic = null;
+        
+        function onStatusReceived(result, error_code) {
+          try {
+            if (error_code !== 0 || !result) {
+              return;
+            }
+            result.sys.installed_version = installedVersion;
+            MQTT.publish(statusTopic, JSON.stringify(result));
+          } catch (e) {
+            console.log("sendDeviceStatus has failed: ", e);
+          }
+        }
+        
+        function sendDeviceStatus() {
+          if (!MQTT.isConnected()) {
+            return;
+          }
+          Shelly.call("Shelly.GetStatus", {}, onStatusReceived);
+        }
+        
+        function onMQTTConfigReceived(config) {
+          topicPrefix = config.topic_prefix;
+          statusTopic = topicPrefix + "/status/rpc";
+          console.log("Using topic prefix: ", topicPrefix);
+        
+          if (!updateTimer) {
+            updateTimer = Timer.set(30000, true, sendDeviceStatus);
+          }
+        }
+        
+        function initScript() {
+          console.log("Starting shellies_discovery_gen2_script");
+          try {
+            installedVersion = Shelly.getDeviceInfo().ver;
+            Shelly.call("MQTT.GetConfig", {}, onMQTTConfigReceived);
+          } catch (e) {
+            console.log("initScript has failed: ", e);
+          }
+        }
+        
+        initScript();
+  
+      ''',
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][1-topic]
+  'shellypro3em63-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][10-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'EM0 voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][10-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][11-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'EM0 frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][11-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][12-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'EM1 active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.act_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][12-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][13-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'EM1 apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.aprt_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][13-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][14-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'EM1 current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][14-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-current/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][15-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'EM1 power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-power_factor',
+    'val_tpl': '{{value_json.pf}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][15-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][16-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM1 total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][16-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][17-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM1 total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_ret_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][17-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-total_active_returned_energy/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][18-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'EM1 voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][18-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][19-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'EM1 frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:1',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-1-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][19-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-1-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][2-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.Start',
+    'params': dict({
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][2-topic]
+  'shellypro3em63-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][20-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'EM2 active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.act_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][20-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][21-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'EM2 apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.aprt_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][21-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][22-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'EM2 current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][22-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-current/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][23-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'EM2 power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-power_factor',
+    'val_tpl': '{{value_json.pf}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][23-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][24-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM2 total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][24-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][25-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM2 total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_ret_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][25-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-total_active_returned_energy/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][26-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'voltage',
+    'en': 'false',
+    'name': 'EM2 voltage',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-voltage',
+    'unit_of_meas': 'V',
+    'val_tpl': '{{value_json.voltage}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][26-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-voltage/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][27-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'frequency',
+    'en': 'false',
+    'name': 'EM2 frequency',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:2',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-2-frequency',
+    'unit_of_meas': 'Hz',
+    'val_tpl': '{{value_json.freq}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][27-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-2-frequency/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][28-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-restart',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][28-topic]
+  'homeassistant/button/shellypro3em63-aabbccddeeff-restart/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][29-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'true',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.stable is defined%}{{value_json.sys.available_updates.stable.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"stable"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-firmware',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][29-topic]
+  'homeassistant/update/shellypro3em63-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][3-payload]
+  dict({
+    'id': 1,
+    'method': 'Script.SetConfig',
+    'params': dict({
+      'config': dict({
+        'enable': True,
+      }),
+      'id': 1,
+    }),
+    'src': 'shellies_discovery_script',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][3-topic]
+  'shellypro3em63-aabbccddeeff/rpc'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][30-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'firmware',
+    'en': 'false',
+    'ent_cat': 'config',
+    'ent_pic': 'https://brands.home-assistant.io/_/shelly/icon.png',
+    'l_ver_t': '~status/rpc',
+    'l_ver_tpl': '{%if value_json.sys.available_updates.beta is defined%}{{value_json.sys.available_updates.beta.version}}{%else%}{{value_json.sys.installed_version}}{%endif%}',
+    'name': 'Firmware beta',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_inst': '{"id":1,"src":"home-assistant","method":"Shelly.Update","params":{"stage":"beta"}}',
+    'qos': 0,
+    'rel_u': 'https://shelly-api-docs.shelly.cloud/gen2/changelog',
+    'stat_t': '~status/rpc',
+    'tit': 'Test Name Firmware',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-firmware_beta',
+    'val_tpl': '{{value_json.sys.installed_version}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][30-topic]
+  'homeassistant/update/shellypro3em63-aabbccddeeff-firmware_beta/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][31-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'Ethernet IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-eth_ip',
+    'val_tpl': '{{value_json.eth.ip}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][31-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-eth_ip/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][32-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.sys.uptime)|timestamp_local}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][32-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][33-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.wifi.ssid}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][33-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][34-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.wifi.sta_ip}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][34-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][35-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{%if value_json.wifi.rssi is defined%}{{value_json.wifi.rssi}}{%endif%}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][35-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][36-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'temperature',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Device temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/rpc',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-device_temperature',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json["temperature:0"].tC}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][36-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-device_temperature/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][37-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/rpc',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.cloud.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][37-topic]
+  'homeassistant/binary_sensor/shellypro3em63-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power',
+    'en': 'true',
+    'name': 'EM0 active power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-active_power',
+    'unit_of_meas': 'W',
+    'val_tpl': '{{value_json.act_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][4-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-active_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'apparent_power',
+    'en': 'true',
+    'name': 'EM0 apparent power',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-apparent_power',
+    'unit_of_meas': 'VA',
+    'val_tpl': '{{value_json.aprt_power}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][5-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-apparent_power/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'current',
+    'en': 'false',
+    'name': 'EM0 current',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-current',
+    'unit_of_meas': 'A',
+    'val_tpl': '{{value_json.current}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][6-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-current/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'power_factor',
+    'en': 'false',
+    'name': 'EM0 power factor',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/em1:0',
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-power_factor',
+    'val_tpl': '{{value_json.pf}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][7-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-power_factor/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][8-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM0 total active energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-total_active_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][8-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-total_active_energy/config'
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][9-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://shellypro3em63-aabbccddeeff.local/',
+      'hw': 'gen2',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'Shelly Pro 3EM-3CT63',
+      'mdl_id': 'SPEM-003CEBEU63',
+      'mf': 'Shelly',
+      'name': 'Test Name',
+      'sw': '20260710-101221/2.0.0-g87fbfa4',
+    }),
+    'dev_cla': 'energy',
+    'en': 'true',
+    'name': 'EM0 total active returned energy',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'total_increasing',
+    'stat_t': '~status/em1data:0',
+    'sug_dsp_prc': 1,
+    'uniq_id': 'shellypro3em63-aabbccddeeff-0-total_active_returned_energy',
+    'unit_of_meas': 'Wh',
+    'val_tpl': '{{value_json.total_act_ret_energy}}',
+    '~': 'shellypro3em63-aabbccddeeff/',
+  })
+# ---
+# name: test_device[shelly_pro_3em_3ct63_monophase][9-topic]
+  'homeassistant/sensor/shellypro3em63-aabbccddeeff-0-total_active_returned_energy/config'
+# ---
 # name: test_device[shelly_pro_4pm_inputs_switch][0-payload]
   dict({
     'id': 1,

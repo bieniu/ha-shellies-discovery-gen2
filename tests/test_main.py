@@ -164,6 +164,7 @@ def test_mqtt_prefix_with_space() -> None:
         "shelly_plus_1pm",
         "shelly_plus_1pm_scripts",
         "shelly_pro_3em",
+        "shelly_pro_3em_3ct63_monophase",
         "shelly_power_strip_gen4",
         "shelly_wall_display_x1i",
         "shelly_duo_bulb_gen3",
