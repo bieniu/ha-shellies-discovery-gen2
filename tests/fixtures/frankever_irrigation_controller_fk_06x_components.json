@@ -1,0 +1,576 @@
+{
+    "id": "irrigation-aabbccddeeff",
+    "device_config": {
+        "components": [
+            {
+                "cfg_rev": 37,
+                "components": [
+                    {
+                        "key": "ble",
+                        "status": {
+                            "addr": "aa:bb:cc:dd:ee:ff,p"
+                        },
+                        "config": {
+                            "rpc": {
+                                "enable": false
+                            }
+                        }
+                    },
+                    {
+                        "key": "boolean:200",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 200,
+                            "name": "Zone 1",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 101
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone0"
+                        }
+                    },
+                    {
+                        "key": "boolean:201",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 201,
+                            "name": "Zone 2",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 102
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone1"
+                        }
+                    },
+                    {
+                        "key": "boolean:202",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 202,
+                            "name": "Zone 3",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 103
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone2"
+                        }
+                    },
+                    {
+                        "key": "boolean:203",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 203,
+                            "name": "Zone 4",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 104
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone3"
+                        }
+                    },
+                    {
+                        "key": "boolean:204",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 204,
+                            "name": "Zone 5",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 105
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone4"
+                        }
+                    },
+                    {
+                        "key": "boolean:205",
+                        "status": {
+                            "value": false,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 205,
+                            "name": "Zone 6",
+                            "meta": {
+                                "svc": {
+                                    "dpId": 106
+                                },
+                                "cloud": [
+                                    "log"
+                                ],
+                                "ui": {
+                                    "view": "toggle"
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": false,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zone5"
+                        }
+                    },
+                    {
+                        "key": "bthome",
+                        "status": {},
+                        "config": {}
+                    },
+                    {
+                        "key": "cloud",
+                        "status": {
+                            "connected": false
+                        },
+                        "config": {
+                            "enable": false,
+                            "server": "iot.shelly.cloud:6012/jrpc"
+                        }
+                    }
+                ],
+                "offset": 0,
+                "total": 18
+            },
+            {
+                "cfg_rev": 37,
+                "components": [
+                    {
+                        "key": "enum:200",
+                        "status": {
+                            "value": "none",
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 200,
+                            "name": "Active Sequence",
+                            "options": [
+                                "none"
+                            ],
+                            "meta": {
+                                "ui": {
+                                    "view": "select",
+                                    "titles": {
+                                        "none": "None"
+                                    }
+                                }
+                            },
+                            "persisted": false,
+                            "default_value": "none",
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "active_sequence"
+                        }
+                    },
+                    {
+                        "key": "mqtt",
+                        "status": {
+                            "connected": true
+                        },
+                        "config": {
+                            "enable": true,
+                            "server": "mqtt_broker:1883",
+                            "client_id": "irrigation-aabbccddeeff",
+                            "user": "mqtt_client",
+                            "ssl_ca": null,
+                            "topic_prefix": "irrigation-aabbccddeeff",
+                            "rpc_ntf": true,
+                            "status_ntf": true,
+                            "use_client_cert": false,
+                            "enable_rpc": true,
+                            "enable_control": true
+                        }
+                    },
+                    {
+                        "key": "number:200",
+                        "status": {
+                            "value": 0,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 200,
+                            "name": "Average Temperature",
+                            "min": -50,
+                            "max": 100,
+                            "meta": {
+                                "ui": {
+                                    "view": "label",
+                                    "unit": "\u00b0C"
+                                },
+                                "cloud": [
+                                    "measurement",
+                                    "log"
+                                ]
+                            },
+                            "persisted": false,
+                            "default_value": 0,
+                            "owner": "service:0",
+                            "access": "cr"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "average_temperature"
+                        }
+                    },
+                    {
+                        "key": "number:201",
+                        "status": {
+                            "value": 0,
+                            "source": "",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 201,
+                            "name": "Rainfall last 24h",
+                            "min": 0,
+                            "max": 99999,
+                            "meta": {
+                                "ui": {
+                                    "view": "label",
+                                    "unit": "mm/m2"
+                                },
+                                "cloud": [
+                                    "measurement",
+                                    "log"
+                                ]
+                            },
+                            "persisted": false,
+                            "default_value": 0,
+                            "owner": "service:0",
+                            "access": "cr"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "last_precipitation"
+                        }
+                    },
+                    {
+                        "key": "object:200",
+                        "status": {
+                            "value": {
+                                "zone0": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                },
+                                "zone1": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                },
+                                "zone2": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                },
+                                "zone3": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                },
+                                "zone4": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                },
+                                "zone5": {
+                                    "duration": 10,
+                                    "started_at": null,
+                                    "source": "init"
+                                }
+                            },
+                            "source": "sys",
+                            "last_update_ts": 0
+                        },
+                        "config": {
+                            "id": 200,
+                            "name": "Zones status",
+                            "meta": null,
+                            "owner": "service:0",
+                            "access": "crw"
+                        },
+                        "attrs": {
+                            "owner": "service:0",
+                            "role": "zones_status"
+                        }
+                    },
+                    {
+                        "key": "service:0",
+                        "status": {
+                            "etag": "00000000000000000000000000000000",
+                            "state": "running",
+                            "dev_mode": false,
+                            "stats": {
+                                "mem": 1464,
+                                "mem_peak": 1671
+                            }
+                        },
+                        "config": {
+                            "seq_rev": 0,
+                            "duration_offset": 0,
+                            "limit_zones": 2,
+                            "base_temp": 20,
+                            "weather_api": false,
+                            "zones": [
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                },
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                },
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                },
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                },
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                },
+                                {
+                                    "name": null,
+                                    "duration": 10,
+                                    "water_amount": 10
+                                }
+                            ],
+                            "id": 0
+                        }
+                    }
+                ],
+                "offset": 9,
+                "total": 18
+            },
+            {
+                "cfg_rev": 37,
+                "components": [
+                    {
+                        "key": "sys",
+                        "status": {
+                            "mac": "AABBCCDDEEFF",
+                            "restart_required": false,
+                            "time": "12:00",
+                            "unixtime": 1790000000,
+                            "last_sync_ts": 1790000000,
+                            "uptime": 1463,
+                            "ram_size": 275468,
+                            "ram_free": 130756,
+                            "ram_min_free": 106000,
+                            "fs_size": 1048576,
+                            "fs_free": 499712,
+                            "cfg_rev": 37,
+                            "kvs_rev": 0,
+                            "schedule_rev": 0,
+                            "webhook_rev": 1,
+                            "btrelay_rev": 0,
+                            "available_updates": {},
+                            "reset_reason": 3,
+                            "utc_offset": 7200
+                        },
+                        "config": {
+                            "device": {
+                                "name": "IrrigationController",
+                                "mac": "AABBCCDDEEFF",
+                                "fw_id": "20260925-100443/2.0.1-xt1-g59b45b2",
+                                "discoverable": true,
+                                "tls_check_cert_validity_time": true,
+                                "enhanced_security": false
+                            },
+                            "location": {
+                                "tz": "Europe/Rome",
+                                "lat": 0.0,
+                                "lon": 0.0
+                            },
+                            "debug": {
+                                "level": 2,
+                                "file_level": null,
+                                "mqtt": {
+                                    "enable": false
+                                },
+                                "websocket": {
+                                    "enable": false
+                                },
+                                "udp": {
+                                    "addr": null
+                                }
+                            },
+                            "ui_data": {
+                                "device_revision": "1-36"
+                            },
+                            "rpc_udp": {
+                                "dst_addr": null,
+                                "listen_port": null
+                            },
+                            "sntp": {
+                                "server": "time.cloudflare.com"
+                            },
+                            "cfg_rev": 37
+                        }
+                    },
+                    {
+                        "key": "wifi",
+                        "status": {
+                            "sta_ip": "192.168.1.100",
+                            "status": "got ip",
+                            "ssid": "ssid",
+                            "channel": 1,
+                            "rssi": -55,
+                            "bssid": "00:00:00:00:00:00",
+                            "sta_ip6": []
+                        },
+                        "config": {
+                            "ap": {
+                                "ssid": "Irrigation-AABBCCDDEEFF",
+                                "is_open": true,
+                                "enable": false,
+                                "range_extender": {
+                                    "enable": false
+                                }
+                            },
+                            "sta": {
+                                "ssid": "ssid",
+                                "is_open": false,
+                                "enable": true,
+                                "ipv4mode": "dhcp",
+                                "ip": null,
+                                "netmask": null,
+                                "gw": null,
+                                "nameserver": null
+                            },
+                            "sta1": {
+                                "ssid": null,
+                                "is_open": true,
+                                "enable": false,
+                                "ipv4mode": "dhcp",
+                                "ip": null,
+                                "netmask": null,
+                                "gw": null,
+                                "nameserver": null
+                            },
+                            "roam": {
+                                "rssi_thr": -80,
+                                "interval": 60
+                            }
+                        }
+                    },
+                    {
+                        "key": "ws",
+                        "status": {
+                            "connected": false
+                        },
+                        "config": {
+                            "enable": false,
+                            "server": null,
+                            "ssl_ca": "ca.pem"
+                        }
+                    }
+                ],
+                "offset": 15,
+                "total": 18
+            }
+        ]
+    }
+}
