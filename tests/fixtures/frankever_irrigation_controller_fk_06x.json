@@ -1,0 +1,146 @@
+{
+    "id": "irrigation-aabbccddeeff",
+    "device_config": {
+        "ble": {
+            "rpc": {
+                "enable": false
+            }
+        },
+        "bthome": {},
+        "cloud": {
+            "enable": false,
+            "server": "iot.shelly.cloud:6012/jrpc"
+        },
+        "mqtt": {
+            "enable": true,
+            "server": "mqtt_broker:1883",
+            "client_id": "irrigation-aabbccddeeff",
+            "user": "mqtt_client",
+            "ssl_ca": null,
+            "topic_prefix": "irrigation-aabbccddeeff",
+            "rpc_ntf": true,
+            "status_ntf": true,
+            "use_client_cert": false,
+            "enable_rpc": true,
+            "enable_control": true
+        },
+        "service:0": {
+            "seq_rev": 0,
+            "duration_offset": 0,
+            "limit_zones": 2,
+            "base_temp": 20,
+            "weather_api": false,
+            "zones": [
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                },
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                },
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                },
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                },
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                },
+                {
+                    "name": null,
+                    "duration": 10,
+                    "water_amount": 10
+                }
+            ],
+            "id": 0
+        },
+        "sys": {
+            "device": {
+                "name": "IrrigationController",
+                "mac": "AABBCCDDEEFF",
+                "fw_id": "20260925-100443/2.0.1-xt1-g59b45b2",
+                "discoverable": true,
+                "tls_check_cert_validity_time": true,
+                "enhanced_security": false
+            },
+            "location": {
+                "tz": "Europe/Rome",
+                "lat": 0.0,
+                "lon": 0.0
+            },
+            "debug": {
+                "level": 2,
+                "file_level": null,
+                "mqtt": {
+                    "enable": false
+                },
+                "websocket": {
+                    "enable": false
+                },
+                "udp": {
+                    "addr": null
+                }
+            },
+            "ui_data": {
+                "device_revision": "1-36"
+            },
+            "rpc_udp": {
+                "dst_addr": null,
+                "listen_port": null
+            },
+            "sntp": {
+                "server": "time.cloudflare.com"
+            },
+            "cfg_rev": 37
+        },
+        "wifi": {
+            "ap": {
+                "ssid": "Irrigation-AABBCCDDEEFF",
+                "is_open": true,
+                "enable": false,
+                "range_extender": {
+                    "enable": false
+                }
+            },
+            "sta": {
+                "ssid": "ssid",
+                "is_open": false,
+                "enable": true,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "sta1": {
+                "ssid": null,
+                "is_open": true,
+                "enable": false,
+                "ipv4mode": "dhcp",
+                "ip": null,
+                "netmask": null,
+                "gw": null,
+                "nameserver": null
+            },
+            "roam": {
+                "rssi_thr": -80,
+                "interval": 60
+            }
+        },
+        "ws": {
+            "enable": false,
+            "server": null,
+            "ssl_ca": "ca.pem"
+        }
+    }
+}

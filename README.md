@@ -129,6 +129,7 @@ You need to manually add the `shellies_announce_gen2`, `shellies_discovery_gen2`
 
 ### Powered by Shelly
 
+- FrankEver Irrigation Controller FK-06X
 - FrankEver Smart Water Valve
 - LinkedGo Smart Thermostat ST1820
 - LinkedGo Smart Thermostat ST802-B

@@ -1,4 +1,718 @@
 # serializer version: 1
+# name: test_device[frankever_irrigation_controller_fk_06x][0-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'dev_cla': 'restart',
+    'en': 'true',
+    'ent_cat': 'config',
+    'name': 'Restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_prs': '{"id":1,"src":"home-assistant","method":"Shelly.Reboot"}',
+    'qos': 0,
+    'uniq_id': 'irrigation-aabbccddeeff-restart',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][0-topic]
+  'homeassistant/button/irrigation-aabbccddeeff-restart/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][1-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'dev_cla': 'timestamp',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Last restart',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'irrigation-aabbccddeeff-last_restart',
+    'val_tpl': '{{(as_timestamp(now())-value_json.uptime)|timestamp_local}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][1-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-last_restart/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][2-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:wifi-settings',
+    'name': 'SSID',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'irrigation-aabbccddeeff-ssid',
+    'val_tpl': '{{value_json.ssid}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][2-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-ssid/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][3-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'icon': 'mdi:ip-outline',
+    'name': 'WiFi IP',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/wifi',
+    'uniq_id': 'irrigation-aabbccddeeff-wifi_ip',
+    'val_tpl': '{{value_json.sta_ip}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][3-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-wifi_ip/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'dev_cla': 'signal_strength',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'name': 'Signal strength',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_cla': 'measurement',
+    'stat_t': '~status/wifi',
+    'uniq_id': 'irrigation-aabbccddeeff-wifi_signal',
+    'unit_of_meas': 'dBm',
+    'val_tpl': '{{value_json.rssi}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][4-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-wifi_signal/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'dev_cla': 'connectivity',
+    'en': 'false',
+    'ent_cat': 'diagnostic',
+    'name': 'Cloud',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/cloud',
+    'uniq_id': 'irrigation-aabbccddeeff-cloud',
+    'val_tpl': '{%if value_json.connected%}ON{%else%}OFF{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][5-topic]
+  'homeassistant/binary_sensor/irrigation-aabbccddeeff-cloud/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'cu': 'http://irrigation-aabbccddeeff.local/',
+      'hw': 'gen3',
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+      'mdl': 'FrankEver Irrigation Controller FK-06X',
+      'mdl_id': 'FK-06X',
+      'mf': 'FrankEver (Powered by Shelly)',
+      'name': 'IrrigationController',
+      'sw': '20260925-100443/2.0.1-xt1-g59b45b2',
+    }),
+    'dev_cla': 'update',
+    'en': 'true',
+    'ent_cat': 'diagnostic',
+    'json_attr_t': '~status/sys',
+    'json_attr_tpl': '{{value_json.available_updates.get("stable",{})|to_json}}',
+    'name': 'Firmware',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/sys',
+    'uniq_id': 'irrigation-aabbccddeeff-firmware',
+    'val_tpl': '{%if value_json.available_updates.stable is defined%}ON{%else%}OFF{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x][6-topic]
+  'homeassistant/binary_sensor/irrigation-aabbccddeeff-firmware/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][0-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 1',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":200,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:200',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-200',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][0-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-200/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][1-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 2',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":201,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":201,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:201',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-201',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][1-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-201/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][2-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 3',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":202,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":202,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:202',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-202',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][2-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-202/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][3-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 4',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":203,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":203,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:203',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-203',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][3-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-203/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][4-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 5',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":204,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":204,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:204',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-204',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][4-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-204/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][5-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'cmd_t': '~rpc',
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Zone 6',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'pl_off': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":205,"value":false}}',
+    'pl_on': '{"id":1,"src":"home-assistant","method":"Boolean.Set","params":{"id":205,"value":true}}',
+    'qos': 0,
+    'stat_off': 'off',
+    'stat_on': 'on',
+    'stat_t': '~status/boolean:205',
+    'uniq_id': 'irrigation-aabbccddeeff-boolean-205',
+    'val_tpl': '{%if value_json.value%}on{%else%}off{%endif%}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][5-topic]
+  'homeassistant/switch/irrigation-aabbccddeeff-boolean-205/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][6-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Average Temperature',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/number:200',
+    'uniq_id': 'irrigation-aabbccddeeff-number-200',
+    'unit_of_meas': '°C',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][6-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-number-200/config'
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][7-payload]
+  dict({
+    'avty': list([
+      dict({
+        'pl_avail': 'true',
+        'pl_not_avail': 'false',
+        't': '~online',
+      }),
+      dict({
+        't': '~status/rpc',
+        'val_tpl': '{%if value_json.mqtt.connected%}online{%else%}offline{%endif%}',
+      }),
+    ]),
+    'dev': dict({
+      'cns': list([
+        list([
+          'mac',
+          'aa:bb:cc:dd:ee:ff',
+        ]),
+      ]),
+      'ids': list([
+        'aa:bb:cc:dd:ee:ff',
+      ]),
+    }),
+    'en': 'true',
+    'name': 'Rainfall last 24h',
+    'o': dict({
+      'name': 'Shellies Discovery Gen2',
+      'sw': '0.0.0',
+      'url': 'https://github.com/bieniu/ha-shellies-discovery-gen2',
+    }),
+    'qos': 0,
+    'stat_t': '~status/number:201',
+    'uniq_id': 'irrigation-aabbccddeeff-number-201',
+    'unit_of_meas': 'mm/m2',
+    'val_tpl': '{{value_json.value}}',
+    '~': 'irrigation-aabbccddeeff/',
+  })
+# ---
+# name: test_device[frankever_irrigation_controller_fk_06x_components][7-topic]
+  'homeassistant/sensor/irrigation-aabbccddeeff-number-201/config'
+# ---
 # name: test_device[linkedgo_st1820][0-payload]
   dict({
     'id': 1,
