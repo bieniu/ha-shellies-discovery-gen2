@@ -98,6 +98,7 @@ You need to manually add the `shellies_announce_gen2`, `shellies_discovery_gen2`
 - Shelly 1PM Gen4
 - Shelly 1PM Mini Gen4
 - Shelly 2PM Gen4
+- Shelly Dimmer Gen4
 - Shelly EM Mini Gen4
 - Shelly i4 Gen4
 - Shelly Flood Gen4

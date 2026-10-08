@@ -154,6 +154,7 @@ def test_mqtt_prefix_with_space() -> None:
     "device_fixture",
     [
         "shelly_1_gen4",
+        "shelly_dimmer_gen4",
         "shelly_plug_m_gen3",
         "shelly_plug_pm_gen3",
         "shelly_blu_rc_button_4_zb",
