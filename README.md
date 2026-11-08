@@ -17,7 +17,11 @@ This script adds MQTT discovery support for Shelly Gen2, Gen3 and Gen4 devices i
 
 This script needs Home Assistant `python_script` component so, if you never used it, I strongly suggest you to follow the [official instruction](https://www.home-assistant.io/integrations/python_script#writing-your-first-script) and check that `python_script` is properly configured and it's working.
 
-For the device to work with the script, it must have MQTT configured and options **Enable "MQTT Control"**, **RPC status notifications over MQTT** and **Generic status update over MQTT** enabled.
+For the device to work with the script, it must have MQTT configured and the following options enabled:
+- **Enable "MQTT Control"**
+- **Enable RPC over MQTT**
+- **RPC status notifications over MQTT**
+- **Generic status update over MQTT**
 
 MQTT integration must be configured in Home Assistant.
 
