@@ -199,3 +199,84 @@ def test_device(snapshot: SnapshotAssertion, device_fixture: str) -> None:
             continue
         assert topic == snapshot(name=f"{call}-topic")
         assert json.loads(payload) == snapshot(name=f"{call}-payload")
+
+
+@pytest.mark.parametrize(
+    ("sys_device_name", "expected_device_name"),
+    [
+        ("Garden Irrigation", "Garden Irrigation"),
+        ("Dan's Plug", "Dan_s Plug"),
+        ("", "Shelly Plug US Gen4 AABBCCDDEEFF"),
+        (None, "Shelly Plug US Gen4 AABBCCDDEEFF"),
+    ],
+)
+def test_components_response_device_name(
+    sys_device_name: str | None, expected_device_name: str
+) -> None:
+    """Test the device name in payloads generated from a GetComponents response."""
+    logger = Mock()
+    hass = Mock()
+    hass.services = Mock()
+    fixture_path = FIXTURES_PATH / "virtual_components.json"
+    data = json.loads(fixture_path.read_text())
+
+    for page in data["device_config"]["components"]:
+        for component in page["components"]:
+            if component["key"] == "sys":
+                component["config"]["device"]["name"] = sys_device_name
+
+    run_script(logger=logger, data=data, hass=hass)
+
+    payloads = [
+        json.loads(call[0][2]["payload"])
+        for call in hass.services.call.call_args_list
+        if call[0][2].get("payload")
+    ]
+
+    assert payloads
+    assert all(payload["dev"]["name"] == expected_device_name for payload in payloads)
+
+
+def test_components_response_device_name_with_bthome_device() -> None:
+    """Test the gateway device name fallback when a BTHome device is paired."""
+    logger = Mock()
+    hass = Mock()
+    hass.services = Mock()
+    fixture_path = FIXTURES_PATH / "virtual_components.json"
+    data = json.loads(fixture_path.read_text())
+    gateway_mac = "aa:bb:cc:dd:ee:ff"
+
+    for page in data["device_config"]["components"]:
+        for component in page["components"]:
+            if component["key"] == "sys":
+                component["config"]["device"]["name"] = None
+    data["device_config"]["components"][0]["components"].append(
+        {
+            "key": "bthomedevice:200",
+            "status": {"id": 200, "rssi": -58, "battery": 100},
+            "config": {
+                "id": 200,
+                "addr": "11:22:33:44:55:66",
+                "name": "FourButtonSwitch",
+                "key": None,
+                "meta": {"ui": {"view": "regular", "icon": None}},
+            },
+            "attrs": {"flags": 0, "model_id": 22},
+        }
+    )
+
+    run_script(logger=logger, data=data, hass=hass)
+
+    gateway_payloads = [
+        payload
+        for call in hass.services.call.call_args_list
+        if call[0][2].get("payload")
+        and (payload := json.loads(call[0][2]["payload"]))["dev"]["ids"]
+        == [gateway_mac]
+    ]
+
+    assert gateway_payloads
+    assert all(
+        payload["dev"]["name"] == "Shelly Plug US Gen4 AABBCCDDEEFF"
+        for payload in gateway_payloads
+    )

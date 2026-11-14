@@ -377,6 +377,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 1',
@@ -423,6 +424,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 2',
@@ -469,6 +471,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 3',
@@ -515,6 +518,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 4',
@@ -561,6 +565,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 5',
@@ -607,6 +612,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Zone 6',
@@ -652,6 +658,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Average Temperature',
@@ -694,6 +701,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'IrrigationController',
     }),
     'en': 'true',
     'name': 'Rainfall last 24h',
@@ -1258,6 +1266,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'name': 'Anti-freeze',
@@ -1304,6 +1313,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'name': 'Child lock',
@@ -1350,6 +1360,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'name': 'Enable thermostat',
@@ -1395,6 +1406,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'name': 'Current humidity',
@@ -1437,6 +1449,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'name': 'Current temperature',
@@ -1481,6 +1494,7 @@
       'ids': list([
         'cc:dd:ee:ff:00:11',
       ]),
+      'name': 'LinkedGo Starlight Thermostat ST1820',
     }),
     'en': 'true',
     'max': 40,
@@ -24528,6 +24542,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Boolean Toogle',
@@ -24573,6 +24588,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Boolean Label',
@@ -24615,6 +24631,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Button',
@@ -24657,6 +24674,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Enum Dropdown',
@@ -24702,6 +24720,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Text Label',
@@ -24745,6 +24764,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'max': 100,
@@ -24793,6 +24813,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'max': 10,
@@ -24839,6 +24860,7 @@
       'ids': list([
         'aa:bb:cc:dd:ee:ff',
       ]),
+      'name': 'Shelly Plug US Gen4',
     }),
     'en': 'true',
     'name': 'Number Label',
